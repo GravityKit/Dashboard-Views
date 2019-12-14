@@ -19,6 +19,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 	public function add_hooks() {
 		add_action( 'admin_menu', array( $this, 'add_submenu' ), 1 );
 		add_filter( 'post_row_actions', array( $this, 'view_admin_action' ), 10, 2 );
+
+		add_filter( 'gravityview/entry/permalink', array( $this, 'entry_permalink' ), 10, 4 );
 	}
 
 	public function view_admin_action( $actions, $post ) {
@@ -63,48 +65,75 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 */
 	public function render_screen() {
 
+		require_once plugin_dir_path( __FILE__ ) . 'class-gravityview-admin-view-request.php';
+		gravityview()->request = new GravityView_Admin_View_Request();
+
 		echo '<style> body { background:  white; } </style>';
 
-		$view_id = \GV\Utils::_GET( 'id' );
 
-		if ( empty( $view_id ) ) {
-			return;
-		}
+		if ( ! $view = gravityview()->request->is_view() ) {
+			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id = \GV\Utils::_GET( 'id' ) ) );
 
-		if ( ! $view = \GV\View::by_id( $view_id ) ) {
-
-			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id ) );
-
-			printf( '<h1>%s</h1>', sprintf( esc_html__( 'View #%s not found.', 'gravityview-admin' ), esc_html( $view_id ) ) );
+			printf( '<h1>%s</h1>', sprintf( esc_html__( 'View #%s not found.', 'gravityview-admin' ), intval( $view_id ) ) );
 
 			return;
 		}
 
-		$renderer = new \GV\View_Renderer();
+		$view_renderer = new \GV\View_Renderer();
+		$entry_renderer = new \GV\Entry_Renderer();
 
 		if ( ! class_exists( 'GravityView_View' ) ) {
 			gravityview()->plugin->include_legacy_frontend( true );
 		}
 
-		gravityview()->request                     = new \GV\Mock_Request();
-		gravityview()->request->returns['is_view'] = $view;
-
 		echo '<div class="wrap">';
 
-		echo $renderer->render( $view );
+		/** Entry */
+		if ( $entry = gravityview()->request->is_entry() ) {
+			echo $entry_renderer->render( $entry, $view, $request );
+		/** View */
+		} else {
+			echo $view_renderer->render( $view );
+		}
 
 		echo '</div>';
 
 		$view_data = GravityView_View_Data::getInstance();
-		$view_data->add_view( $view_id );
+		$view_data->add_view( $view->ID );
 		GravityView_frontend::getInstance()->setGvOutputData( $view_data );
-
-		//GravityView_frontend::getInstance()->setGvOutputData( $view_data );
 
 		GravityView_frontend::getInstance()->add_scripts_and_styles();
 
 		wp_print_scripts();
 		wp_print_styles();
+	}
+
+	/**
+	 * Filter the entry permalink to lead to the Admin View page.
+	 *
+	 * Called via `gravityview/entry/permalink` filter.
+	 *
+	 * @param string $permalink The permalink.
+	 * @param \GV\Entry $entry The entry.
+	 * @param \GV\View $view The View.
+	 * @param \GV\Request $request The request.
+	 *
+	 */
+	public function entry_permalink( $permalink, $entry, $view, $request ) {
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return $permalink;
+		}
+
+		$url = admin_url( 'edit.php' );
+
+		$url = add_query_arg( array(
+			'post_type' => 'gravityview',
+			'page' => 'adminview',
+			'id' => $view->ID,
+			'entry_id' => $entry->ID,
+		), $url );
+
+		return $url;
 	}
 }
 

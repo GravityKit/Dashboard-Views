@@ -27,5 +27,5 @@ function gv_extension_adminview_load() {
 		}
 	}
 
-	include_once plugin_dir_path( __FILE__ ) . 'class-gravityview-adminview.php';
+	include_once plugin_dir_path( __FILE__ ) . 'class-gravityview-admin-view.php';
 }
