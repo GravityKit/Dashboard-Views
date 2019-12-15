@@ -23,6 +23,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 		add_filter( 'gravityview/entry/permalink', array( $this, 'entry_permalink' ), 10, 4 );
 		add_filter( 'gravityview/widget/search/form/action', array( $this, 'search_action' ) );
 		add_action( 'gravityview_search_widget_fields_before', array( $this, 'search_fields' ) );
+
+		add_filter( 'gravityview_page_links_args', array( $this, 'page_links_args' ) );
 	}
 
 	public function view_admin_action( $actions, $post ) {
@@ -201,6 +203,40 @@ class GravityView_Admin_View extends GravityView_Extension {
 		foreach ( $args as $field => $value ) {
 			printf( '<input type="hidden" name="%s" value="%s" />', esc_attr( $field ), esc_attr( $value ) );
 		}
+	}
+
+	/**
+	 * Fix pagination links.
+	 *
+	 * Called from `gravityview_page_links_args` filter
+	 *
+	 * @param array $args The paginate_links arguments.
+	 *
+	 * @return array $args The arguments.
+	 */
+	public function page_links_args( $args ) {
+		if ( ! $request = gravityview()->request ) {
+			return $args;
+		}
+
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return $args;
+		}
+
+		if ( ! $view = $request->is_view() ) {
+			return $args;
+		}
+
+		$url = admin_url( 'edit.php' );
+
+		$args['base'] = add_query_arg( array(
+			'pagenum' => '%#%',
+			'post_type' => 'gravityview',
+			'page' => 'adminview',
+			'id' => $view->ID,
+		), $url );
+
+		return $args;
 	}
 }
 
