@@ -21,6 +21,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 		add_filter( 'post_row_actions', array( $this, 'view_admin_action' ), 10, 2 );
 
 		add_filter( 'gravityview/entry/permalink', array( $this, 'entry_permalink' ), 10, 4 );
+		add_filter( 'gravityview/widget/search/form/action', array( $this, 'search_action' ) );
+		add_action( 'gravityview_search_widget_fields_before', array( $this, 'search_fields' ) );
 	}
 
 	public function view_admin_action( $actions, $post ) {
@@ -118,6 +120,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @param \GV\View $view The View.
 	 * @param \GV\Request $request The request.
 	 *
+	 * @return string The URL.
 	 */
 	public function entry_permalink( $permalink, $entry, $view, $request ) {
 		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
@@ -134,6 +137,70 @@ class GravityView_Admin_View extends GravityView_Extension {
 		), $url );
 
 		return $url;
+	}
+
+	/**
+	 * Filter the search action to stay in the admin.
+	 *
+	 * Called from `gravityview/widget/search/form/action` filter.
+	 *
+	 * @param string $url The URL.
+	 *
+	 * @return string The URL.
+	 */
+	public function search_action( $url ) {
+		if ( ! $request = gravityview()->request ) {
+			return $url;
+		}
+
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return $url;
+		}
+
+		if ( ! $view = $request->is_view() ) {
+			return $url;
+		}
+
+		$url = admin_url( 'edit.php' );
+
+		$url = add_query_arg( array(
+			'post_type' => 'gravityview',
+			'page' => 'adminview',
+			'id' => $view->ID,
+		), $url );
+
+		return $url;
+	}
+
+	/**
+	 * Output tracking fields as necessary to stay on the same page.
+	 *
+	 * Called via `gravityview_search_widget_fields_before` action.
+	 *
+	 * @return void
+	 */
+	public function search_fields() {
+		if ( ! $request = gravityview()->request ) {
+			return $url;
+		}
+
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return $url;
+		}
+
+		if ( ! $view = $request->is_view() ) {
+			return $url;
+		}
+
+		$args = array(
+			'post_type' => 'gravityview',
+			'page' => 'adminview',
+			'id' => $view->ID,
+		);
+
+		foreach ( $args as $field => $value ) {
+			printf( '<input type="hidden" name="%s" value="%s" />', esc_attr( $field ), esc_attr( $value ) );
+		}
 	}
 }
 
