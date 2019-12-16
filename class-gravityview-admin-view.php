@@ -25,6 +25,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 		add_action( 'gravityview_search_widget_fields_before', array( $this, 'search_fields' ) );
 
 		add_filter( 'gravityview_page_links_args', array( $this, 'page_links_args' ) );
+
+		add_filter( 'gravityview/view/links/directory', array( $this, 'directory_link' ), 10, 2 );
 	}
 
 	public function view_admin_action( $actions, $post ) {
@@ -94,7 +96,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		/** Entry */
 		if ( $entry = gravityview()->request->is_entry() ) {
-			echo $entry_renderer->render( $entry, $view, $request );
+			echo $entry_renderer->render( $entry, $view, gravityview()->request );
 		/** View */
 		} else {
 			echo $view_renderer->render( $view );
@@ -237,6 +239,40 @@ class GravityView_Admin_View extends GravityView_Extension {
 		), $url );
 
 		return $args;
+	}
+
+	/**
+	 * Global modification of the directory link in the admin.
+	 *
+	 * Called from `gravityview/view/links/directory` filter.
+	 *
+	 * @param string $link The URL.
+	 * @param \GV\Context $context The context.
+	 *
+	 * @return string The URL.
+	 */
+	public function directory_link( $link, $context ) {
+		if ( ! $request = gravityview()->request ) {
+			return $link;
+		}
+
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return $link;
+		}
+
+		if ( ! $view = $request->is_view() ) {
+			return $link;
+		}
+
+		$url = admin_url( 'edit.php' );
+
+		$url = add_query_arg( array(
+			'post_type' => 'gravityview',
+			'page' => 'adminview',
+			'id' => $view->ID,
+		), $url );
+
+		return $url;
 	}
 }
 
