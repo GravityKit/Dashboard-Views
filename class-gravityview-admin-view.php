@@ -27,6 +27,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		add_filter( 'gravityview_page_links_args', array( $this, 'page_links_args' ) );
 
 		add_filter( 'gravityview/view/links/directory', array( $this, 'directory_link' ), 10, 2 );
+		add_filter( 'gravityview/entry-list/link', array( $this, 'entry_list_link' ), 10, 3 );
 	}
 
 	public function view_admin_action( $actions, $post ) {
@@ -270,6 +271,42 @@ class GravityView_Admin_View extends GravityView_Extension {
 			'post_type' => 'gravityview',
 			'page' => 'adminview',
 			'id' => $view->ID,
+		), $url );
+
+		return $url;
+	}
+
+	/**
+	 * Output the correct link to the other entries.
+	 *
+	 * Called from the `gravityview/entry-list/link` filter.
+	 *
+	 * @param string $link The link to filter.
+	 * @param array $entry The entry.
+	 * @param \GravityView_Entry_List $list The list object.
+	 *
+	 * @return string The link.
+	 */
+	public function entry_list_link( $link, $entry, $list ) {
+		if ( ! $request = gravityview()->request ) {
+			return $link;
+		}
+
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return $link;
+		}
+
+		if ( ! $view = $request->is_view() ) {
+			return $link;
+		}
+
+		$url = admin_url( 'edit.php' );
+
+		$url = add_query_arg( array(
+			'post_type' => 'gravityview',
+			'page' => 'adminview',
+			'id' => $view->ID,
+			'entry_id' => $entry['id'],
 		), $url );
 
 		return $url;
