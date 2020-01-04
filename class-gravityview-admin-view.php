@@ -16,9 +16,18 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 	protected $_path = __FILE__;
 
+	/**
+	 * Hooks.
+	 *
+	 * Anything that relies on gravityview()->request should be
+	 * added on the `current_screen` action instead of the `admin_init` action.
+	 */
 	public function add_hooks() {
 		add_action( 'admin_menu', array( $this, 'add_submenu' ), 1 );
 		add_filter( 'post_row_actions', array( $this, 'view_admin_action' ), 10, 2 );
+
+		add_action( 'current_screen', array( $this, 'set_request' ), 1 );
+		add_action( 'current_screen', array( $this, 'maybe_delete_entry' ) );
 
 		add_filter( 'gravityview/entry/permalink', array( $this, 'entry_permalink' ), 10, 4 );
 		add_filter( 'gravityview/widget/search/form/action', array( $this, 'search_action' ) );
@@ -28,8 +37,40 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		add_filter( 'gravityview/view/links/directory', array( $this, 'directory_link' ), 10, 2 );
 		add_filter( 'gravityview/entry-list/link', array( $this, 'entry_list_link' ), 10, 3 );
+
+		add_action( 'gravityview/admin/before', array( $this, 'maybe_output_notices' ) );
 	}
 
+	/**
+	 * Set the current request to the admin request.
+	 *
+	 * Caled from current_screen action.
+	 *
+	 * @return void
+	 */
+	public function set_request() {
+		if ( ! $current_screen = get_current_screen() ) {
+			return;
+		}
+
+		if ( 'gravityview_page_adminview' !== $current_screen->id ) {
+			return;
+		}
+
+		require_once plugin_dir_path( __FILE__ ) . 'class-gravityview-admin-view-request.php';
+		gravityview()->request = new GravityView_Admin_View_Request();
+	}
+
+	/**
+	 * Output the View in Admin links in row actions.
+	 *
+	 * Called from `post_row_actions` filter.
+	 *
+	 * @param array $actions The actions.
+	 * @param WP_Post $post The post.
+	 *
+	 * @return array The actions.
+	 */
 	public function view_admin_action( $actions, $post ) {
 		if ( 'gravityview' !== get_post_type( $post ) ) {
 			return $actions;
@@ -46,6 +87,13 @@ class GravityView_Admin_View extends GravityView_Extension {
 		return $actions;
 	}
 
+	/**
+	 * Add menu option.
+	 *
+	 * Called from `admin_menu` action.
+	 *
+	 * @return void
+	 */
 	public function add_submenu() {
 
 		if( 'adminview' !== \GV\Utils::_GET( 'page' ) ) {
@@ -72,11 +120,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 */
 	public function render_screen() {
 
-		require_once plugin_dir_path( __FILE__ ) . 'class-gravityview-admin-view-request.php';
-		gravityview()->request = new GravityView_Admin_View_Request();
-
 		echo '<style> body { background:  white; } </style>';
-
 
 		if ( ! $view = gravityview()->request->is_view() ) {
 			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id = \GV\Utils::_GET( 'id' ) ) );
@@ -85,6 +129,12 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 			return;
 		}
+
+		/**
+		 * @filter `gravityview/admin/before` Before the admin renders.
+		 * @param \GV\View $view The View.
+		 */
+		do_action( 'gravityview/admin/before', $view );
 
 		$view_renderer = new \GV\View_Renderer();
 		$entry_renderer = new \GV\Entry_Renderer();
@@ -211,7 +261,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	/**
 	 * Fix pagination links.
 	 *
-	 * Called from `gravityview_page_links_args` filter
+	 * Called from `gravityview_page_links_args` filter.
 	 *
 	 * @param array $args The paginate_links arguments.
 	 *
@@ -310,6 +360,38 @@ class GravityView_Admin_View extends GravityView_Extension {
 		), $url );
 
 		return $url;
+	}
+
+	/**
+	 * Kick off notice sequences. Perhaps...
+	 *
+	 * Called from `gravityview/admin/before` action.
+	 *
+	 * @param \GV\View $view The View.
+	 *
+	 * @return void
+	 */
+	public function maybe_output_notices( $view ) {
+		GravityView_Delete_Entry::getInstance()->display_message( $view->ID );
+	}
+
+	/** 
+	 * Kick off delete sequences. Perhaps...
+	 *
+	 * Called from `admin_init` action.
+	 *
+	 * @return void
+	 */
+	public function maybe_delete_entry() {
+		if ( ! $request = gravityview()->request ) {
+			return;
+		}
+
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return;
+		}
+
+		GravityView_Delete_Entry::getInstance()->process_delete();
 	}
 }
 
