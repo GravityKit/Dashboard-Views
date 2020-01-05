@@ -27,7 +27,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		add_filter( 'post_row_actions', array( $this, 'view_admin_action' ), 10, 2 );
 
 		add_action( 'current_screen', array( $this, 'set_request' ), 1 );
-		add_action( 'current_screen', array( $this, 'maybe_delete_entry' ) );
+		add_action( 'current_screen', array( $this, 'process_entry' ) );
 
 		add_filter( 'gravityview/entry/permalink', array( $this, 'entry_permalink' ), 10, 4 );
 		add_filter( 'gravityview/widget/search/form/action', array( $this, 'search_action' ) );
@@ -38,7 +38,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		add_filter( 'gravityview/view/links/directory', array( $this, 'directory_link' ), 10, 2 );
 		add_filter( 'gravityview/entry-list/link', array( $this, 'entry_list_link' ), 10, 3 );
 
-		add_action( 'gravityview/admin/before', array( $this, 'maybe_output_notices' ) );
+		add_action( 'gravityview_before', array( $this, 'maybe_output_notices' ) );
 	}
 
 	/**
@@ -372,17 +372,18 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return void
 	 */
 	public function maybe_output_notices( $view ) {
-		GravityView_Delete_Entry::getInstance()->display_message( $view->ID );
+		GravityView_Delete_Entry::getInstance()->display_message();
+		GravityView_Duplicate_Entry::getInstance()->display_message();
 	}
 
 	/** 
-	 * Kick off delete sequences. Perhaps...
+	 * Kick off delete/duplicate sequences. Perhaps...
 	 *
-	 * Called from `admin_init` action.
+	 * Called from `current_screen` action.
 	 *
 	 * @return void
 	 */
-	public function maybe_delete_entry() {
+	public function process_entry() {
 		if ( ! $request = gravityview()->request ) {
 			return;
 		}
@@ -392,6 +393,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		}
 
 		GravityView_Delete_Entry::getInstance()->process_delete();
+		GravityView_Duplicate_Entry::getInstance()->process_duplicate();
 	}
 }
 
