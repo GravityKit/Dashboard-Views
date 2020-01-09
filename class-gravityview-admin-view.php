@@ -120,7 +120,11 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 */
 	public function render_screen() {
 
-		echo '<style> body { background:  white; } </style>';
+		echo '
+		<style> 
+			body { background:  white; }
+			.update-nag { display: none; } 
+		</style>';
 
 		if ( ! $view = gravityview()->request->is_view() ) {
 			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id = \GV\Utils::_GET( 'id' ) ) );
@@ -148,7 +152,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		/** Entry */
 		if ( $entry = gravityview()->request->is_entry() ) {
 			echo $entry_renderer->render( $entry, $view, gravityview()->request );
-		/** View */
+			/** View */
 		} else {
 			echo $view_renderer->render( $view );
 		}
@@ -376,7 +380,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		GravityView_Duplicate_Entry::getInstance()->display_message();
 	}
 
-	/** 
+	/**
 	 * Kick off delete/duplicate sequences. Perhaps...
 	 *
 	 * Called from `current_screen` action.
