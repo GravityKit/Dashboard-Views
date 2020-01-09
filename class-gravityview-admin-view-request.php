@@ -54,4 +54,21 @@ class GravityView_Admin_View_Request extends \GV\Request {
 
 		return \GV\GF_Entry::by_id( \GV\Utils::_GET( 'entry_id' ) );
 	}
+
+	/**
+	 * Is this an edit entry?
+	 *
+	 * @return bool Yes?
+	 */
+	public function is_edit_entry( $form_id = 0 ) {
+		if ( ! $entry = $this->is_entry( $form_id ) ) {
+			return false;
+		}
+
+		if ( empty( $_GET['edit'] ) ) {
+			return false;
+		}
+
+		return true;
+	}
 }

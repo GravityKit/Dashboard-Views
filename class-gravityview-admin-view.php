@@ -37,6 +37,9 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		add_filter( 'gravityview/view/links/directory', array( $this, 'directory_link' ), 10, 2 );
 		add_filter( 'gravityview/entry-list/link', array( $this, 'entry_list_link' ), 10, 3 );
+		add_filter( 'gravityview/edit/link', array( $this, 'edit_entry_link' ), 10, 3 );
+
+		add_filter( 'gravityview/edit_entry/success', array( $this, 'edit_entry_success' ), 10, 4 );
 
 		add_action( 'gravityview_before', array( $this, 'maybe_output_notices' ) );
 	}
@@ -138,6 +141,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		$view_renderer = new \GV\View_Renderer();
 		$entry_renderer = new \GV\Entry_Renderer();
+		$edit_renderer = new \GV\Edit_Entry_Renderer();
 
 		if ( ! class_exists( 'GravityView_View' ) ) {
 			gravityview()->plugin->include_legacy_frontend( true );
@@ -145,8 +149,11 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		echo '<div class="wrap">';
 
+		/** Edit */
+		if ( gravityview()->request->is_edit_entry() ) {
+			echo $edit_renderer->render( gravityview()->request->is_entry(), $view, gravityview()->request );
 		/** Entry */
-		if ( $entry = gravityview()->request->is_entry() ) {
+		} elseif ( $entry = gravityview()->request->is_entry() ) {
 			echo $entry_renderer->render( $entry, $view, gravityview()->request );
 		/** View */
 		} else {
@@ -360,6 +367,55 @@ class GravityView_Admin_View extends GravityView_Extension {
 		), $url );
 
 		return $url;
+	}
+
+	/**
+	 * Output the correct edit entry link.
+	 *
+	 * Called from the `gravityview/edit/link` filter.
+	 *
+	 * @param string $url The link.
+	 * @param array $entry The entry.
+	 * @param \GV\View $view The View.
+	 *
+	 * @return string The corrected link.
+	 */
+	public function edit_entry_link( $url, $entry, $view ) {
+		if ( ! $request = gravityview()->request ) {
+			return $url;
+		}
+
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return $url;
+		}
+
+		$url = admin_url( 'edit.php' );
+
+		$url = add_query_arg( array(
+			'post_type' => 'gravityview',
+			'page' => 'adminview',
+			'id' => $view->ID,
+			'entry_id' => $entry['id'],
+			'edit' => wp_create_nonce( GravityView_Edit_Entry::get_nonce_key( $view->ID, $entry['form_id'], $entry['id'] ) ),
+		), $url );
+
+		return $url;
+	}
+
+	/**
+	 * Fix the edit entry success message correctly.
+	 *
+	 * Called from the `gravityview/edit_entry/success` filter.
+	 *
+	 * @param string $message The message.
+	 * @param int $view_id The View ID.
+	 * @param array $entry The entry.
+	 * @param string $back_link The return URL.
+	 *
+	 * @return string The fixed success message.
+	 */
+	public function edit_entry_success( $message, $view_id, $entry, $back_link ) {
+		return str_replace( 'edit.php?post_type', 'edit.php?page=adminview&post_type', $message );
 	}
 
 	/**
