@@ -29,6 +29,10 @@ class GravityView_Admin_View extends GravityView_Extension {
 		add_action( 'current_screen', array( $this, 'set_request' ), 1 );
 		add_action( 'current_screen', array( $this, 'process_entry' ) );
 
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'gravityview_noconflict_scripts', array( $this, 'noconflict_scripts' ) );
+		add_action( 'gravityview_noconflict_styles', array( $this, 'noconflict_styles' ) ); 
+
 		add_filter( 'gravityview/entry/permalink', array( $this, 'entry_permalink' ), 10, 4 );
 		add_filter( 'gravityview/widget/search/form/action', array( $this, 'search_action' ) );
 		add_action( 'gravityview_search_widget_fields_before', array( $this, 'search_fields' ) );
@@ -62,6 +66,86 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		require_once plugin_dir_path( __FILE__ ) . 'class-gravityview-admin-view-request.php';
 		gravityview()->request = new GravityView_Admin_View_Request();
+	}
+
+	/**
+	 * A small `$request->is_admin_view()` proxy.
+	 *
+	 * @return \GV\GravityView_Admin_View_Request|null
+	 */
+	public function is_admin_view() {
+		if ( ! $request = gravityview()->request ) {
+			return null;
+		}
+
+		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+			return null;
+		}
+
+		return $request;
+	}
+
+	/**
+	 * Equeue required scripts sometimes.
+	 *
+	 * Called from the `admin_enqueue_scripts` action.
+	 *
+	 * @return void
+	 */
+	public function enqueue_scripts() {
+		if ( ! $this->is_admin_view() ) {
+			return;
+		}
+
+		$approval_field = \GravityView_Fields::get_instance( 'entry_approval' );
+		$approval_field->register_scripts_and_styles();
+	}
+
+	/**
+	 * Scripts to load on the admin interface.
+	 *
+	 * Called via the `gravityview_noconflict_scripts` filter.
+	 *
+	 * @param array $handles The script handles safelist.
+	 *
+	 * @return array The allowed handles.
+	 */
+	public function noconflict_scripts( $handles ) {
+		if ( ! $this->is_admin_view() ) {
+			return $handles;
+		}
+
+		$handles = array_merge( $handles, array(
+			// Approval
+			'gravityview-field-approval',
+			'gravityview-field-approval-tippy',
+			'gravityview-field-approval-popper',
+		) );
+
+		return $handles;
+	}
+
+	/**
+	 * Styles to load on the admin interface.
+	 *
+	 * Called via the `gravityview_noconflict_styles` filter.
+	 *
+	 * @param array $handles The style handles safelist.
+	 *
+	 * @return array The allowed handles.
+	 */
+	public function noconflict_styles( $handles ) {
+		if ( ! $this->is_admin_view() ) {
+			return $handles;
+		}
+
+		$handles = array_merge( $handles, array(
+			// Approval
+			'gravityview-field-approval',
+			'gravityview-field-approval-tippy',
+		) );
+
+		return $handles;
 	}
 
 	/**
@@ -215,12 +299,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return string The URL.
 	 */
 	public function search_action( $url ) {
-		if ( ! $request = gravityview()->request ) {
-			return $url;
-		}
-
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
-			return $url;
+		if ( ! $request = $this->is_admin_view() ) {
+			return;
 		}
 
 		if ( ! $view = $request->is_view() ) {
@@ -246,11 +326,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return void
 	 */
 	public function search_fields() {
-		if ( ! $request = gravityview()->request ) {
-			return;
-		}
-
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+		if ( ! $request = $this->is_admin_view() ) {
 			return;
 		}
 
@@ -279,11 +355,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return array $args The arguments.
 	 */
 	public function page_links_args( $args ) {
-		if ( ! $request = gravityview()->request ) {
-			return $args;
-		}
-
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+		if ( ! $request = $this->is_admin_view() ) {
 			return $args;
 		}
 
@@ -314,11 +386,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return string The URL.
 	 */
 	public function directory_link( $link, $context ) {
-		if ( ! $request = gravityview()->request ) {
-			return $link;
-		}
-
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+		if ( ! $request = $this->is_admin_view() ) {
 			return $link;
 		}
 
@@ -349,11 +417,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return string The link.
 	 */
 	public function entry_list_link( $link, $entry, $list ) {
-		if ( ! $request = gravityview()->request ) {
-			return $link;
-		}
-
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+		if ( ! $request = $this->is_admin_view() ) {
 			return $link;
 		}
 
@@ -385,11 +449,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return string The corrected link.
 	 */
 	public function edit_entry_link( $url, $entry, $view ) {
-		if ( ! $request = gravityview()->request ) {
-			return $url;
-		}
-
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+		if ( ! $request = $this->is_admin_view() ) {
 			return $url;
 		}
 
@@ -444,11 +504,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return void
 	 */
 	public function process_entry() {
-		if ( ! $request = gravityview()->request ) {
-			return;
-		}
-
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+		if ( ! $request = $this->is_admin_view() ) {
 			return;
 		}
 
