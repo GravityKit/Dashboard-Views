@@ -97,8 +97,24 @@ class GravityView_Admin_View extends GravityView_Extension {
 			return;
 		}
 
+		// Add approval scripts and styles
 		$approval_field = \GravityView_Fields::get_instance( 'entry_approval' );
 		$approval_field->register_scripts_and_styles();
+
+		// Add notes scripts and styles
+		global $wp_filter;
+		if ( $enqueue_scripts = $wp_filter['wp_enqueue_scripts'] ) {
+			// @todo Do this the getInstance() way or something, or convert the method to static
+			if ( $enqueue_scripts->callbacks['10'] ) {
+				foreach ( $enqueue_scripts->callbacks['10'] as $id => $callback ) {
+					if ( strpos( $id, 'register_scripts' ) && is_array( $callback['function'] ) ) {
+						if ( $callback['function'][0] instanceof GravityView_Field_Notes ) {
+							call_user_func( $callback['function'] );
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -120,6 +136,9 @@ class GravityView_Admin_View extends GravityView_Extension {
 			'gravityview-field-approval',
 			'gravityview-field-approval-tippy',
 			'gravityview-field-approval-popper',
+
+			// Notes
+			'gravityview-notes'
 		) );
 
 		return $handles;
@@ -143,6 +162,9 @@ class GravityView_Admin_View extends GravityView_Extension {
 			// Approval
 			'gravityview-field-approval',
 			'gravityview-field-approval-tippy',
+
+			// Notes
+			'gravityview-notes'
 		) );
 
 		return $handles;
