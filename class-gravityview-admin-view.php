@@ -185,16 +185,17 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return void
 	 */
 	public function search_fields() {
+
 		if ( ! $request = gravityview()->request ) {
-			return $url;
+			return;
 		}
 
 		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
-			return $url;
+			return;
 		}
 
 		if ( ! $view = $request->is_view() ) {
-			return $url;
+			return;
 		}
 
 		$args = array(
