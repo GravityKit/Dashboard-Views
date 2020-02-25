@@ -26,7 +26,7 @@ class GravityView_Admin_View_Request extends \GV\Request {
 	 * The current screen is an Admin View.
 	 */
 	public function is_admin_view() {
-		return $this->is_admin() && true /** @todo current_screen */;
+		return $this->is_admin() && 'adminview' === \GV\Utils::_GET( 'page' ) /** @todo current_screen */;
 	}
 
 	/**
