@@ -39,7 +39,7 @@ class GravityView_Admin_View_Request extends \GV\Request {
 			return false;
 		}
 
-		return \GV\View::by_id( \GV\Utils::_GET( 'id' ) );
+		return \GV\View::by_id( \GV\Utils::_GET( 'gvid' ) );
 	}
 
 	/**

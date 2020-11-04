@@ -189,7 +189,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		$actions['adminview'] = sprintf(
 			'<a href="%s">%s</a>',
-			esc_url( add_query_arg( 'id', urlencode( $post->ID ), $action_link ) ),
+			esc_url( add_query_arg( 'gvid', urlencode( $post->ID ), $action_link ) ),
 			__( 'View in Admin', 'gravityview-adminview' )
 		);
 
@@ -207,7 +207,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		if( 'adminview' !== \GV\Utils::_GET( 'page' ) ) {
 			return;
-		} elseif ( ! isset( $_GET['id'] ) ) {
+		} elseif ( ! isset( $_GET['gvid'] ) ) {
 			wp_safe_redirect( admin_url( 'edit.php?post_type=gravityview' ) );
 			exit();
 		}
@@ -236,7 +236,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		</style>';
 
 		if ( ! $view = gravityview()->request->is_view() ) {
-			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id = \GV\Utils::_GET( 'id' ) ) );
+			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id = \GV\Utils::_GET( 'gvid' ) ) );
 
 			printf( '<h1>%s</h1>', sprintf( esc_html__( 'View #%s not found.', 'gravityview-admin' ), intval( $view_id ) ) );
 
@@ -282,6 +282,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 		wp_print_styles();
 	}
 
+
+
 	/**
 	 * Filter the entry permalink to lead to the Admin View page.
 	 *
@@ -304,7 +306,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
 			'page' => 'adminview',
-			'id' => $view->ID,
+			'gvid' => \GV\Utils::get( $view, 'ID', \GV\Utils::_GET( 'gvid' ) ),
 			'entry_id' => $entry->ID,
 		), $url );
 
@@ -334,7 +336,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
 			'page' => 'adminview',
-			'id' => $view->ID,
+			'gvid' => $view->ID,
 		), $url );
 
 		return $url;
@@ -360,7 +362,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		$args = array(
 			'post_type' => 'gravityview',
 			'page' => 'adminview',
-			'id' => $view->ID,
+			'gvid' => $view->ID,
 		);
 
 		foreach ( $args as $field => $value ) {
@@ -392,7 +394,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 			'pagenum' => '%#%',
 			'post_type' => 'gravityview',
 			'page' => 'adminview',
-			'id' => $view->ID,
+			'gvid' => $view->ID,
 		), $url );
 
 		return $args;
@@ -422,7 +424,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
 			'page' => 'adminview',
-			'id' => $view->ID,
+			'gvid' => $view->ID,
 		), $url );
 
 		return $url;
@@ -481,7 +483,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
 			'page' => 'adminview',
-			'id' => $view->ID,
+			'gvid' => $view->ID,
 			'entry_id' => $entry['id'],
 			'edit' => wp_create_nonce( GravityView_Edit_Entry::get_nonce_key( $view->ID, $entry['form_id'], $entry['id'] ) ),
 		), $url );
