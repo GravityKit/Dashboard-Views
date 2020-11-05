@@ -48,6 +48,27 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		add_action( 'gravityview_before', array( $this, 'maybe_output_notices' ) );
 
+		// Ratings & Reviews relies on priority 15
+		add_action( 'gravityview_after', array( $this, 'set_post_global' ), -100 );
+		add_action( 'gravityview_after', array( $this, 'unset_post_global' ), 10000 );
+
+		if ( class_exists( 'GV_Extension_DataTables' ) ) {
+			// Support DataTables
+			add_action( 'gravityview/template/after', array( $this, 'set_post_global' ), -100 );
+			add_action( 'admin_enqueue_scripts', array( $this, 'set_post_global' ), -100 );
+			add_action( 'gravityview/template/after', array( $this, 'unset_post_global' ), 10000 );
+			add_action( 'admin_enqueue_scripts', array( $this, 'unset_post_global' ), 1000 );
+
+			$GV_Extension_DataTables = new GV_Extension_DataTables;
+
+			// load DataTables core logic
+			$GV_Extension_DataTables->core_actions();
+
+			$DT = new GV_Extension_DataTables_Data();
+			add_action( 'admin_enqueue_scripts', array( $DT, 'add_scripts_and_styles' ) );
+		}
+
+	}
 
 	/**
 	 * Modify the links shown in the Connected Form links in the Data Source box
@@ -75,6 +96,43 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		return true;
 	}
+
+	/**
+	 * Set the $post global in the admin screen
+	 *
+	 * @global \WP_Post|null $post
+	 *
+	 * @param int|\GV\View $view View being rendered
+	 */
+	public function set_post_global( $view = 0 ) {
+
+		if ( ! $this->is_admin_view_request() ) {
+			return;
+		}
+
+		global $post;
+
+		if ( $post ) {
+			return;
+		}
+
+		$backup_view_id = $view instanceof \GV\View ? $view->ID : $view;
+
+		$post = get_post( \GV\Utils::_GET( 'gvid', $backup_view_id ) );
+	}
+
+	/**
+	 * @param int|\GV\View $view View being rendered
+	 */
+	public function unset_post_global( $view ) {
+
+		if ( ! $this->is_admin_view_request() ) {
+			return;
+		}
+
+		global $post;
+
+		$post = null;
 	}
 
 	/**
