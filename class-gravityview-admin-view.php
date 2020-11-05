@@ -23,6 +23,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * added on the `current_screen` action instead of the `admin_init` action.
 	 */
 	public function add_hooks() {
+
 		add_action( 'admin_menu', array( $this, 'add_submenu' ), 1 );
 		add_filter( 'post_row_actions', array( $this, 'view_admin_action' ), 10, 2 );
 
@@ -45,6 +46,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		add_filter( 'gravityview/edit_entry/success', array( $this, 'edit_entry_success' ), 10, 4 );
 		add_filter( 'gravityview_connected_form_links', array( $this, 'add_data_source_link' ), 20, 2 );
+
+		$this->load_legacy();
 
 		add_action( 'gravityview_before', array( $this, 'maybe_output_notices' ) );
 
@@ -631,6 +634,17 @@ class GravityView_Admin_View extends GravityView_Extension {
 	public function maybe_output_notices( $view ) {
 		GravityView_Delete_Entry::getInstance()->display_message();
 		GravityView_Duplicate_Entry::getInstance()->display_message();
+	}
+
+	/**
+	 * Prevent fatal error "GravityView_View not found" in gravityview/includes/class-frontend-views.php on line 1170
+	 */
+	public function load_legacy() {
+
+		// GravityView_View not loaded in AJAX, but used by GravityView_Edit_Entry
+		if ( ! class_exists( 'GravityView_View' ) && ! class_exists( '\GravityView_View' ) && defined('GRAVITYVIEW_DIR') ) {
+			include_once( GRAVITYVIEW_DIR .'includes/class-template.php' );
+		}
 	}
 
 	/**
