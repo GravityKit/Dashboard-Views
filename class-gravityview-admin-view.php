@@ -44,8 +44,24 @@ class GravityView_Admin_View extends GravityView_Extension {
 		add_filter( 'gravityview/edit/link', array( $this, 'edit_entry_link' ), 10, 3 );
 
 		add_filter( 'gravityview/edit_entry/success', array( $this, 'edit_entry_success' ), 10, 4 );
+		add_filter( 'gravityview_connected_form_links', array( $this, 'add_data_source_link' ), 20, 2 );
 
 		add_action( 'gravityview_before', array( $this, 'maybe_output_notices' ) );
+
+
+	/**
+	 * Modify the links shown in the Connected Form links in the Data Source box
+	 *
+	 * @param array $links Links to show
+	 * @param array $form Gravity Forms form array
+	 */
+	public function add_data_source_link( $links, $form = array() ) {
+		global $post;
+
+		$links[] = $this->get_admin_link( $post->ID );
+
+		return $links;
+	}
 
 	private function is_admin_view_request() {
 
@@ -200,15 +216,20 @@ class GravityView_Admin_View extends GravityView_Extension {
 			return $actions;
 		}
 
-		$action_link = add_query_arg( 'page', 'adminview', admin_url( 'edit.php?post_type=gravityview' ) );
-
-		$actions['adminview'] = sprintf(
-			'<a href="%s">%s</a>',
-			esc_url( add_query_arg( 'gvid', urlencode( $post->ID ), $action_link ) ),
-			__( 'View in Admin', 'gravityview-adminview' )
-		);
+		$actions['adminview'] = $this->get_admin_link( $post->ID );
 
 		return $actions;
+	}
+
+	private function get_admin_link( $view_id = 0 ) {
+
+		$base = add_query_arg( 'page', 'adminview', admin_url( 'edit.php?post_type=gravityview' ) );
+
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( add_query_arg( 'gvid', urlencode( $view_id ), $base ) ),
+			__( 'View in Admin', 'gravityview-adminview' )
+		);
 	}
 
 	/**
