@@ -620,55 +620,6 @@ class GravityView_Admin_View extends GravityView_Extension {
 	}
 
 	/**
-	 * Convert the Edit Entry link to use Gravity Forms' Edit Entry
-	 *
-	 * @param string $url The url.
-	 * @param array $entry The entry.
-	 * @param \GV\View $view The View.
-	 */
-	public function edit_entry_link( $url, array $entry, \GV\View $view ) {
-
-		if ( ! $this->is_admin_view_request() ) {
-			return $url;
-		}
-
-		// If use GF admin URL:
-		$use_admin = apply_filters( 'gravityview/adminview/use-gf-edit-entry', true, $url, $entry, $view );
-
-		if( true == $use_admin ) {
-			$params = array(
-				'page'        => 'gf_entries',
-				'view'        => 'entry',
-				'id'          => $entry['form_id'],
-				'lid'         => $entry['id'],
-				'screen_mode' => 'edit',
-			);
-
-			return esc_url( add_query_arg( $params, admin_url( 'admin.php?page=gf_entries' ) ) );
-		}
-
-		$view_id = \GV\Utils::get( $view, 'ID', \GV\Utils::_GET( 'gvid' ) );
-
-		$nonce_key = GravityView_Edit_Entry::get_nonce_key( $view_id, $entry['form_id'], $entry['id'] );
-
-		$base = GravityView_API::entry_link( $entry, $view_id );
-
-		$gv_entry = \GV\GF_Entry::from_entry( $entry );
-
-		$query_arg_name = \GV\Entry::get_endpoint_name();
-
-		if ( ! $gv_entry ) {
-			return null; // TODO: ERROR
-		}
-
-		$url = add_query_arg( array(
-			'edit' => wp_create_nonce( $nonce_key )
-		), get_permalink( $view_id ) . trailingslashit( $query_arg_name ) . trailingslashit( $gv_entry->get_slug() ) );
-
-		return $url;
-	}
-
-	/**
 	 * Kick off notice sequences. Perhaps...
 	 *
 	 * Called from `gravityview/admin/before` action.
