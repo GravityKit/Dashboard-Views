@@ -71,9 +71,13 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 			/**
 			 * `GravityView_Template` class isn't loaded in the admin; CSS files won't get called
-			 *  We need to manually enqueue them for now.
+			 *  We need to manually enqueue CSS for now.
 			 */
-			add_action( 'admin_enqueue_scripts', function() {
+			add_action( 'gravityview/template/before', function( $gravityview ) {
+
+				if( 'datatables_table' !== $gravityview->view->settings->get('template') ) {
+					return;
+				}
 
 				$datatables_css_url = apply_filters( 'gravityview_datatables_style_src', plugins_url( 'assets/css/datatables.css', GV_DT_FILE ) );
 
