@@ -9,13 +9,17 @@
  * Domain Path: /languages/
  */
 
-add_action( 'gform_loaded', 'gv_extension_adminview_load' );
+add_action( 'plugins_loaded', 'gv_extension_adminview_load', 100 );
 
 /**
  * Wrapper function to make sure GravityView_Extension has loaded
  * @return void
  */
 function gv_extension_adminview_load() {
+
+	if ( ! class_exists( 'GFAPI' ) ) {
+		return;
+	}
 
 	if ( ! class_exists( 'GravityView_Extension' ) ) {
 
