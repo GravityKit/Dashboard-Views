@@ -325,9 +325,16 @@ class GravityView_Admin_View extends GravityView_Extension {
 			exit();
 		}
 
+		$view = get_post( $_GET['gvid'] );
+
+		if ( ! $view ) {
+			wp_safe_redirect( admin_url( 'edit.php?post_type=gravityview' ) );
+			exit();
+		}
+
 		add_submenu_page(
 			'edit.php?post_type=gravityview',
-			__( 'Admin View', 'gravityview-presets' ),
+			sprintf( __( '%s &lsaquo; Admin View', 'gravityview-presets' ), $view->post_title ),
 			__( 'Admin View', 'gravityview-presets' ),
 			'manage_options',
 			'adminview',
