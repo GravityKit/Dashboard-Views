@@ -10,7 +10,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	/**
 	 * @var int The download ID on gravityview.co
 	 */
-	protected $_item_id = 999999; // FIX ME!
+	protected $_item_id = 672171;
 
 	protected $_min_gravityview_version = '2.3';
 
