@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GravityView - Views in Dashboard
  * Description: Show Views in the WordPress Dashboard
- * Version: develop
+ * Version: 1.0
  * Author: GravityView
  * Author URI: https://gravityview.co
  * Text Domain: gravityview-adminview

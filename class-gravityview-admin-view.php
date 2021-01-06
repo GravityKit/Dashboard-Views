@@ -1,5 +1,5 @@
 <?php
-class GravityView_Admin_View extends GravityView_Extension {
+class GravityView_Admin_View extends \GV\Extension {
 
 	protected $_title = 'Dashboard Views';
 
@@ -202,6 +202,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
+
 		if ( ! $this->is_admin_view() ) {
 			return;
 		}
@@ -652,7 +653,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	/**
 	 * Prevent fatal error "GravityView_View not found" in gravityview/includes/class-frontend-views.php on line 1170
 	 */
-	public function load_legacy() {
+	private function load_legacy() {
 
 		// GravityView_View not loaded in AJAX, but used by GravityView_Edit_Entry
 		if ( ! class_exists( 'GravityView_View' ) && ! class_exists( '\GravityView_View' ) && defined('GRAVITYVIEW_DIR') ) {
