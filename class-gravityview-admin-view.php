@@ -102,19 +102,6 @@ class GravityView_Admin_View extends GravityView_Extension {
 		return $links;
 	}
 
-	private function is_admin_view_request() {
-
-		if ( ! $request = gravityview()->request ) {
-			return false;
-		}
-
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
-			return false;
-		}
-
-		return true;
-	}
-
 	/**
 	 * Set the $post global in the admin screen
 	 *
@@ -124,7 +111,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 */
 	public function set_post_global( $view = 0 ) {
 
-		if ( ! $this->is_admin_view_request() ) {
+		if ( ! $this->is_admin_view() ) {
 			return;
 		}
 
@@ -144,7 +131,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 */
 	public function unset_post_global( $view ) {
 
-		if ( ! $this->is_admin_view_request() ) {
+		if ( ! $this->is_admin_view() ) {
 			return;
 		}
 
@@ -162,22 +149,21 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 */
 	public function set_request() {
 
-		if ( ! $current_screen = get_current_screen() ) {
-			return;
-		}
-
-		if ( 'gravityview_page_adminview' !== $current_screen->id ) {
-			return;
-		}
-
 		require_once plugin_dir_path( __FILE__ ) . 'class-gravityview-admin-view-request.php';
-		gravityview()->request = new GravityView_Admin_View_Request();
+
+		$admin_request = new GravityView_Admin_View_Request();
+
+		if ( ! $admin_request->is_admin_view() ) {
+			return;
+		}
+
+		gravityview()->request = $admin_request;
 	}
 
 	/**
 	 * A small `$request->is_admin_view()` proxy.
 	 *
-	 * @return \GV\GravityView_Admin_View_Request|null
+	 * @return null|false|GravityView_Admin_View_Request null: Not GV request. false: Not an Admin View request. Otherwise, returns Admin View request.
 	 */
 	public function is_admin_view() {
 
@@ -186,7 +172,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 		}
 
 		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
-			return null;
+			return false;
 		}
 
 		return $request;

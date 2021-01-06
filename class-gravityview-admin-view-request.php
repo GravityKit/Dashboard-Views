@@ -24,9 +24,58 @@ class GravityView_Admin_View_Request extends \GV\Request {
 
 	/**
 	 * The current screen is an Admin View.
+	 *
+	 * @return bool
 	 */
 	public function is_admin_view() {
-		return $this->is_admin() && 'adminview' === \GV\Utils::_GET( 'page' ) /** @todo current_screen */;
+		global $current_screen;
+
+		if ( $current_screen && ! $current_screen = get_current_screen() ) {
+			return false;
+		}
+
+		if ( $current_screen && 'gravityview_page_adminview' !== $current_screen->id ) {
+			return false;
+		}
+
+		if ( $this->doing_datatables_ajax_request() ) {
+			return true;
+		}
+
+		return $this->is_admin() && 'adminview' === \GV\Utils::_GET( 'page' );
+	}
+
+
+	/**
+	 * Checks whether we're in a DT AJAX request
+	 *
+	 * @since 1.0
+	 *
+	 * @return bool True: We're inside a DataTables request in an admin View. False: We're not!
+	 */
+	private function doing_datatables_ajax_request() {
+
+		$datatables_get_data = \GV\Utils::_REQUEST( 'getData', null );
+
+		if ( ! $datatables_get_data ) {
+			return false;
+		}
+
+		$datatables_get_data = json_decode( stripslashes( $datatables_get_data ), true );
+
+		if ( 'gravityview' !== \GV\Utils::get( $datatables_get_data, 'post_type' ) ) {
+			return false;
+		}
+
+		if ( 'adminview' !== \GV\Utils::get( $datatables_get_data, 'page' ) ) {
+			return false;
+		}
+
+		if ( ! \GV\Utils::get( $datatables_get_data, 'gvid' ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
