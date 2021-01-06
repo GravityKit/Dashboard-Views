@@ -3,7 +3,7 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 	protected $_title = 'Dashboard Views';
 
-	protected $_version = 'develop';
+	protected $_version = GV_ADMIN_VIEWS_VERSION;
 
 	protected $_text_domain = 'gravityview-adminview';
 

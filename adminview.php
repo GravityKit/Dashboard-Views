@@ -9,6 +9,11 @@
  * Domain Path: /languages/
  */
 
+/**
+ * The plugin version.
+ */
+define( 'GV_ADMIN_VIEWS_VERSION', '1.0' );
+
 add_action( 'plugins_loaded', 'gv_extension_adminview_load', 100 );
 
 /**
