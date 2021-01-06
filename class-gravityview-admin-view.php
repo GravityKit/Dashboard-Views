@@ -71,6 +71,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 	 */
 	private function add_datatables_hooks() {
 
+		add_action( 'wp_ajax_nopriv_gv_datatables_data', array( $this, 'set_request' ), 1 );
+		add_action( 'wp_ajax_gv_datatables_data', array( $this, 'set_request' ), 1 );
 		add_action( 'gravityview/template/after', array( $this, 'set_post_global' ), -100 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_post_global' ), -100 );
 		add_action( 'gravityview/template/after', array( $this, 'unset_post_global' ), 10000 );
