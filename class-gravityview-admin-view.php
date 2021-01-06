@@ -14,6 +14,8 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 	protected $_min_gravityview_version = '2.3';
 
+	protected $_min_php_version = '5.3';
+
 	protected $_path = __FILE__;
 
 	/**
