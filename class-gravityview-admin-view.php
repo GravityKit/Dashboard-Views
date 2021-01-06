@@ -57,35 +57,47 @@ class GravityView_Admin_View extends GravityView_Extension {
 
 		// Support DataTables
 		if ( class_exists( 'GV_Extension_DataTables' ) ) {
-			add_action( 'gravityview/template/after', array( $this, 'set_post_global' ), -100 );
-			add_action( 'admin_enqueue_scripts', array( $this, 'set_post_global' ), -100 );
-			add_action( 'gravityview/template/after', array( $this, 'unset_post_global' ), 10000 );
-			add_action( 'admin_enqueue_scripts', array( $this, 'unset_post_global' ), 1000 );
-
-			// load DataTables core logic, not normally loaded in admin
-			$GV_Extension_DataTables = new GV_Extension_DataTables;
-			$GV_Extension_DataTables->core_actions();
-
-			$DT = new GV_Extension_DataTables_Data();
-			add_action( 'admin_enqueue_scripts', array( $DT, 'add_scripts_and_styles' ) );
-
-			/**
-			 * `GravityView_Template` class isn't loaded in the admin; CSS files won't get called
-			 *  We need to manually enqueue CSS for now.
-			 */
-			add_action( 'gravityview/template/before', function( $gravityview ) {
-
-				if( 'datatables_table' !== $gravityview->view->settings->get('template') ) {
-					return;
-				}
-
-				$datatables_css_url = apply_filters( 'gravityview_datatables_style_src', plugins_url( 'assets/css/datatables.css', GV_DT_FILE ) );
-
-				wp_enqueue_style( 'gravityview_style_datatables_table', $datatables_css_url );
-
-			}, 100 );
+			$this->add_datatables_hooks();
 		}
 
+	}
+
+	/**
+	 * Adds hooks specific to DataTables
+	 *
+	 * @since 1.0
+	 *
+	 * @return void
+	 */
+	private function add_datatables_hooks() {
+
+		add_action( 'gravityview/template/after', array( $this, 'set_post_global' ), -100 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'set_post_global' ), -100 );
+		add_action( 'gravityview/template/after', array( $this, 'unset_post_global' ), 10000 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'unset_post_global' ), 10000 );
+
+		// load DataTables core logic, not normally loaded in admin
+		$GV_Extension_DataTables = new GV_Extension_DataTables;
+		$GV_Extension_DataTables->core_actions();
+
+		$DT = new GV_Extension_DataTables_Data();
+		add_action( 'admin_enqueue_scripts', array( $DT, 'add_scripts_and_styles' ) );
+
+		/**
+		 * `GravityView_Template` class isn't loaded in the admin; CSS files won't get called
+		 *  We need to manually enqueue CSS for now.
+		 */
+		add_action( 'gravityview/template/before', function( $gravityview ) {
+
+			if( 'datatables_table' !== $gravityview->view->settings->get('template') ) {
+				return;
+			}
+
+			$datatables_css_url = apply_filters( 'gravityview_datatables_style_src', plugins_url( 'assets/css/datatables.css', GV_DT_FILE ) );
+
+			wp_enqueue_style( 'gravityview_style_datatables_table', $datatables_css_url );
+
+		}, 100 );
 	}
 
 	/**
