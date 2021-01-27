@@ -53,28 +53,7 @@ class GravityView_Dashboard_Views_Request extends \GV\Request {
 	 * @return bool True: We're inside a DataTables request in an admin View. False: We're not!
 	 */
 	private function doing_datatables_ajax_request() {
-
-		$datatables_get_data = \GV\Utils::_REQUEST( 'getData', null );
-
-		if ( ! $datatables_get_data ) {
-			return false;
-		}
-
-		$datatables_get_data = json_decode( stripslashes( $datatables_get_data ), true );
-
-		if ( 'gravityview' !== \GV\Utils::get( $datatables_get_data, 'post_type' ) ) {
-			return false;
-		}
-
-		if ( 'adminview' !== \GV\Utils::get( $datatables_get_data, 'page' ) ) {
-			return false;
-		}
-
-		if ( ! \GV\Utils::get( $datatables_get_data, 'gvid' ) ) {
-			return false;
-		}
-
-		return true;
+		return 'gv_datatables_data' === \GV\Utils::_REQUEST( 'action' );
 	}
 
 	/**
