@@ -1,26 +1,26 @@
 <?php
 /**
- * Plugin Name: GravityView - Views in Dashboard
- * Description: Show Views in the WordPress Dashboard
+ * Plugin Name: GravityView - Dashboard Views
+ * Description: Display Views in the WordPress Dashboard.
  * Version: 1.0
  * Author: GravityView
  * Author URI: https://gravityview.co
- * Text Domain: gravityview-adminview
+ * Text Domain: gravityview-dashboard-views
  * Domain Path: /languages/
  */
 
 /**
  * The plugin version.
  */
-define( 'GV_ADMIN_VIEWS_VERSION', '1.0' );
+define( 'GV_DASHBOARD_VIEWS_VERSION', '1.0' );
 
-add_action( 'plugins_loaded', 'gv_extension_adminview_load', 100 );
+add_action( 'plugins_loaded', 'gv_extension_dashboard_views_load', 100 );
 
 /**
  * Wrapper function to make sure GravityView_Extension has loaded
  * @return void
  */
-function gv_extension_adminview_load() {
+function gv_extension_dashboard_views_load() {
 
 	if ( ! class_exists( 'GFAPI' ) ) {
 		return;
@@ -36,5 +36,9 @@ function gv_extension_adminview_load() {
 		}
 	}
 
-	include_once plugin_dir_path( __FILE__ ) . 'class-gravityview-admin-view.php';
+	if ( ! class_exists( '\GV\Extension' ) ) {
+		return;
+	}
+
+	include_once plugin_dir_path( __FILE__ ) . 'class-gravityview-dashboard-views.php';
 }

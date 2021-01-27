@@ -1,11 +1,11 @@
 <?php
-class GravityView_Admin_View extends \GV\Extension {
+class GravityView_Dashboard_Views extends \GV\Extension {
 
 	protected $_title = 'Dashboard Views';
 
-	protected $_version = GV_ADMIN_VIEWS_VERSION;
+	protected $_version = GV_DASHBOARD_VIEWS_VERSION;
 
-	protected $_text_domain = 'gravityview-adminview';
+	protected $_text_domain = 'gravityview-dashboard-views';
 
 	/**
 	 * @var int The download ID on gravityview.co
@@ -14,9 +14,11 @@ class GravityView_Admin_View extends \GV\Extension {
 
 	protected $_min_gravityview_version = '2.3';
 
-	protected $_min_php_version = '5.3';
+	protected $_min_php_version = '5.4';
 
 	protected $_path = __FILE__;
+
+	const PAGE_SLUG = 'dashboard_views';
 
 	/**
 	 * Hooks.
@@ -127,7 +129,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function set_post_global( $view = 0 ) {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return;
 		}
 
@@ -147,7 +149,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function unset_post_global( $view ) {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return;
 		}
 
@@ -165,29 +167,35 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function set_request() {
 
-		require_once plugin_dir_path( __FILE__ ) . 'class-gravityview-admin-view-request.php';
+		try {
+			require_once plugin_dir_path( __FILE__ ) . 'class-gravityview-dashboard-views-request.php';
 
-		$admin_request = new GravityView_Admin_View_Request();
+			$dashboard_request = new GravityView_Dashboard_Views_Request();
 
-		if ( ! $admin_request->is_admin_view() ) {
-			return;
+			if ( ! $dashboard_request->is_dashboard_view() ) {
+				return;
+			}
+
+			gravityview()->request = $dashboard_request;
+
+		} catch ( Exception $exception ) {
+
+			gravityview()->log->debug( 'The Dashboard Request failed to be set.', array( 'data' => $exception ) );
 		}
-
-		gravityview()->request = $admin_request;
 	}
 
 	/**
-	 * A small `$request->is_admin_view()` proxy.
+	 * A small `$request->is_dashboard_view()` proxy.
 	 *
-	 * @return null|false|GravityView_Admin_View_Request null: Not GV request. false: Not an Admin View request. Otherwise, returns Admin View request.
+	 * @return null|false|GravityView_Dashboard_Views_Request null: Not GV request. false: Not an Admin View request. Otherwise, returns Admin View request.
 	 */
-	public function is_admin_view() {
+	static public function is_dashboard_view() {
 
 		if ( ! $request = gravityview()->request ) {
 			return null;
 		}
 
-		if ( ! method_exists( $request, 'is_admin_view' ) || ! $request->is_admin_view() ) {
+		if ( ! method_exists( $request, 'is_dashboard_view' ) || ! $request->is_dashboard_view() ) {
 			return false;
 		}
 
@@ -203,7 +211,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function enqueue_scripts() {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return;
 		}
 
@@ -237,7 +245,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 * @return array The allowed handles.
 	 */
 	public function noconflict_scripts( $handles ) {
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return $handles;
 		}
 
@@ -264,7 +272,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 * @return array The allowed handles.
 	 */
 	public function noconflict_styles( $handles ) {
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return $handles;
 		}
 
@@ -296,19 +304,19 @@ class GravityView_Admin_View extends \GV\Extension {
 			return $actions;
 		}
 
-		$actions['adminview'] = $this->get_admin_link( $post->ID );
+		$actions[ self::PAGE_SLUG ] = $this->get_admin_link( $post->ID );
 
 		return $actions;
 	}
 
 	private function get_admin_link( $view_id = 0 ) {
 
-		$base = add_query_arg( 'page', 'adminview', admin_url( 'edit.php?post_type=gravityview' ) );
+		$base = add_query_arg( 'page', self::PAGE_SLUG, admin_url( 'edit.php?post_type=gravityview' ) );
 
 		return sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( add_query_arg( 'gvid', urlencode( $view_id ), $base ) ),
-			__( 'View in Admin', 'gravityview-adminview' )
+			esc_html__( 'View in Dashboard', 'gravityview-dashboard-views' )
 		);
 	}
 
@@ -321,7 +329,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function add_submenu() {
 
-		if( 'adminview' !== \GV\Utils::_GET( 'page' ) ) {
+		if( self::PAGE_SLUG !== \GV\Utils::_GET( 'page' ) ) {
 			return;
 		} elseif ( ! isset( $_GET['gvid'] ) ) {
 			wp_safe_redirect( admin_url( 'edit.php?post_type=gravityview' ) );
@@ -340,7 +348,7 @@ class GravityView_Admin_View extends \GV\Extension {
 			sprintf( __( '%s &lsaquo; Admin View', 'gravityview-presets' ), $view->post_title ),
 			__( 'Admin View', 'gravityview-presets' ),
 			'manage_options',
-			'adminview',
+			self::PAGE_SLUG,
 			array( $this, 'render_screen' )
 		);
 	}
@@ -367,10 +375,10 @@ class GravityView_Admin_View extends \GV\Extension {
 		}
 
 		/**
-		 * @filter `gravityview/admin/before` Before the admin renders.
+		 * @filter `gravityview/dashboard-view/before` Before the admin renders.
 		 * @param \GV\View $view The View.
 		 */
-		do_action( 'gravityview/admin/before', $view );
+		do_action( 'gravityview/dashboard-view/before', $view );
 
 		$view_renderer = new \GV\View_Renderer();
 		$entry_renderer = new \GV\Entry_Renderer();
@@ -421,7 +429,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function entry_permalink( $permalink, $entry, $view, $request ) {
 
-		if ( ! $request = $this->is_admin_view() ) {
+		if ( ! $request = self::is_dashboard_view() ) {
 			return $permalink;
 		}
 
@@ -429,7 +437,7 @@ class GravityView_Admin_View extends \GV\Extension {
 
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
-			'page' => 'adminview',
+			'page' => self::PAGE_SLUG,
 			'gvid' => \GV\Utils::get( $view, 'ID', \GV\Utils::_GET( 'gvid' ) ),
 			'entry_id' => $entry->ID,
 		), $url );
@@ -448,7 +456,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function search_action( $url ) {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return $url;
 		}
 
@@ -460,7 +468,7 @@ class GravityView_Admin_View extends \GV\Extension {
 
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
-			'page' => 'adminview',
+			'page' => self::PAGE_SLUG,
 			'gvid' => $view->ID,
 		), $url );
 
@@ -476,7 +484,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function search_fields() {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return;
 		}
 
@@ -486,7 +494,7 @@ class GravityView_Admin_View extends \GV\Extension {
 
 		$args = array(
 			'post_type' => 'gravityview',
-			'page' => 'adminview',
+			'page' => self::PAGE_SLUG,
 			'gvid' => $view->ID,
 		);
 
@@ -506,7 +514,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function page_links_args( $args ) {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return $args;
 		}
 
@@ -519,7 +527,7 @@ class GravityView_Admin_View extends \GV\Extension {
 		$args['base'] = add_query_arg( array(
 			'pagenum' => '%#%',
 			'post_type' => 'gravityview',
-			'page' => 'adminview',
+			'page' => self::PAGE_SLUG,
 			'gvid' => $view->ID,
 		), $url );
 
@@ -538,7 +546,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function directory_link( $link, $context ) {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return $link;
 		}
 
@@ -550,7 +558,7 @@ class GravityView_Admin_View extends \GV\Extension {
 
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
-			'page' => 'adminview',
+			'page' => self::PAGE_SLUG,
 			'gvid' => $view->ID,
 		), $url );
 
@@ -570,7 +578,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function entry_list_link( $link, $entry, $list ) {
 
-		if ( ! $request = $this->is_admin_view() ) {
+		if ( ! $request = self::is_dashboard_view() ) {
 			return $link;
 		}
 
@@ -582,7 +590,7 @@ class GravityView_Admin_View extends \GV\Extension {
 
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
-			'page' => 'adminview',
+			'page' => self::PAGE_SLUG,
 			'id' => $view->ID,
 			'entry_id' => $entry['id'],
 		), $url );
@@ -603,7 +611,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function edit_entry_link( $url, $entry, $view ) {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return $url;
 		}
 
@@ -611,7 +619,7 @@ class GravityView_Admin_View extends \GV\Extension {
 
 		$url = add_query_arg( array(
 			'post_type' => 'gravityview',
-			'page' => 'adminview',
+			'page' => self::PAGE_SLUG,
 			'gvid' => $view->ID,
 			'entry_id' => $entry['id'],
 			'edit' => wp_create_nonce( GravityView_Edit_Entry::get_nonce_key( $view->ID, $entry['form_id'], $entry['id'] ) ),
@@ -633,13 +641,13 @@ class GravityView_Admin_View extends \GV\Extension {
 	 * @return string The fixed success message.
 	 */
 	public function edit_entry_success( $message, $view_id, $entry, $back_link ) {
-		return str_replace( 'edit.php?post_type', 'edit.php?page=adminview&post_type', $message );
+		return str_replace( 'edit.php?post_type', 'edit.php?page=' . self::PAGE_SLUG . '&post_type', $message );
 	}
 
 	/**
 	 * Kick off notice sequences. Perhaps...
 	 *
-	 * Called from `gravityview/admin/before` action.
+	 * Called from `gravityview/dashboard-view/before` action.
 	 *
 	 * @param \GV\View $view The View.
 	 *
@@ -670,7 +678,7 @@ class GravityView_Admin_View extends \GV\Extension {
 	 */
 	public function process_entry() {
 
-		if ( ! $this->is_admin_view() ) {
+		if ( ! self::is_dashboard_view() ) {
 			return;
 		}
 
@@ -679,4 +687,4 @@ class GravityView_Admin_View extends \GV\Extension {
 	}
 }
 
-new GravityView_Admin_View;
+new GravityView_Dashboard_Views();

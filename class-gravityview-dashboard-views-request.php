@@ -5,9 +5,9 @@ if ( ! defined( 'GRAVITYVIEW_DIR' ) ) {
 }
 
 /**
- * The default Admin View Request class.
+ * The default Dashboard View Request class.
  */
-class GravityView_Admin_View_Request extends \GV\Request {
+class GravityView_Dashboard_Views_Request extends \GV\Request {
 
 	public function __construct() {
 		add_filter( 'gravityview/request/is_renderable', array( $this, 'declare_renderable' ), 10, 2 );
@@ -23,18 +23,18 @@ class GravityView_Admin_View_Request extends \GV\Request {
 	}
 
 	/**
-	 * The current screen is an Admin View.
+	 * The current screen is a Dashboard View.
 	 *
 	 * @return bool
 	 */
-	public function is_admin_view() {
+	public function is_dashboard_view() {
 		global $current_screen;
 
 		if ( $current_screen && ! $current_screen = get_current_screen() ) {
 			return false;
 		}
 
-		if ( $current_screen && 'gravityview_page_adminview' !== $current_screen->id ) {
+		if ( $current_screen && 'gravityview_page_' . GravityView_Dashboard_Views::PAGE_SLUG !== $current_screen->id ) {
 			return false;
 		}
 
@@ -42,9 +42,8 @@ class GravityView_Admin_View_Request extends \GV\Request {
 			return true;
 		}
 
-		return $this->is_admin() && 'adminview' === \GV\Utils::_GET( 'page' );
+		return $this->is_admin() && GravityView_Dashboard_Views::PAGE_SLUG === \GV\Utils::_GET( 'page' );
 	}
-
 
 	/**
 	 * Checks whether we're in a DT AJAX request
@@ -84,7 +83,7 @@ class GravityView_Admin_View_Request extends \GV\Request {
 	 * @return false|\GV\View
 	 */
 	public function is_view() {
-		if ( ! $this->is_admin_view() ) {
+		if ( ! $this->is_dashboard_view() ) {
 			return false;
 		}
 
