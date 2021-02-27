@@ -115,6 +115,10 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 	public function add_data_source_link( $links, $form = array() ) {
 		global $post;
 
+		if ( 'single' !== gravityview()->request->is_admin('') ) {
+			return $links;
+		}
+
 		$links[] = $this->get_admin_link( $post->ID );
 
 		return $links;
