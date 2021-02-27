@@ -313,6 +313,13 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 		return $actions;
 	}
 
+	/**
+	 * Generates a link to the Dashboard View
+	 *
+	 * @param int $view_id
+	 *
+	 * @return string HTML anchor tag
+	 */
 	private function get_admin_link( $view_id = 0 ) {
 
 		$base = add_query_arg( 'page', self::PAGE_SLUG, admin_url( 'edit.php?post_type=gravityview' ) );
