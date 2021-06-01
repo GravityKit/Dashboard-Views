@@ -395,7 +395,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 		$entry_renderer = new \GV\Entry_Renderer();
 		$edit_renderer = new \GV\Edit_Entry_Renderer();
 
-		if ( ! class_exists( 'GravityView_View' ) ) {
+		if ( ! did_action( 'gravityview_include_frontend_actions' ) ) {
 			gravityview()->plugin->include_legacy_frontend( true );
 		}
 
