@@ -21,6 +21,12 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 	const PAGE_SLUG = 'dashboard_views';
 
 	/**
+	 * Capability needed to see Dashboard Views
+	 * @todo Move to per-View setting
+	 */
+	const SUBMENU_CAPABILITY = 'edit_gravityviews';
+
+	/**
 	 * Hooks.
 	 *
 	 * Anything that relies on gravityview()->request should be
@@ -354,11 +360,15 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 			exit();
 		}
 
+		if( ! GravityView_Roles_Capabilities::has_cap( 'edit_gravityview', $view ) ) {
+			return;
+		}
+
 		add_submenu_page(
 			'edit.php?post_type=gravityview',
 			sprintf( __( '%s &lsaquo; Admin View', 'gravityview-presets' ), $view->post_title ),
-			__( 'Admin View', 'gravityview-presets' ),
-			'manage_options',
+			__( 'Dashboard View', 'gravityview-presets' ),
+			self::SUBMENU_CAPABILITY,
 			self::PAGE_SLUG,
 			array( $this, 'render_screen' )
 		);
@@ -665,8 +675,12 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 	 * @return void
 	 */
 	public function maybe_output_notices( $view ) {
+
 		GravityView_Delete_Entry::getInstance()->display_message();
-		GravityView_Duplicate_Entry::getInstance()->display_message();
+
+		if ( class_exists( 'GravityView_Duplicate_Entry' ) ) {
+			GravityView_Duplicate_Entry::getInstance()->display_message();
+		}
 	}
 
 	/**
