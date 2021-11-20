@@ -24,7 +24,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 	 * Capability needed to see Dashboard Views
 	 * @todo Move to per-View setting
 	 */
-	const SUBMENU_CAPABILITY = 'edit_gravityviews';
+	const SUBMENU_CAPABILITY = 'read_private_gravityviews';
 
 	/**
 	 * Hooks.
@@ -360,14 +360,26 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 			exit();
 		}
 
-		if( ! GravityView_Roles_Capabilities::has_cap( 'edit_gravityview', $view ) ) {
-			return;
+		$user = wp_get_current_user();
+
+		if( ! GravityView_Roles_Capabilities::has_cap( array( self::SUBMENU_CAPABILITY ), $view ) ) {
+
+			$message = esc_html__( 'The user must have the {cap} capability. {link}Read a guide about modifying capabilities{/link}.', 'gravityview-dashboard' );
+
+			$message = strtr( $message, array(
+					'{cap}' => '<code>read_private_gravityviews</code>',
+					'{link}' => '<a href="https://docs.gravityview.co/article/333-modifying-user-role-capabilities">',
+					'{/link}' => '</a>',
+				)
+			);
+
+			wp_die( $message );
 		}
 
 		add_submenu_page(
 			'edit.php?post_type=gravityview',
-			sprintf( __( '%s &lsaquo; Admin View', 'gravityview-presets' ), $view->post_title ),
-			__( 'Dashboard View', 'gravityview-presets' ),
+			sprintf( __( '%s &lsaquo; Admin View', 'gravityview-dashboard' ), $view->post_title ),
+			__( 'Dashboard View', 'gravityview-dashboard' ),
 			self::SUBMENU_CAPABILITY,
 			self::PAGE_SLUG,
 			array( $this, 'render_screen' )
