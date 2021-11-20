@@ -34,16 +34,16 @@ module.exports = function(grunt) {
 			zip: {
 				cmd: function( version = '' ) {
 
-					var filename = ( version === '' ) ? 'gravityview-az-filters' : 'gravityview-az-filters-' + version;
+					var filename = ( version === '' ) ? 'gravityview-dashboard-views' : 'gravityview-dashboard-views-' + version;
 
 					// First, create the full archive
-					var command = 'git-archive-all gravityview-az-filters.zip &&';
+					var command = 'git-archive-all gravityview-dashboard-views.zip &&';
 
-					command += 'unzip -o gravityview-az-filters.zip &&';
+					command += 'unzip -o gravityview-dashboard-views.zip &&';
 
-					command += 'zip -r ../' + filename + '.zip "gravityview-az-filters" &&';
+					command += 'zip -r ../' + filename + '.zip "gravityview-dashboard-views" &&';
 
-					command += 'rm -rf "gravityview-az-filters/" && rm -f "gravityview-az-filters.zip"';
+					command += 'rm -rf "gravityview-dashboard-views/" && rm -f "gravityview-dashboard-views.zip"';
 
 					return command;
 				}
