@@ -14,7 +14,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 
 	protected $_min_gravityview_version = '2.3';
 
-	protected $_min_php_version = '5.4';
+	protected $_min_php_version = '5.6.20';
 
 	protected $_path = __FILE__;
 
@@ -364,7 +364,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 
 		if( ! GravityView_Roles_Capabilities::has_cap( array( self::SUBMENU_CAPABILITY ), $view ) ) {
 
-			$message = esc_html__( 'The user must have the {cap} capability. {link}Read a guide about modifying capabilities{/link}.', 'gravityview-dashboard' );
+			$message = esc_html__( 'The user must have the {cap} capability. {link}Read a guide about modifying capabilities{/link}.', 'gravityview-dashboard-views' );
 
 			$message = strtr( $message, array(
 					'{cap}' => '<code>read_private_gravityviews</code>',
@@ -378,8 +378,8 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 
 		add_submenu_page(
 			'edit.php?post_type=gravityview',
-			sprintf( __( '%s &lsaquo; Admin View', 'gravityview-dashboard' ), $view->post_title ),
-			__( 'Dashboard View', 'gravityview-dashboard' ),
+			sprintf( __( '%s &lsaquo; Admin View', 'gravityview-dashboard-views' ), $view->post_title ),
+			esc_html__( 'Dashboard View', 'gravityview-dashboard-views' ),
 			self::SUBMENU_CAPABILITY,
 			self::PAGE_SLUG,
 			array( $this, 'render_screen' )
@@ -402,7 +402,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 		if ( ! $view = gravityview()->request->is_view() ) {
 			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id = \GV\Utils::_GET( 'gvid' ) ) );
 
-			printf( '<h1>%s</h1>', sprintf( esc_html__( 'View #%s not found.', 'gravityview-admin' ), intval( $view_id ) ) );
+			printf( '<h1>%s</h1>', sprintf( esc_html__( 'View #%s not found.', 'gravityview-dashboard-views' ), intval( $view_id ) ) );
 
 			return;
 		}
