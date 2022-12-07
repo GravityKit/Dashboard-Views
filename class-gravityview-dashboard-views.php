@@ -399,7 +399,13 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 			.update-nag { display: none; } 
 		</style>';
 
-		if ( ! $view = gravityview()->request->is_view() ) {
+		if( version_compare( \GV\Plugin::$version, '2.16', '>=' ) ) {
+		    $view = gravityview()->request->is_view( true );
+		} else {
+			$view = gravityview()->request->is_view();
+		}
+
+		if ( ! $view ) {
 			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id = \GV\Utils::_GET( 'gvid' ) ) );
 
 			printf( '<h1>%s</h1>', sprintf( esc_html__( 'View #%s not found.', 'gravityview-dashboard-views' ), intval( $view_id ) ) );
