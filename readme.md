@@ -9,3 +9,9 @@ To see a GravityView View in the admin, click the "View in Admin" action link:
 It looks a bit sparse at the moment, but here's an example of how it can look:
 
 ![View in the admin looks kinda okay somehow](https://i.gravityview.co/jB1ERa+)
+
+## Change Log
+
+### 1.0.2-beta
+
+- Fix fatal error due to change in structure of `\GV\Request::is_view()` in GravityView 2.16

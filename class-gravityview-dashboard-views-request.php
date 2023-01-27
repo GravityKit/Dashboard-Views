@@ -61,7 +61,7 @@ class GravityView_Dashboard_Views_Request extends \GV\Request {
 	 *
 	 * @return false|\GV\View
 	 */
-	public function is_view() {
+	public function is_view( $return_view = true ) {
 		if ( ! $this->is_dashboard_view() ) {
 			return false;
 		}

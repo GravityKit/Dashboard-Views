@@ -12,7 +12,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 	 */
 	protected $_item_id = 672171;
 
-	protected $_min_gravityview_version = '2.3';
+	protected $_min_gravityview_version = '2.16';
 
 	protected $_min_php_version = '5.6.20';
 
