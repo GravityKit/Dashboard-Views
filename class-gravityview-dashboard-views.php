@@ -377,7 +377,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 		}
 
 		add_submenu_page(
-			'edit.php?post_type=gravityview',
+			'admin.php?page=_gk_admin_menu',
 			sprintf( __( '%s &lsaquo; Admin View', 'gravityview-dashboard-views' ), $view->post_title ),
 			esc_html__( 'Dashboard View', 'gravityview-dashboard-views' ),
 			self::SUBMENU_CAPABILITY,

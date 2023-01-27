@@ -34,7 +34,7 @@ class GravityView_Dashboard_Views_Request extends \GV\Request {
 			return false;
 		}
 
-		if ( $current_screen && 'gravityview_page_' . GravityView_Dashboard_Views::PAGE_SLUG !== $current_screen->id ) {
+		if ( $current_screen && 'admin_page_' . GravityView_Dashboard_Views::PAGE_SLUG !== $current_screen->id ) {
 			return false;
 		}
 
