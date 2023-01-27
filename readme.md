@@ -12,6 +12,7 @@ It looks a bit sparse at the moment, but here's an example of how it can look:
 
 ## Change Log
 
-### 1.0.2-beta
+### 1.1-beta
 
+- Now requires GravityView 2.16 or higher
 - Fix fatal error due to change in structure of `\GV\Request::is_view()` in GravityView 2.16
