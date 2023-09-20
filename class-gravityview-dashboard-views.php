@@ -8,7 +8,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 	protected $_text_domain = 'gravityview-dashboard-views';
 
 	/**
-	 * @var int The download ID on gravityview.co
+	 * @var int The download ID on gravitykit.com
 	 */
 	protected $_item_id = 672171;
 
@@ -368,7 +368,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 
 			$message = strtr( $message, array(
 					'{cap}' => '<code>read_private_gravityviews</code>',
-					'{link}' => '<a href="https://docs.gravityview.co/article/333-modifying-user-role-capabilities">',
+					'{link}' => '<a href="https://docs.gravitykit.com/article/333-modifying-user-role-capabilities">',
 					'{/link}' => '</a>',
 				)
 			);

@@ -65,17 +65,17 @@ module.exports = function(grunt) {
 					},
 					processPot: function( pot, options ) {
 						pot.headers['language'] = 'en_US';
-						pot.headers['language-team'] = 'GravityView <support@gravityview.co>';
-						pot.headers['last-translator'] = 'GravityView <support@gravityview.co>';
-						pot.headers['report-msgid-bugs-to'] = 'https://gravityview.co/support/';
+						pot.headers['language-team'] = 'GravityKit <support@gravitykit.com>';
+						pot.headers['last-translator'] = 'GravityKit <support@gravitykit.com>';
+						pot.headers['report-msgid-bugs-to'] = 'https://gravitykit.com/support/';
 
 						var translation,
 							excluded_meta = [
 								'GravityView - Dashboard Views',
 								'Display Views in the WordPress Dashboard.',
-								'https://gravityview.co',
+								'https://gravitykit.com',
 								'GravityView',
-								'https://gravityview.co/extensions/dashboard-views/'
+								'https://gravitykit.com/extensions/dashboard-views/'
 							];
 
 						for ( translation in pot.translations[''] ) {
