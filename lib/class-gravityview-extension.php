@@ -3,7 +3,7 @@
  * @package GravityView
  * @license   GPL2+
  * @author    Katz Web Services, Inc.
- * @link      https://gravitykit.com
+ * @link      https://www.gravitykit.com
  * @copyright Copyright 2015, Katz Web Services, Inc.
  */
 
@@ -50,7 +50,7 @@ abstract class GravityView_Extension {
 	/**
 	 * @var string The URL to fetch license info from. Do not change unless you know what you're doing.
 	 */
-	protected $_remote_update_url = 'https://gravitykit.com';
+	protected $_remote_update_url = 'https://www.gravitykit.com';
 
 	/**
 	 * @var string Author of plugin, sent when fetching license info.

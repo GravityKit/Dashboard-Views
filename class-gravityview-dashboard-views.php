@@ -55,7 +55,7 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 		add_filter( 'gravityview/edit/link', array( $this, 'edit_entry_link' ), 10, 3 );
 
 		add_filter( 'gravityview/edit_entry/success', array( $this, 'edit_entry_success' ), 10, 4 );
-		add_filter( 'gravityview_connected_form_links', array( $this, 'add_data_source_link' ), 20, 2 );
+		add_filter( 'gravitykit.comnnected_form_links', array( $this, 'add_data_source_link' ), 20, 2 );
 
 		$this->load_legacy();
 
