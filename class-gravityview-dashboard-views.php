@@ -65,6 +65,8 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 		add_action( 'gravityview_after', array( $this, 'set_post_global' ), -100 );
 		add_action( 'gravityview_after', array( $this, 'unset_post_global' ), 10000 );
 
+		add_filter( 'wp_redirect', array( $this, 'handle_redirects' ) );
+
 		// Support DataTables
 		if ( class_exists( 'GV_Extension_DataTables' ) ) {
 			$this->add_datatables_hooks();
@@ -727,6 +729,29 @@ class GravityView_Dashboard_Views extends \GV\Extension {
 
 		GravityView_Delete_Entry::getInstance()->process_delete();
 		GravityView_Duplicate_Entry::getInstance()->process_duplicate();
+	}
+
+	/**
+	 * Ensures that all redirects to the Dashboard View have the `gvid` parameter set after interacting with an entry.
+	 *
+	 * @param string $redirect_url Redirect URL.
+	 *
+	 * @return string
+	 */
+	public function handle_redirects( $redirect_url ) {
+		if ( function_exists( 'gravityview' ) && ! gravityview()->request instanceof GravityView_Dashboard_Views_Request ) {
+			return $redirect_url;
+		}
+
+		// If we're not redirecting to the Dashboard View, leave the location as-is.
+		if ( strpos( $redirect_url, 'page=dashboard_views' ) === false ) {
+			return $redirect_url;
+		}
+
+		// Set the gvid parameter that's removed by Delete Entry, Update Entry, etc.
+		$location = add_query_arg( 'gvid', $_GET['gvid'] ?? '', $redirect_url );
+
+		return $location;
 	}
 }
 
