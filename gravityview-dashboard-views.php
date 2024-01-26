@@ -5,7 +5,7 @@
  * Version: 1.1-beta
  * Author: GravityKit
  * Author URI: https://www.gravitykit.com
- * Text Domain: gravityview-dashboard-views
+ * Text Domain: gk-gravityview-dashboard-views
  * Domain Path: /languages/
  */
 
@@ -18,6 +18,7 @@ add_action( 'plugins_loaded', 'gv_extension_dashboard_views_load', 100 );
 
 /**
  * Wrapper function to make sure GravityView_Extension has loaded
+ *
  * @return void
  */
 function gv_extension_dashboard_views_load() {

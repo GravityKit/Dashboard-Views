@@ -1,14 +1,24 @@
 <?php
-/** If this file is called directly, abort. */
+
 if ( ! defined( 'GRAVITYVIEW_DIR' ) ) {
 	die();
 }
 
+use GV\Entry;
+use GV\GF_Entry;
+use GV\Request;
+use GV\Utils;
+use GV\View;
+
 /**
  * The default Dashboard View Request class.
  */
-class GravityView_Dashboard_Views_Request extends \GV\Request {
-
+class GravityView_Dashboard_Views_Request extends Request {
+	/**
+	 * Class constructor.
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		add_filter( 'gravityview/request/is_renderable', array( $this, 'declare_renderable' ), 10, 2 );
 
@@ -16,21 +26,30 @@ class GravityView_Dashboard_Views_Request extends \GV\Request {
 	}
 
 	/**
-	 * Declare this class as something that is renderable.
+	 * Declares this class as something that is renderable.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool    $is_renderable Whether the request is renderable.
+	 * @param Request $instance      Request instance.
+	 *
+	 * @return bool
 	 */
 	public function declare_renderable( $is_renderable, $instance ) {
 		return get_class( $this ) === get_class( $instance );
 	}
 
 	/**
-	 * The current screen is a Dashboard View.
+	 * Checks if the current screen is a Dashboard View.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return bool
 	 */
 	public function is_dashboard_view() {
 		global $current_screen;
 
-		if ( $current_screen && ! $current_screen = get_current_screen() ) {
+		if ( $current_screen && ! get_current_screen() ) {
 			return false;
 		}
 
@@ -42,57 +61,69 @@ class GravityView_Dashboard_Views_Request extends \GV\Request {
 			return true;
 		}
 
-		return $this->is_admin() && GravityView_Dashboard_Views::PAGE_SLUG === \GV\Utils::_GET( 'page' );
+		return $this->is_admin() && GravityView_Dashboard_Views::PAGE_SLUG === Utils::_GET( 'page' );
 	}
 
 	/**
-	 * Checks whether we're in a DT AJAX request
+	 * Checks whether we're in a DT Ajax request.
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 *
 	 * @return bool True: We're inside a DataTables request in an admin View. False: We're not!
 	 */
 	private function doing_datatables_ajax_request() {
-		return 'gv_datatables_data' === \GV\Utils::_REQUEST( 'action' );
+		return 'gv_datatables_data' === Utils::_REQUEST( 'action' );
 	}
 
 	/**
-	 * The current admin screen is a View.
+	 * Checks if the current admin screen is a View.
 	 *
-	 * @return false|\GV\View
+	 * @since 1.0.0
+	 *
+	 * @param bool $return_view Whether to return the View object.
+	 *
+	 * @return false|View
 	 */
 	public function is_view( $return_view = true ) {
 		if ( ! $this->is_dashboard_view() ) {
 			return false;
 		}
 
-		return \GV\View::by_id( \GV\Utils::_GET( 'gvid' ) );
+		return View::by_id( Utils::_GET( 'gvid' ) );
 	}
 
 	/**
-	 * The current entry.
+	 * Checks whether this is a single entry request.
 	 *
-	 * @return false|\GV\Entry
+	 * @since 1.0.0
+	 *
+	 * @param int $form_id The form ID, since slugs can be non-unique. Default: 0.
+	 *
+	 * @return false|Entry
 	 */
 	public function is_entry( $form_id = 0 ) {
-		if ( ! $view = $this->is_view() ) {
+		if ( ! $this->is_view() ) {
 			return false;
 		}
 
-		return \GV\GF_Entry::by_id( \GV\Utils::_GET( 'entry_id' ) );
+		return GF_Entry::by_id( Utils::_GET( 'entry_id' ) );
 	}
 
 	/**
-	 * Is this an edit entry?
+	 * Checks whether this an edit entry request.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $form_id The form ID, since slugs can be non-unique. Default: 0.
 	 *
 	 * @return bool Yes?
 	 */
 	public function is_edit_entry( $form_id = 0 ) {
-		if ( ! $entry = $this->is_entry( $form_id ) ) {
+		if ( ! $this->is_entry( $form_id ) ) {
 			return false;
 		}
 
-		if ( empty( $_GET['edit'] ) ) {
+		if ( empty( $_GET['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return false;
 		}
 
