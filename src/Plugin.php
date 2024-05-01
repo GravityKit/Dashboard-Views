@@ -1,75 +1,22 @@
 <?php
 
+namespace GravityKit\GravityView\DashboardViews;
+
+use Exception;
+use GravityView_Delete_Entry;
+use GravityView_Duplicate_Entry;
+use GravityView_Field_Notes;
+use GravityView_frontend;
+use GravityView_Roles_Capabilities;
+use GravityView_View_Data;
 use GV\Entry;
-use GV\Extension;
-use GV\Request;
 use GV\Utils;
 use GV\View;
+use GV_Extension_DataTables;
+use GV_Extension_DataTables_Data;
+use WP_Post;
 
-class GravityView_Dashboard_Views extends Extension {
-	/**
-	 * Extension title.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $_title = 'Dashboard Views';
-
-	/**
-	 * Extension version.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $_version = GV_DASHBOARD_VIEWS_VERSION;
-
-	/**
-	 * Extension text domain.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $_text_domain = 'gk-gravityview-dashboard-views';
-
-	/**
-	 * Download ID on gravitykit.com
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var int
-	 */
-	protected $_item_id = 672171;
-
-	/**
-	 * Minimum required GV version.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $_min_gravityview_version = '2.16';
-
-	/**
-	 * Minimum required PHP version.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $_min_php_version = '5.6.20';
-
-	/**
-	 * The full path and filename of the extension file.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $_path = __FILE__;
-
+class Plugin {
 	const PAGE_SLUG = 'dashboard_views';
 
 	/**
@@ -116,7 +63,7 @@ class GravityView_Dashboard_Views extends Extension {
 		add_action( 'gravityview_before', array( $this, 'maybe_output_notices' ) );
 
 		// Ratings & Reviews relies on priority 15.
-		add_action( 'gravityview_after', array( $this, 'set_post_global' ), -100 );
+		add_action( 'gravityview_after', array( $this, 'set_post_global' ), - 100 );
 		add_action( 'gravityview_after', array( $this, 'unset_post_global' ), 10000 );
 
 		add_filter( 'wp_redirect', array( $this, 'handle_redirects' ) );
@@ -137,8 +84,8 @@ class GravityView_Dashboard_Views extends Extension {
 	private function add_datatables_hooks() {
 		add_action( 'wp_ajax_nopriv_gv_datatables_data', array( $this, 'set_request' ), 1 );
 		add_action( 'wp_ajax_gv_datatables_data', array( $this, 'set_request' ), 1 );
-		add_action( 'gravityview/template/after', array( $this, 'set_post_global' ), -100 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'set_post_global' ), -100 );
+		add_action( 'gravityview/template/after', array( $this, 'set_post_global' ), - 100 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'set_post_global' ), - 100 );
 		add_action( 'gravityview/template/after', array( $this, 'unset_post_global' ), 10000 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'unset_post_global' ), 10000 );
 
@@ -237,18 +184,14 @@ class GravityView_Dashboard_Views extends Extension {
 	 */
 	public function set_request() {
 		try {
-			require_once plugin_dir_path( __FILE__ ) . 'class-gravityview-dashboard-views-request.php';
-
-			$dashboard_request = new GravityView_Dashboard_Views_Request();
+			$dashboard_request = new Request();
 
 			if ( ! $dashboard_request->is_dashboard_view() ) {
 				return;
 			}
 
 			gravityview()->request = $dashboard_request;
-
 		} catch ( Exception $exception ) {
-
 			gravityview()->log->debug( 'The Dashboard Request failed to be set.', array( 'data' => $exception ) );
 		}
 	}
@@ -258,7 +201,7 @@ class GravityView_Dashboard_Views extends Extension {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return null|false|GravityView_Dashboard_Views_Request null: Not GV request. false: Not an Admin View request. Otherwise, returns Admin View request.
+	 * @return null|false|Request null: Not GV request. false: Not an Admin View request. Otherwise, returns Dashboard Views request.
 	 */
 	public static function is_dashboard_view() {
 		$request = gravityview()->request;
@@ -781,14 +724,11 @@ class GravityView_Dashboard_Views extends Extension {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $message   The message.
-	 * @param int    $view_id   The View ID.
-	 * @param array  $entry     The entry.
-	 * @param string $back_link The return URL.
+	 * @param string $message The message.
 	 *
 	 * @return string The fixed success message.
 	 */
-	public function edit_entry_success( $message, $view_id, $entry, $back_link ) {
+	public function edit_entry_success( $message ) {
 		return str_replace( 'edit.php?post_type', 'edit.php?page=' . self::PAGE_SLUG . '&post_type', $message );
 	}
 
@@ -798,11 +738,9 @@ class GravityView_Dashboard_Views extends Extension {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param View $view The View.
-	 *
 	 * @return void
 	 */
-	public function maybe_output_notices( $view ) {
+	public function maybe_output_notices() {
 		GravityView_Delete_Entry::getInstance()->display_message();
 
 		if ( class_exists( 'GravityView_Duplicate_Entry' ) ) {
@@ -851,7 +789,7 @@ class GravityView_Dashboard_Views extends Extension {
 	 * @return string
 	 */
 	public function handle_redirects( $redirect_url ) {
-		if ( function_exists( 'gravityview' ) && ! gravityview()->request instanceof GravityView_Dashboard_Views_Request ) {
+		if ( function_exists( 'gravityview' ) && ! gravityview()->request instanceof Request ) {
 			return $redirect_url;
 		}
 
@@ -866,5 +804,3 @@ class GravityView_Dashboard_Views extends Extension {
 		return $location;
 	}
 }
-
-new GravityView_Dashboard_Views();

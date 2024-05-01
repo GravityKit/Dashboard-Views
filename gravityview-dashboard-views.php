@@ -1,17 +1,18 @@
 <?php
 /**
- * Plugin Name: GravityView - Dashboard Views
- * Description: Display Views in the WordPress Dashboard.
- * Version: 1.1-beta
- * Author: GravityKit
- * Author URI: https://www.gravitykit.com
- * Text Domain: gk-gravityview-dashboard-views
- * Domain Path: /languages/
+ * Plugin Name:         GravityView - Dashboard Views
+ * Plugin URI:          https://www.gravitykit.com/products/dashboard-views/
+ * Description:         Display Views in the WordPress Dashboard.
+ * Version:             1.1-beta
+ * Author:              GravityKit
+ * Author URI:          https://www.gravitykit.com
+ * Text Domain:         gk-gravityview-dashboard-views
+ * License:             GPLv2 or later
+ * License URI:         https://www.gnu.org/licenses/gpl-2.0.en.html
  */
 
-/**
- * The plugin version.
- */
+require_once __DIR__ . '/vendor/autoload.php';
+
 define( 'GV_DASHBOARD_VIEWS_VERSION', '1.1-beta' );
 
 add_action( 'plugins_loaded', 'gv_extension_dashboard_views_load', 100 );
@@ -22,24 +23,9 @@ add_action( 'plugins_loaded', 'gv_extension_dashboard_views_load', 100 );
  * @return void
  */
 function gv_extension_dashboard_views_load() {
-
-	if ( ! class_exists( 'GFAPI' ) ) {
+	if ( ! class_exists( 'GFAPI' ) || ! function_exists( 'gravityview' ) ) {
 		return;
 	}
 
-	if ( ! class_exists( 'GravityView_Extension' ) ) {
-
-		if ( class_exists( 'GravityView_Plugin' ) && is_callable( array( 'GravityView_Plugin', 'include_extension_framework' ) ) ) {
-			GravityView_Plugin::include_extension_framework();
-		} else {
-			// We prefer to use the one bundled with GravityView, but if it doesn't exist, go here.
-			include_once plugin_dir_path( __FILE__ ) . 'lib/class-gravityview-extension.php';
-		}
-	}
-
-	if ( ! class_exists( '\GV\Extension' ) ) {
-		return;
-	}
-
-	include_once plugin_dir_path( __FILE__ ) . 'class-gravityview-dashboard-views.php';
+	( new GravityKit\GravityView\DashboardViews\Plugin() )->add_hooks();
 }

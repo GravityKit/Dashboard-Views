@@ -1,19 +1,17 @@
 <?php
 
-if ( ! defined( 'GRAVITYVIEW_DIR' ) ) {
-	die();
-}
+namespace GravityKit\GravityView\DashboardViews;
 
 use GV\Entry;
 use GV\GF_Entry;
-use GV\Request;
 use GV\Utils;
 use GV\View;
+use GV\Request as GravityViewRequest;
 
 /**
  * The default Dashboard View Request class.
  */
-class GravityView_Dashboard_Views_Request extends Request {
+class Request extends GravityViewRequest {
 	/**
 	 * Class constructor.
 	 *
@@ -53,7 +51,7 @@ class GravityView_Dashboard_Views_Request extends Request {
 			return false;
 		}
 
-		if ( $current_screen && 'admin_page_' . GravityView_Dashboard_Views::PAGE_SLUG !== $current_screen->id ) {
+		if ( $current_screen && 'admin_page_' . Plugin::PAGE_SLUG !== $current_screen->id ) {
 			return false;
 		}
 
@@ -61,7 +59,7 @@ class GravityView_Dashboard_Views_Request extends Request {
 			return true;
 		}
 
-		return $this->is_admin() && GravityView_Dashboard_Views::PAGE_SLUG === Utils::_GET( 'page' );
+		return $this->is_admin() && Plugin::PAGE_SLUG === Utils::_GET( 'page' );
 	}
 
 	/**
