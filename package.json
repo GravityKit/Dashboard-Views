@@ -1,17 +1,18 @@
 {
-  "name": "GravityView-Dashboard",
+  "name": "gravityview-dashboard-views",
   "version": "1.0.0",
+  "license": "GPL-2.0",
   "devDependencies": {
     "grunt": "^1.4.1",
-    "grunt-exec": "^0.4.6",
-    "grunt-potomo": "^3.2.1",
+    "grunt-exec": "^0.4",
+    "grunt-potomo": "^3.5.0",
     "grunt-wp-i18n": "^1.0.3",
-    "husky": "^9.0.5",
+    "husky": "^8.0.3",
     "lint-staged": "^15.2.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gravityview/Dashboard-Views.git"
+    "url": "https://github.com/GravityKit/Dashboard-Views.git"
   },
   "husky": {
     "hooks": {
