@@ -56,7 +56,7 @@ class Plugin {
 		add_filter( 'gravityview/edit/link', [ $this, 'edit_entry_link' ], 10, 3 );
 
 		add_filter( 'gravityview/edit_entry/success', [ $this, 'edit_entry_success' ], 10, 4 );
-		add_filter( 'gravitykit.comnnected_form_links', [ $this, 'add_data_source_link' ], 20 );
+		add_filter( 'gravityview_connected_form_links', [ $this, 'add_data_source_link' ], 20 );
 
 		$this->load_legacy();
 
