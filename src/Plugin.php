@@ -35,38 +35,38 @@ class Plugin {
 	 * @since 1.0.0
 	 */
 	public function add_hooks() {
-		add_action( 'admin_menu', array( $this, 'add_submenu' ), 1 );
-		add_filter( 'post_row_actions', array( $this, 'view_admin_action' ), 10, 2 );
+		add_action( 'admin_menu', [ $this, 'add_submenu' ], 1 );
+		add_filter( 'post_row_actions', [ $this, 'view_admin_action' ], 10, 2 );
 
-		add_action( 'current_screen', array( $this, 'set_request' ), 1 );
-		add_action( 'current_screen', array( $this, 'process_entry' ) );
+		add_action( 'current_screen', [ $this, 'set_request' ], 1 );
+		add_action( 'current_screen', [ $this, 'process_entry' ] );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'gravityview_noconflict_scripts', array( $this, 'noconflict_scripts' ) );
-		add_action( 'gravityview_noconflict_styles', array( $this, 'noconflict_styles' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'gravityview_noconflict_scripts', [ $this, 'noconflict_scripts' ] );
+		add_action( 'gravityview_noconflict_styles', [ $this, 'noconflict_styles' ] );
 
-		add_filter( 'gravityview/entry/permalink', array( $this, 'entry_permalink' ), 10, 3 );
-		add_filter( 'gravityview/widget/search/form/action', array( $this, 'search_action' ) );
-		add_action( 'gravityview_search_widget_fields_before', array( $this, 'search_fields' ) );
+		add_filter( 'gravityview/entry/permalink', [ $this, 'entry_permalink' ], 10, 3 );
+		add_filter( 'gravityview/widget/search/form/action', [ $this, 'search_action' ] );
+		add_action( 'gravityview_search_widget_fields_before', [ $this, 'search_fields' ] );
 
-		add_filter( 'gravityview_page_links_args', array( $this, 'page_links_args' ) );
+		add_filter( 'gravityview_page_links_args', [ $this, 'page_links_args' ] );
 
-		add_filter( 'gravityview/view/links/directory', array( $this, 'directory_link' ), 10, 2 );
-		add_filter( 'gravityview/entry-list/link', array( $this, 'entry_list_link' ), 10, 3 );
-		add_filter( 'gravityview/edit/link', array( $this, 'edit_entry_link' ), 10, 3 );
+		add_filter( 'gravityview/view/links/directory', [ $this, 'directory_link' ], 10, 2 );
+		add_filter( 'gravityview/entry-list/link', [ $this, 'entry_list_link' ], 10, 3 );
+		add_filter( 'gravityview/edit/link', [ $this, 'edit_entry_link' ], 10, 3 );
 
-		add_filter( 'gravityview/edit_entry/success', array( $this, 'edit_entry_success' ), 10, 4 );
-		add_filter( 'gravitykit.comnnected_form_links', array( $this, 'add_data_source_link' ), 20 );
+		add_filter( 'gravityview/edit_entry/success', [ $this, 'edit_entry_success' ], 10, 4 );
+		add_filter( 'gravitykit.comnnected_form_links', [ $this, 'add_data_source_link' ], 20 );
 
 		$this->load_legacy();
 
-		add_action( 'gravityview_before', array( $this, 'maybe_output_notices' ) );
+		add_action( 'gravityview_before', [ $this, 'maybe_output_notices' ] );
 
 		// Ratings & Reviews relies on priority 15.
-		add_action( 'gravityview_after', array( $this, 'set_post_global' ), - 100 );
-		add_action( 'gravityview_after', array( $this, 'unset_post_global' ), 10000 );
+		add_action( 'gravityview_after', [ $this, 'set_post_global' ], - 100 );
+		add_action( 'gravityview_after', [ $this, 'unset_post_global' ], 10000 );
 
-		add_filter( 'wp_redirect', array( $this, 'handle_redirects' ) );
+		add_filter( 'wp_redirect', [ $this, 'handle_redirects' ] );
 
 		// Support DataTables.
 		if ( class_exists( 'GV_Extension_DataTables' ) ) {
@@ -82,18 +82,18 @@ class Plugin {
 	 * @return void
 	 */
 	private function add_datatables_hooks() {
-		add_action( 'wp_ajax_nopriv_gv_datatables_data', array( $this, 'set_request' ), 1 );
-		add_action( 'wp_ajax_gv_datatables_data', array( $this, 'set_request' ), 1 );
-		add_action( 'gravityview/template/after', array( $this, 'set_post_global' ), - 100 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'set_post_global' ), - 100 );
-		add_action( 'gravityview/template/after', array( $this, 'unset_post_global' ), 10000 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'unset_post_global' ), 10000 );
+		add_action( 'wp_ajax_nopriv_gv_datatables_data', [ $this, 'set_request' ], 1 );
+		add_action( 'wp_ajax_gv_datatables_data', [ $this, 'set_request' ], 1 );
+		add_action( 'gravityview/template/after', [ $this, 'set_post_global' ], - 100 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'set_post_global' ], - 100 );
+		add_action( 'gravityview/template/after', [ $this, 'unset_post_global' ], 10000 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'unset_post_global' ], 10000 );
 
 		// Load DataTables core logic, not normally loaded in admin.
 		$gv_extension_data_tables = new GV_Extension_DataTables();
 		$gv_extension_data_tables->core_actions();
 
-		add_action( 'admin_enqueue_scripts', array( new GV_Extension_DataTables_Data(), 'add_scripts_and_styles' ) );
+		add_action( 'admin_enqueue_scripts', [ new GV_Extension_DataTables_Data(), 'add_scripts_and_styles' ] );
 
 		/**
 		 * `GravityView_Template` class isn't loaded in the admin; CSS files won't get called
@@ -192,7 +192,7 @@ class Plugin {
 
 			gravityview()->request = $dashboard_request;
 		} catch ( Exception $exception ) {
-			gravityview()->log->debug( 'The Dashboard Request failed to be set.', array( 'data' => $exception ) );
+			gravityview()->log->debug( 'The Dashboard Request failed to be set.', [ 'data' => $exception ] );
 		}
 	}
 
@@ -272,7 +272,7 @@ class Plugin {
 
 		$handles = array_merge(
 			$handles,
-			array(
+			[
 				// Approval.
 				'gravityview-field-approval',
 				'gravityview-field-approval-tippy',
@@ -280,7 +280,7 @@ class Plugin {
 
 				// Notes.
 				'gravityview-notes',
-			)
+			]
 		);
 
 		return $handles;
@@ -303,14 +303,14 @@ class Plugin {
 
 		$handles = array_merge(
 			$handles,
-			array(
+			[
 				// Approval.
 				'gravityview-field-approval',
 				'gravityview-field-approval-tippy',
 
 				// Notes.
 				'gravityview-notes',
-			)
+			]
 		);
 
 		return $handles;
@@ -380,17 +380,17 @@ class Plugin {
 			exit();
 		}
 
-		if ( ! GravityView_Roles_Capabilities::has_cap( array( self::SUBMENU_CAPABILITY ), $view ) ) {
+		if ( ! GravityView_Roles_Capabilities::has_cap( [ self::SUBMENU_CAPABILITY ], $view ) ) {
 
 			$message = esc_html__( 'The user must have the {cap} capability. {link}Read a guide about modifying capabilities{/link}.', 'gk-gravityview-dashboard-views' );
 
 			$message = strtr(
 				$message,
-				array(
+				[
 					'{cap}'   => '<code>read_private_gravityviews</code>',
 					'{link}'  => '<a href="https://docs.gravitykit.com/article/333-modifying-user-role-capabilities">',
 					'{/link}' => '</a>',
-				)
+				]
 			);
 
 			wp_die( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -403,7 +403,7 @@ class Plugin {
 			esc_html__( 'Dashboard View', 'gk-gravityview-dashboard-views' ),
 			self::SUBMENU_CAPABILITY,
 			self::PAGE_SLUG,
-			array( $this, 'render_screen' )
+			[ $this, 'render_screen' ]
 		);
 	}
 
@@ -428,7 +428,7 @@ class Plugin {
 		}
 
 		if ( ! $view ) {
-			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', array( 'view_id' => $view_id = Utils::_GET( 'gvid' ) ) );
+			gravityview()->log->error( 'View cannot be displayed in the admin; View with ID #{view_id} could not be found.', [ 'view_id' => $view_id = Utils::_GET( 'gvid' ) ] );
 
 			// translators: %s: View ID.
 			printf( '<h1>%s</h1>', sprintf( esc_html__( 'View #%s not found.', 'gk-gravityview-dashboard-views' ), intval( $view_id ) ) );
@@ -498,12 +498,12 @@ class Plugin {
 		$url = admin_url( 'edit.php' );
 
 		$url = add_query_arg(
-			array(
+			[
 				'post_type' => 'gravityview',
 				'page'      => self::PAGE_SLUG,
 				'gvid'      => Utils::get( $view, 'ID', Utils::_GET( 'gvid' ) ),
 				'entry_id'  => $entry->ID,
-			),
+			],
 			$url
 		);
 
@@ -534,11 +534,11 @@ class Plugin {
 		$url = admin_url( 'edit.php' );
 
 		$url = add_query_arg(
-			array(
+			[
 				'post_type' => 'gravityview',
 				'page'      => self::PAGE_SLUG,
 				'gvid'      => $view->ID,
-			),
+			],
 			$url
 		);
 
@@ -564,11 +564,11 @@ class Plugin {
 			return;
 		}
 
-		$args = array(
+		$args = [
 			'post_type' => 'gravityview',
 			'page'      => self::PAGE_SLUG,
 			'gvid'      => $view->ID,
-		);
+		];
 
 		foreach ( $args as $field => $value ) {
 			printf( '<input type="hidden" name="%s" value="%s" />', esc_attr( $field ), esc_attr( $value ) );
@@ -599,12 +599,12 @@ class Plugin {
 		$url = admin_url( 'edit.php' );
 
 		$args['base'] = add_query_arg(
-			array(
+			[
 				'pagenum'   => '%#%',
 				'post_type' => 'gravityview',
 				'page'      => self::PAGE_SLUG,
 				'gvid'      => $view->ID,
-			),
+			],
 			$url
 		);
 
@@ -635,11 +635,11 @@ class Plugin {
 		$url = admin_url( 'edit.php' );
 
 		$url = add_query_arg(
-			array(
+			[
 				'post_type' => 'gravityview',
 				'page'      => self::PAGE_SLUG,
 				'gvid'      => $view->ID,
-			),
+			],
 			$url
 		);
 
@@ -673,12 +673,12 @@ class Plugin {
 		$url = admin_url( 'edit.php' );
 
 		$url = add_query_arg(
-			array(
+			[
 				'post_type' => 'gravityview',
 				'page'      => self::PAGE_SLUG,
 				'id'        => $view->ID,
 				'entry_id'  => $entry['id'],
-			),
+			],
 			$url
 		);
 
@@ -705,13 +705,13 @@ class Plugin {
 		$url = admin_url( 'edit.php' );
 
 		$url = add_query_arg(
-			array(
+			[
 				'post_type' => 'gravityview',
 				'page'      => self::PAGE_SLUG,
 				'gvid'      => $view->ID,
 				'entry_id'  => $entry['id'],
 				'edit'      => wp_create_nonce( GravityView_Edit_Entry::get_nonce_key( $view->ID, $entry['form_id'], $entry['id'] ) ),
-			),
+			],
 			$url
 		);
 

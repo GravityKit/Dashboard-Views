@@ -18,7 +18,7 @@ class Request extends GravityViewRequest {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_filter( 'gravityview/request/is_renderable', array( $this, 'declare_renderable' ), 10, 2 );
+		add_filter( 'gravityview/request/is_renderable', [ $this, 'declare_renderable' ], 10, 2 );
 
 		parent::__construct();
 	}
