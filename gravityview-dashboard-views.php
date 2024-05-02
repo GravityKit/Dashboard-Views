@@ -15,17 +15,15 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 define( 'GV_DASHBOARD_VIEWS_VERSION', '1.1-beta' );
 
-add_action( 'plugins_loaded', 'gv_extension_dashboard_views_load', 100 );
+add_action(
+    'gravityview/loaded',
+    function () {
+		if ( ! class_exists( 'GravityKit\GravityView\Foundation\Core' ) ) {
+			return;
+		}
 
-/**
- * Wrapper function to make sure GravityView_Extension has loaded
- *
- * @return void
- */
-function gv_extension_dashboard_views_load() {
-	if ( ! class_exists( 'GFAPI' ) || ! function_exists( 'gravityview' ) ) {
-		return;
+		GravityKit\GravityView\Foundation\Core::register( __FILE__ );
+
+		( new GravityKit\GravityView\DashboardViews\Plugin() )->add_hooks();
 	}
-
-	( new GravityKit\GravityView\DashboardViews\Plugin() )->add_hooks();
-}
+);
