@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "GPL-2.0",
   "devDependencies": {
+    "@picocss/pico": "^2.0.6",
     "grunt": "^1.4.1",
     "grunt-exec": "^0.4",
     "grunt-potomo": "^3.5.0",
@@ -25,6 +26,7 @@
     ]
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky install",
+    "postinstall": "cp node_modules/@picocss/pico/css/pico.min.css assets/css/"
   }
 }
