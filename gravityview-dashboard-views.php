@@ -14,6 +14,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 define( 'GV_DASHBOARD_VIEWS_VERSION', '1.1-beta' );
+define( 'GV_DASHBOARD_VIEWS_PLUGIN_FILE', __FILE__ );
 
 add_action(
     'gravityview/loaded',
@@ -22,7 +23,7 @@ add_action(
 			return;
 		}
 
-		GravityKit\GravityView\Foundation\Core::register( __FILE__ );
+		GravityKit\GravityView\Foundation\Core::register( GV_DASHBOARD_VIEWS_PLUGIN_FILE );
 
 		( new GravityKit\GravityView\DashboardViews\Plugin() )->add_hooks();
 	}
