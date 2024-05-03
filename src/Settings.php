@@ -94,6 +94,13 @@ class Settings {
 						[
 							'title' => strtr(
 								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
+								[ '[framework]' => 'Pico' ]
+							),
+							'value' => 'pico',
+						],
+						[
+							'title' => strtr(
+								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
 								[ '[framework]' => 'Pure' ]
 							),
 							'value' => 'pure',
