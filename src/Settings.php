@@ -36,6 +36,53 @@ class Settings {
 		$gravityview_settings    = GravityKitFoundation::settings()->get_plugin_settings( $gravityview_settings_id );
 		$site_url                = is_multisite() ? network_home_url() : home_url();
 
+		$supported_css_frameworks = [
+			'chota'  => [
+				'link' => 'https://jenil.github.io/chota/',
+				'name' => 'Chota',
+			],
+			'cirrus' => [
+				'link' => 'https://www.cirrus-ui.com/',
+				'name' => 'Cirrus UI',
+			],
+			'marx'   => [
+				'link' => 'https://mblode.github.io/marx/',
+				'name' => 'Marx',
+			],
+			'mvp'    => [
+				'link' => 'https://andybrewer.github.io/mvp/',
+				'name' => 'MVP.css',
+			],
+			'picnic' => [
+				'link' => 'https://picnicss.com/',
+				'name' => 'Picnic CSS',
+			],
+			'pico'   => [
+				'link' => 'https://picocss.com/',
+				'name' => 'Pico',
+			],
+			'pure'   => [
+				'link' => 'https://purecss.io/',
+				'name' => 'Pure',
+			],
+			'sakura' => [
+				'link' => 'https://oxal.org/projects/sakura/',
+				'name' => 'Sakura',
+			],
+		];
+
+		$css_framework_choices = [];
+
+		foreach ( $supported_css_frameworks as $value => $framework ) {
+			$css_framework_choices[] = [
+				'title' => strtr(
+					esc_html_x( 'CSS framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
+					[ '[framework]' => $framework['name'] ]
+				),
+				'value' => $value,
+			];
+		}
+
 		$settings[ $gravityview_settings_id ]['defaults']['dashboard_views_stylesheet'] = 'unstyled';
 
 		$settings[ $gravityview_settings_id ]['sections'][] = [
@@ -47,72 +94,19 @@ class Settings {
 					'title'       => esc_html__( 'Default Style', 'gk-gravityview-dashboard-views' ),
 					'description' => esc_html__( 'Choose how you would like to style your Views.', 'gk-gravityview-dashboard-views' ),
 					'value'       => $gravityview_settings['dashboard_views_stylesheet'] ?? $settings['gravityview']['defaults']['dashboard_views_stylesheet'],
-					'choices'     => [
+					'choices'     => array_merge(
 						[
-							'title' => esc_html__( 'Unstyled', 'gk-gravityview-dashboard-views' ),
-							'value' => 'unstyled',
+							[
+								'title' => esc_html__( 'Unstyled', 'gk-gravityview-dashboard-views' ),
+								'value' => 'unstyled',
+							],
+							[
+								'title' => esc_html__( 'Custom Stylesheet', 'gk-gravityview-dashboard-views' ),
+								'value' => 'custom',
+							],
 						],
-						[
-							'title' => esc_html__( 'Custom Stylesheet', 'gk-gravityview-dashboard-views' ),
-							'value' => 'custom',
-						],
-						[
-							'title' => strtr(
-								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
-								[ '[framework]' => 'Chota' ]
-							),
-							'value' => 'chota',
-						],
-						[
-							'title' => strtr(
-								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
-								[ '[framework]' => 'Cirrus UI' ]
-							),
-							'value' => 'cirrus',
-						],
-						[
-							'title' => strtr(
-								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
-								[ '[framework]' => 'Marx' ]
-							),
-							'value' => 'marx',
-						],
-						[
-							'title' => strtr(
-								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
-								[ '[framework]' => 'MVP.css' ]
-							),
-							'value' => 'mvp',
-						],
-						[
-							'title' => strtr(
-								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
-								[ '[framework]' => 'Picnic CSS' ]
-							),
-							'value' => 'picnic',
-						],
-						[
-							'title' => strtr(
-								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
-								[ '[framework]' => 'Pico' ]
-							),
-							'value' => 'pico',
-						],
-						[
-							'title' => strtr(
-								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
-								[ '[framework]' => 'Pure' ]
-							),
-							'value' => 'pure',
-						],
-						[
-							'title' => strtr(
-								esc_html_x( 'Framework: [framework]', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
-								[ '[framework]' => 'Sakura' ]
-							),
-							'value' => 'sakura',
-						],
-					],
+						$css_framework_choices
+					),
 				],
 				[
 					'id'          => 'dashboard_views_stylesheet_custom',
