@@ -1,0 +1,31 @@
+:root {
+  --font-size: 1rem;
+}
+
+[id^="gv-view-"] {
+  & * {
+    font-size: initial;
+  }
+
+  .gv-table-container {
+    overflow-x: auto;
+  }
+
+  form.gv-widget-search {
+    input {
+      width: auto;
+    }
+
+    &:not(.gv-is-search) .gv-search-clear {
+      display: none;
+    }
+
+    .gv-search-clear {
+      margin: 0 3%;
+    }
+
+    .gv-search-box-submit {
+      align-items: baseline;
+    }
+  }
+}

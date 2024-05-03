@@ -6,6 +6,7 @@ use Exception;
 use GravityView_Delete_Entry;
 use GravityView_Duplicate_Entry;
 use GravityView_Field_Notes;
+use GravityView_Fields;
 use GravityView_frontend;
 use GravityView_Roles_Capabilities;
 use GravityView_View_Data;
@@ -41,7 +42,7 @@ class Plugin {
 		add_action( 'current_screen', [ $this, 'set_request' ], 1 );
 		add_action( 'current_screen', [ $this, 'process_entry' ] );
 
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_ui_assets' ] );
 		add_action( 'gravityview_noconflict_scripts', [ $this, 'noconflict_scripts' ] );
 		add_action( 'gravityview_noconflict_styles', [ $this, 'noconflict_styles' ] );
 
@@ -218,25 +219,47 @@ class Plugin {
 	}
 
 	/**
-	 * Enqueues required scripts sometimes.
-	 * Called from the `admin_enqueue_scripts` action.
+	 * Enqueues UI assets.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_ui_assets() {
+		global $wp_filter;
+
 		if ( ! self::is_dashboard_view() ) {
 			return;
 		}
 
+		$styles = [
+			'build/css/pico.min.css',
+		];
+
+		foreach ( $styles as $style ) {
+			if ( ! file_exists( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $style ) ) {
+				continue;
+			}
+
+			wp_enqueue_style(
+				'gravityview-dashboard-views-' . md5( $style ),
+				plugins_url( $style, GV_DASHBOARD_VIEWS_PLUGIN_FILE ),
+				[],
+				filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $style )
+			);
+		}
+
+		// Unload unnecessary WP styles that may cause interference.
+		foreach ( [ 'forms', 'buttons' ] as $style ) {
+			wp_deregister_style( $style );
+			wp_register_style( $style, 'false' ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+		}
+
 		// Add approval scripts and styles.
-		$approval_field = \GravityView_Fields::get_instance( 'entry_approval' );
+		$approval_field = GravityView_Fields::get_instance( 'entry_approval' );
 		$approval_field->register_scripts_and_styles();
 
 		// Add notes scripts and styles.
-		global $wp_filter;
-
 		$enqueue_scripts = $wp_filter['wp_enqueue_scripts'];
 
 		if ( ! $enqueue_scripts ) {
