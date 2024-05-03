@@ -16,6 +16,8 @@ use GV\View;
 use GV_Extension_DataTables;
 use GV_Extension_DataTables_Data;
 use WP_Post;
+use GravityKitFoundation;
+use GV\Plugin_Settings as GravityViewPluginSettings;
 
 class Plugin {
 	const PAGE_SLUG = 'dashboard_views';
@@ -68,6 +70,8 @@ class Plugin {
 		add_action( 'gravityview_after', [ $this, 'unset_post_global' ], 10000 );
 
 		add_filter( 'wp_redirect', [ $this, 'handle_redirects' ] );
+
+		new Settings();
 
 		// Support DataTables.
 		if ( class_exists( 'GV_Extension_DataTables' ) ) {
@@ -232,28 +236,7 @@ class Plugin {
 			return;
 		}
 
-		$styles = [
-			'build/css/pico.min.css',
-		];
-
-		foreach ( $styles as $style ) {
-			if ( ! file_exists( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $style ) ) {
-				continue;
-			}
-
-			wp_enqueue_style(
-				'gravityview-dashboard-views-' . md5( $style ),
-				plugins_url( $style, GV_DASHBOARD_VIEWS_PLUGIN_FILE ),
-				[],
-				filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $style )
-			);
-		}
-
-		// Unload unnecessary WP styles that may cause interference.
-		foreach ( [ 'forms', 'buttons' ] as $style ) {
-			wp_deregister_style( $style );
-			wp_register_style( $style, 'false' ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-		}
+		$this->enqueue_view_stylesheet();
 
 		// Add approval scripts and styles.
 		$approval_field = GravityView_Fields::get_instance( 'entry_approval' );
@@ -276,6 +259,66 @@ class Plugin {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Enqueues the View stylesheet.
+	 *
+	 * @since TBD
+	 *
+	 * @return void
+	 */
+	public function enqueue_view_stylesheet() {
+		if ( ! class_exists( 'GravityKitFoundation' ) ) {
+			return;
+		}
+
+		$handle = 'gravityview-dashboard-views-stylesheet';
+
+		$gravityview_settings = GravityKitFoundation::settings()->get_plugin_settings( GravityViewPluginSettings::SETTINGS_PLUGIN_ID );
+
+		$unload_wp_styles = function () {
+			// Unload unnecessary WP styles that may cause interference.
+			foreach ( [ 'forms', 'buttons' ] as $style ) {
+				wp_deregister_style( $style );
+				wp_register_style( $style, 'false' ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			}
+		};
+
+		if ( empty( $gravityview_settings['dashboard_views_stylesheet'] ) || 'unstyled' === $gravityview_settings['dashboard_views_stylesheet'] ) {
+			return;
+		}
+
+		if ( 'custom' === ( $gravityview_settings['dashboard_views_stylesheet'] ?? '' ) && ! empty( $gravityview_settings['dashboard_views_stylesheet_custom'] ) ) {
+			wp_enqueue_style(
+				$handle,
+				$gravityview_settings['dashboard_views_stylesheet_custom'],
+				[],
+				GV_DASHBOARD_VIEWS_VERSION
+			);
+
+			$unload_wp_styles();
+
+			return;
+		}
+
+		$stylesheet = "build/css/{$gravityview_settings['dashboard_views_stylesheet']}.min.css";
+
+		if ( ! file_exists( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $stylesheet ) ) {
+			do_action( 'gravityview_log_warning', "Dashboard Views stylesheet {$stylesheet} does not exist." );
+
+			return;
+		}
+
+		wp_enqueue_style(
+			$handle,
+			plugins_url( $stylesheet, GV_DASHBOARD_VIEWS_PLUGIN_FILE ),
+			[],
+			filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $stylesheet )
+		);
+
+		$unload_wp_styles();
 	}
 
 	/**
