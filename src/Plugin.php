@@ -5,6 +5,7 @@ namespace GravityKit\GravityView\DashboardViews;
 use Exception;
 use GravityView_Delete_Entry;
 use GravityView_Duplicate_Entry;
+use GravityView_Edit_Entry;
 use GravityView_Field_Notes;
 use GravityView_Fields;
 use GravityView_frontend;
