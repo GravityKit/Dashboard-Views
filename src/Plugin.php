@@ -63,6 +63,12 @@ class Plugin {
 		}
 
 		foreach ( $views as $view ) {
+			$view_settings = gravityview_get_template_settings( $view->ID );
+
+			if ( ! (bool) ( $view_settings['dashboard_views_enable'] ?? 0 ) ) {
+				continue;
+			}
+
 			$dashboard_views[] = [
 				'id'    => $view->ID,
 				'link'  => add_query_arg(
