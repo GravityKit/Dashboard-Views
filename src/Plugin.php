@@ -65,7 +65,7 @@ class Plugin {
 			$dashboard_views[] = [
 				'id'    => $view->ID,
 				'link'  => add_query_arg(
-					[ 'page' => AdminMenu::WP_ADMIN_MENU_PAGE_PREFIX . $view->ID ],
+					[ 'page' => AdminMenu::get_view_submenu_slug( (int) $view->ID ) ],
 					admin_url( 'admin.php' )
 				),
 				'title' => get_the_title( $view ),
@@ -351,7 +351,6 @@ class Plugin {
 				filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $dashboard_view_script ),
 				false
 			);
-
 		}
 
 		// Entry Approval assets.
@@ -450,7 +449,7 @@ class Plugin {
 		if ( $view ) {
 			$args = array_merge(
 				[
-					'page' => AdminMenu::WP_ADMIN_MENU_PAGE_PREFIX . $view->ID,
+					'page' => AdminMenu::get_view_submenu_slug( (int) $view->ID ),
 				],
 				$args
 			);

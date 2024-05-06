@@ -4,7 +4,7 @@ document.addEventListener( 'keydown', function ( event ) {
 
 		document.addEventListener( 'keydown', function ( event ) {
 			if ( ( event.key === 'e' || event.key === 'E' ) && vPressed ) {
-				const postIdMatch = window.location.href.match( /page=[a-zA-Z0-9_-]+-(\d+)/ );
+				const postIdMatch = window.location.href.match( /page=[a-zA-Z0-9_-]+-(\d+)(?:&|$)/ );
 
 				if ( !postIdMatch || !postIdMatch[ 1 ] ) {
 					return;

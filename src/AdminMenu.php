@@ -11,9 +11,6 @@ use GV\Plugin_Settings as GravityViewPluginSettings;
 class AdminMenu {
 	const WP_ADMIN_MENU_SLUG = '_gk_gravityview_dashboard_views';
 
-	const WP_ADMIN_MENU_PAGE_PREFIX       = 'dashboard-view-';
-	const WP_ADMIN_MENU_PAGE_PREFIX_REGEX = '/' . self::WP_ADMIN_MENU_PAGE_PREFIX . '\d+$/';
-
 	/**
 	 * Submenus of the top menu.
 	 *
@@ -207,7 +204,7 @@ class AdminMenu {
 	}
 
 	/**
-	 * Adds a submenu to the GravityKit top-level menu in WP admin.
+	 * Adds a submenu to the top-level Dashboard View menu.
 	 *
 	 * @since 1.0.0
 	 *
@@ -260,12 +257,12 @@ class AdminMenu {
 
 		foreach ( $dashboard_views as $dashboard_view ) {
 			$submenus['top'][] = [
-				'id'         => self::WP_ADMIN_MENU_PAGE_PREFIX . $dashboard_view['id'],
+				'id'         => self::get_view_submenu_slug( (int) $dashboard_view['id'] ),
 				'page_title' => $dashboard_view['title'],
 				'menu_title' => $dashboard_view['title'],
 				'capability' => 'gravityview_view_entries',
 				'callback'   => function () use ( $dashboard_view ) {
-					$_REQUEST['dashboard_view'] = $dashboard_view['id'];
+					$_REQUEST['_dashboard_view'] = $dashboard_view['id']; // This is used by the Request class to determine the current View ID.
 
 					gravityview()->request = new Request();
 
@@ -334,5 +331,53 @@ class AdminMenu {
 				unset( $menu[ $index ] );
 			}
 		}
+	}
+
+	/**
+	 * Returns the View submenu prefix.
+	 *
+	 * @since TBD
+	 *
+	 * @return string
+	 */
+	public static function get_view_submenu_prefix() {
+		$gravityview_settings = GravityKitFoundation::settings()->get_plugin_settings( GravityViewPluginSettings::SETTINGS_PLUGIN_ID );
+
+		$prefix = sanitize_title( $gravityview_settings['dashboard_views_menu_name'] ?? 'Dashboard Views' );
+
+		/**
+		 * @filter `gk/gravityview/dashboard-views/admin-menu/submenu-prefix`
+		 *
+		 * @since  TBD
+		 *
+		 * @param string $prefix View prefix.
+		 */
+		return apply_filters( 'gk/gravityview/dashboard-views/admin-menu/submenu-prefix', $prefix );
+	}
+
+	/**
+	 * Returns the submenu slug for a given View ID.
+	 *
+	 * @since TBD
+	 *
+	 * @param int $view_id The View ID.
+	 *
+	 * @return string
+	 */
+	public static function get_view_submenu_slug( int $view_id ) {
+		return self::get_view_submenu_prefix() . "-{$view_id}";
+	}
+
+	/**
+	 * Checks if the provided menu slug is a View submenu.
+	 *
+	 * @since TBD
+	 *
+	 * @param string $slug The submenu slug.
+	 *
+	 * @return false|int
+	 */
+	public static function is_view_submenu( $slug ) {
+		return preg_match( '/' . self::get_view_submenu_prefix() . '-\d+/', $slug );
 	}
 }

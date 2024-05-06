@@ -50,7 +50,7 @@ class Request extends GravityViewRequest {
 			return false;
 		}
 
-		if ( $current_screen && ! preg_match( AdminMenu::WP_ADMIN_MENU_PAGE_PREFIX_REGEX, $current_screen->id ) ) {
+		if ( $current_screen && ! AdminMenu::is_view_submenu( $current_screen->id ) ) {
 			return false;
 		}
 
@@ -58,7 +58,7 @@ class Request extends GravityViewRequest {
 			return true;
 		}
 
-		return $this->is_admin() && preg_match( AdminMenu::WP_ADMIN_MENU_PAGE_PREFIX_REGEX, $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return $this->is_admin() && AdminMenu::is_view_submenu( $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Request extends GravityViewRequest {
 			return false;
 		}
 
-		return View::by_id( $_REQUEST['dashboard_view'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return View::by_id( $_REQUEST['_dashboard_view'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
