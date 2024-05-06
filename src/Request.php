@@ -4,7 +4,6 @@ namespace GravityKit\GravityView\DashboardViews;
 
 use GV\Entry;
 use GV\GF_Entry;
-use GV\Utils;
 use GV\View;
 use GV\Request as GravityViewRequest;
 
@@ -70,7 +69,7 @@ class Request extends GravityViewRequest {
 	 * @return bool True: We're inside a DataTables request in an admin View. False: We're not!
 	 */
 	private function doing_datatables_ajax_request() {
-		return 'gv_datatables_data' === Utils::_REQUEST( 'action' );
+		return 'gv_datatables_data' === $_REQUEST['action'] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
@@ -87,7 +86,7 @@ class Request extends GravityViewRequest {
 			return false;
 		}
 
-		return View::by_id( Utils::_GET( 'gvid' ) );
+		return View::by_id( $_REQUEST['dashboard_view'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
@@ -104,7 +103,7 @@ class Request extends GravityViewRequest {
 			return false;
 		}
 
-		return GF_Entry::by_id( Utils::_GET( 'entry_id' ) );
+		return GF_Entry::by_id( $_GET['entry_id'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**

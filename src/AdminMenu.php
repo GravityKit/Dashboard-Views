@@ -265,7 +265,7 @@ class AdminMenu {
 				'menu_title' => $dashboard_view['title'],
 				'capability' => 'gravityview_view_entries',
 				'callback'   => function () use ( $dashboard_view ) {
-					$_GET['gvid'] = $dashboard_view['id'];
+					$_REQUEST['dashboard_view'] = $dashboard_view['id'];
 
 					gravityview()->request = new Request();
 
