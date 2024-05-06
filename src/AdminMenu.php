@@ -109,15 +109,15 @@ class AdminMenu {
 		$menu_title = $gravityview_settings['dashboard_views_menu_name'] ?? esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' );
 
 		/**
-		 * Controls the position of the top-level GravityKit admin menu.
+		 * Controls the position of the top-level admin menu.
 		 *
-		 * @filter 'gk/gravityview/dashboard-views/menu/position'
+		 * @filter 'gk/gravityview/dashboard-views/admin-menu/position'
 		 *
 		 * @since  TBD
 		 *
 		 * @param float $menu_position Default: value of `gform_menu_position` filter +  0.001.
 		 */
-		$menu_position = apply_filters( 'gk/gravityview/dashboard-views/menu/position', (float) apply_filters( 'gform_menu_position', '16.9' ) + .0001 );
+		$menu_position = apply_filters( 'gk/gravityview/dashboard-views/admin-menu/position', (float) apply_filters( 'gform_menu_position', '16.9' ) + .0001 );
 
 		add_menu_page(
 			$page_title,
@@ -277,13 +277,13 @@ class AdminMenu {
 		/**
 		 * Modifies the submenus object.
 		 *
-		 * @filter `gk/gravityview/dashboard-views/menu/submenus`
+		 * @filter `gk/gravityview/dashboard-views/admin-menu/submenus`
 		 *
 		 * @since  TBD
 		 *
 		 * @param array $submenus Submenus.
 		 */
-		return apply_filters( 'gk/gravityview/dashboard-views/menu/submenus', $submenus );
+		return apply_filters( 'gk/gravityview/dashboard-views/admin-menu/submenus', $submenus );
 	}
 
 	/**
