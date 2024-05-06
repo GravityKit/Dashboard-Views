@@ -69,7 +69,7 @@ class Request extends GravityViewRequest {
 	 * @return bool True: We're inside a DataTables request in an admin View. False: We're not!
 	 */
 	private function doing_datatables_ajax_request() {
-		return 'gv_datatables_data' === $_REQUEST['action'] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return 'gv_datatables_data' === ( $_REQUEST['action'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
