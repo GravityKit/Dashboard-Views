@@ -9,6 +9,7 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( '@lodder/grunt-postcss' );
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-clean' );
+	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 
 	grunt.initConfig( {
 		postcss: {
@@ -116,6 +117,14 @@ module.exports = function ( grunt ) {
 			}
 		},
 
+		uglify: {
+			dashboardView: {
+				files: {
+					'build/js/dashboard-view.min.js': 'assets/js/dashboard-view.js'
+				}
+			}
+		},
+
 		clean: {
 			css: [ 'build/css/_*', 'build/css/*.css', '!build/css/*.min.css' ]
 		},
@@ -124,6 +133,13 @@ module.exports = function ( grunt ) {
 			css: {
 				files: [ 'assets/css/**/*.css', 'assets/css/**/*.scss' ],
 				tasks: [ 'styles' ],
+				options: {
+					spawn: false,
+				},
+			},
+			js: {
+				files: [ 'assets/js/**/*.js' ],
+				tasks: [ 'scripts' ],
 				options: {
 					spawn: false,
 				},
@@ -173,6 +189,7 @@ module.exports = function ( grunt ) {
 		}
 	} );
 
-	grunt.registerTask( 'default', [ 'styles', 'addtextdomain', 'exec:makepot' ] );
+	grunt.registerTask( 'default', [ 'styles', 'scripts', 'addtextdomain', 'exec:makepot' ] );
 	grunt.registerTask( 'styles', [ 'postcss', 'sass', 'concat', 'cssmin', 'clean' ] );
+	grunt.registerTask( 'scripts', [ 'uglify' ] );
 };

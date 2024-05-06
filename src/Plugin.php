@@ -339,6 +339,21 @@ class Plugin {
 
 		$this->enqueue_view_stylesheet();
 
+		$dashboard_view_script = 'build/js/dashboard-view.min.js';
+
+		if ( ! file_exists( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $dashboard_view_script ) ) {
+			do_action( 'gravityview_log_warning', "Dashboard Views script {$dashboard_view_script} does not exist." );
+		} else {
+			wp_enqueue_script(
+				'gravityview-dashboard-views-script',
+				plugins_url( $dashboard_view_script, GV_DASHBOARD_VIEWS_PLUGIN_FILE ),
+				[],
+				filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $dashboard_view_script ),
+				false
+			);
+
+		}
+
 		// Entry Approval assets.
 		$approval_field = GravityView_Fields::get_instance( 'entry_approval' );
 		$approval_field->register_scripts_and_styles();
@@ -360,7 +375,7 @@ class Plugin {
 	}
 
 	/**
-	 * Enqueues the View stylesheet.
+	 * Enqueues the View stylesheet that's configured in GravityView settings.
 	 *
 	 * @since TBD
 	 *
