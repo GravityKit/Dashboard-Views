@@ -6,9 +6,9 @@ use GravityKitFoundation;
 use GV\Plugin_Settings as GravityViewPluginSettings;
 
 /**
- * Global GravityView and View-specific settings.
+ * Global GravityView settings in Foundation.
  */
-class Settings {
+class FoundationSettings {
 	/**
 	 * Class constructor.
 	 *
@@ -83,11 +83,32 @@ class Settings {
 			];
 		}
 
-		$settings[ $gravityview_settings_id ]['defaults']['dashboard_views_stylesheet'] = 'unstyled';
+		$settings[ $gravityview_settings_id ]['defaults'] = array_merge(
+			$settings[ $gravityview_settings_id ]['defaults'],
+			[
+				'dashboard_views_stylesheet'        => 'unstyled',
+				'dashboard_views_stylesheet_custom' => $site_url,
+				'dashboard_views_menu_name'         => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
+			]
+		);
 
 		$settings[ $gravityview_settings_id ]['sections'][] = [
 			'title'    => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
 			'settings' => [
+				[
+					'id'          => 'dashboard_views_menu_name',
+					'title'       => esc_html__( 'Menu Name', 'gk-gravityview-dashboard-views' ),
+					'description' => esc_html__( 'Enter the name of the Dashboard menu item under which the Views will appear.', 'gk-gravityview-dashboard-views' ),
+					'type'        => 'text',
+					'value'       => $gravityview_settings['dashboard_views_menu_name'] ?? $settings['gravityview']['defaults']['dashboard_views_menu_name'],
+					'required'    => true,
+					'validation'  => [
+						[
+							'rule'    => 'required',
+							'message' => esc_html__( 'Please enter a menu name', 'gk-gravityview-dashboard-views' ),
+						],
+					],
+				],
 				[
 					'id'          => 'dashboard_views_stylesheet',
 					'type'        => 'select',
@@ -114,7 +135,7 @@ class Settings {
 					'description' => esc_html__( 'Enter the URL of a custom stylesheet.', 'gk-gravityview-dashboard-views' ),
 					'type'        => 'text',
 					'placeholder' => $site_url,
-					'value'       => $gravityview_settings['dashboard_views_stylesheet_custom'] ?? $site_url,
+					'value'       => $gravityview_settings['dashboard_views_stylesheet_custom'] ?? $settings['gravityview']['defaults']['dashboard_views_stylesheet_custom'],
 					'required'    => true,
 					'requires'    => [
 						'id'       => 'dashboard_views_stylesheet',

@@ -17,14 +17,14 @@ define( 'GV_DASHBOARD_VIEWS_VERSION', '1.1-beta' );
 define( 'GV_DASHBOARD_VIEWS_PLUGIN_FILE', __FILE__ );
 
 add_action(
-    'gravityview/loaded',
-    function () {
+	'gravityview/loaded',
+	function () {
 		if ( ! class_exists( 'GravityKit\GravityView\Foundation\Core' ) ) {
 			return;
 		}
 
 		GravityKit\GravityView\Foundation\Core::register( GV_DASHBOARD_VIEWS_PLUGIN_FILE );
 
-		( new GravityKit\GravityView\DashboardViews\Plugin() )->add_hooks();
+		new GravityKit\GravityView\DashboardViews\Plugin();
 	}
 );

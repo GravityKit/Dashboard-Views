@@ -2,9 +2,21 @@
   --font-size: 1rem;
 }
 
-[id^="gv-view-"] {
+body {
+  background: white;
+}
+
+#wpfooter, .update-nag {
+  display: none
+}
+
+.wrap.dashboard-view {
   & * {
     font-size: initial;
+  }
+
+  .gv-grid-col-1-2 {
+    width: auto;
   }
 
   .gv-table-container {
@@ -26,6 +38,18 @@
 
     .gv-search-box-submit {
       align-items: baseline;
+    }
+  }
+
+  .gv-edit-entry-wrapper #publishing-action {
+    display: flex;
+
+    > * {
+      margin-right: 3%;
+    }
+
+    > *:last-child {
+      margin-right: 0;
     }
   }
 }

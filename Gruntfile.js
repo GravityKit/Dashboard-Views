@@ -15,7 +15,7 @@ module.exports = function ( grunt ) {
 			options: {
 				processors: [
 					require( 'postcss-selector-namespace' )( {
-						namespace: '.wrap',
+						namespace: '.wrap.dashboard-view',
 						not: [ ':root', '@keyframes', '@font-face' ]
 					} ),
 					require( 'autoprefixer' )( { overrideBrowserslist: [ 'last 2 versions' ] } ),

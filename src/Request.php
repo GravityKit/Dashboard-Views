@@ -51,7 +51,7 @@ class Request extends GravityViewRequest {
 			return false;
 		}
 
-		if ( $current_screen && 'admin_page_' . Plugin::PAGE_SLUG !== $current_screen->id ) {
+		if ( $current_screen && ! preg_match( AdminMenu::WP_ADMIN_MENU_PAGE_PREFIX_REGEX, $current_screen->id ) ) {
 			return false;
 		}
 
@@ -59,7 +59,7 @@ class Request extends GravityViewRequest {
 			return true;
 		}
 
-		return $this->is_admin() && Plugin::PAGE_SLUG === Utils::_GET( 'page' );
+		return $this->is_admin() && preg_match( AdminMenu::WP_ADMIN_MENU_PAGE_PREFIX_REGEX, $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
