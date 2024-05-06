@@ -14,7 +14,7 @@ class AdminMenu {
 	/**
 	 * Submenus of the top menu.
 	 *
-	 * @since 1.0.0
+	 * @since TBD
 	 *
 	 * @var array
 	 */
@@ -37,7 +37,7 @@ class AdminMenu {
 	/**
 	 * Configures GravityKit top-level menu and submenu items in WP admin.
 	 *
-	 * @since 1.0.0
+	 * @since TBD
 	 *
 	 * @global array $menu
 	 * @global array $submenu
@@ -206,7 +206,7 @@ class AdminMenu {
 	/**
 	 * Adds a submenu to the top-level Dashboard View menu.
 	 *
-	 * @since 1.0.0
+	 * @since TBD
 	 *
 	 * @param array  $submenu  The submenu data.
 	 * @param string $position The position of the submenu. Default: 'top'.
@@ -244,7 +244,7 @@ class AdminMenu {
 	/**
 	 * Returns submenus optionally modified by a filter.
 	 *
-	 * @since 1.0.0
+	 * @since TBD
 	 *
 	 * @return array
 	 */
@@ -286,7 +286,7 @@ class AdminMenu {
 	/**
 	 * Removes a submenu from the top-level menu in WP admin and if the top-level menu is empty, removes it as well.
 	 *
-	 * @since 1.0.0
+	 * @since TBD
 	 *
 	 * @global array $submenu
 	 *
@@ -317,7 +317,7 @@ class AdminMenu {
 	/**
 	 * Removes the top-level menu from WP admin.
 	 *
-	 * @since 1.0.0
+	 * @since TBD
 	 *
 	 * @global array $menu
 	 *
