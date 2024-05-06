@@ -37,6 +37,7 @@ class Plugin {
 		add_filter( 'gravityview_page_links_args', [ $this, 'rewrite_pagination_links' ] );
 
 		new FoundationSettings();
+		new ViewSettings();
 		new AdminMenu();
 	}
 
