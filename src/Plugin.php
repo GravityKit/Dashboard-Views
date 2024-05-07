@@ -14,8 +14,11 @@ use GV\Entry_Renderer;
 use GV\View;
 use GV\View_Renderer;
 use GV\Plugin_Settings as GravityViewPluginSettings;
+use WP_Post;
 
 class Plugin {
+	const UI_ASSETS_PREFIX = 'dashboard-view';
+
 	/**
 	 * Class constructor.
 	 *
@@ -339,6 +342,25 @@ class Plugin {
 	 */
 	public function enqueue_ui_assets() {
 		global $wp_filter;
+		global $post;
+
+		if ( $post instanceof WP_Post && 'gravityview' === $post->post_type && 'edit' === $post->filter ) {
+			$asset_prefix = self::UI_ASSETS_PREFIX . '-editor';
+
+			$this->enqueue_scripts(
+				[
+					$asset_prefix => "build/js/{$asset_prefix}.min.js",
+				]
+			);
+
+			$this->enqueue_styles(
+				[
+					$asset_prefix => "build/css/{$asset_prefix}.min.css",
+				]
+			);
+
+			return;
+		}
 
 		if ( ! self::is_dashboard_view() ) {
 			return;
@@ -346,19 +368,11 @@ class Plugin {
 
 		$this->enqueue_view_stylesheet();
 
-		$dashboard_view_script = 'build/js/dashboard-view.min.js';
-
-		if ( ! file_exists( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $dashboard_view_script ) ) {
-			do_action( 'gravityview_log_warning', "Dashboard Views script {$dashboard_view_script} does not exist." );
-		} else {
-			wp_enqueue_script(
-				'gravityview-dashboard-views-script',
-				plugins_url( $dashboard_view_script, GV_DASHBOARD_VIEWS_PLUGIN_FILE ),
-				[],
-				filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $dashboard_view_script ),
-				false
-			);
-		}
+		$this->enqueue_scripts(
+			[
+				self::UI_ASSETS_PREFIX => 'build/js/' . self::UI_ASSETS_PREFIX . '.min.js',
+			]
+		);
 
 		// Entry Approval assets.
 		$approval_field = GravityView_Fields::get_instance( 'entry_approval' );
@@ -381,6 +395,55 @@ class Plugin {
 	}
 
 	/**
+	 * Helper method that enqueues multiple scripts at once.
+	 *
+	 * @since TBD
+	 *
+	 * @param array[] $scripts The scripts to enqueue.
+	 *
+	 * @return void
+	 */
+	private function enqueue_scripts( $scripts ) {
+		foreach ( $scripts as $handle => $script ) {
+			if ( ! file_exists( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $script ) ) {
+				do_action( 'gravityview_log_warning', "Dashboard Views script {$script} does not exist." );
+			} else {
+				wp_enqueue_script(
+					$handle,
+					plugins_url( $script, GV_DASHBOARD_VIEWS_PLUGIN_FILE ),
+					[],
+					filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $script ),
+					false
+				);
+			}
+		}
+	}
+
+	/**
+	 * Helper method that enqueues multiple styles at once.
+	 *
+	 * @since TBD
+	 *
+	 * @param array[] $styles The scripts to enqueue.
+	 *
+	 * @return void
+	 */
+	private function enqueue_styles( $styles ) {
+		foreach ( $styles as $handle => $style ) {
+			if ( ! file_exists( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $style ) ) {
+				do_action( 'gravityview_log_warning', "Dashboard Views style {$style} does not exist." );
+			} else {
+				wp_enqueue_style(
+					$handle,
+					plugins_url( $style, GV_DASHBOARD_VIEWS_PLUGIN_FILE ),
+					[],
+					filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $style )
+				);
+			}
+		}
+	}
+
+	/**
 	 * Enqueues the View stylesheet that's configured in GravityView settings.
 	 *
 	 * @since TBD
@@ -392,9 +455,9 @@ class Plugin {
 			return;
 		}
 
-		$handle = 'gravityview-dashboard-views-stylesheet';
-
 		$gravityview_settings = GravityKitFoundation::settings()->get_plugin_settings( GravityViewPluginSettings::SETTINGS_PLUGIN_ID );
+
+		$stylesheet_prefix = self::UI_ASSETS_PREFIX;
 
 		$unload_wp_styles = function () {
 			// Unload unnecessary WP styles that may cause interference.
@@ -410,7 +473,7 @@ class Plugin {
 
 		if ( 'custom' === ( $gravityview_settings['dashboard_views_stylesheet'] ?? '' ) && ! empty( $gravityview_settings['dashboard_views_stylesheet_custom'] ) ) {
 			wp_enqueue_style(
-				$handle,
+				$stylesheet_prefix,
 				$gravityview_settings['dashboard_views_stylesheet_custom'],
 				[],
 				GV_DASHBOARD_VIEWS_VERSION
@@ -421,7 +484,7 @@ class Plugin {
 			return;
 		}
 
-		$stylesheet = "build/css/{$gravityview_settings['dashboard_views_stylesheet']}.min.css";
+		$stylesheet = "build/css/{$stylesheet_prefix}-{$gravityview_settings['dashboard_views_stylesheet']}.min.css";
 
 		if ( ! file_exists( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $stylesheet ) ) {
 			do_action( 'gravityview_log_warning', "Dashboard Views stylesheet {$stylesheet} does not exist." );
@@ -430,7 +493,7 @@ class Plugin {
 		}
 
 		wp_enqueue_style(
-			$handle,
+			$stylesheet_prefix,
 			plugins_url( $stylesheet, GV_DASHBOARD_VIEWS_PLUGIN_FILE ),
 			[],
 			filemtime( plugin_dir_path( GV_DASHBOARD_VIEWS_PLUGIN_FILE ) . $stylesheet )
