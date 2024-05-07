@@ -76,7 +76,7 @@ module.exports = function ( grunt ) {
 
 		concat: {
 			viewEditorCss: {
-				src: [ 'node_modules/tom-select/dist/css/tom-select.default.css', 'build/css/_dashboard-view-editor.sass.css' ],
+				src: [ 'node_modules/tom-select/dist/css/tom-select.css', 'build/css/_dashboard-view-editor.sass.css' ],
 				dest: 'build/css/dashboard-view-editor.css',
 			},
 			picoCss: {
