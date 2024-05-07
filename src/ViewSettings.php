@@ -177,7 +177,7 @@ class ViewSettings {
 		<tr style="vertical-align: top;" class="alternate">
 			<td scope="row" colspan="2">
 				<div class="gv-setting-container gv-setting-container-<?php echo esc_attr( $setting_key ); ?>" <?php echo $requires ? 'data-requires=' . esc_attr( $requires ) : ''; ?>>
-					<label for="gravityview_se_{$setting}">
+					<label for="gravityview_se_<?php echo esc_attr( $setting_key ); ?>">
 						<?php echo esc_html( $label ); ?> <span class="howto"><?php echo esc_html( $description ); ?></span>
 						<select id="gravityview_se_<?php echo esc_attr( $setting_key ); ?>" name="template_settings[<?php echo esc_attr( $setting_key ); ?>][]" multiple placeholder="<?php echo esc_attr( $placeholder ); ?>" autocomplete="off">
 							<?php
