@@ -56,6 +56,14 @@ class ViewSettings {
 	 * @return array
 	 */
 	public function add_settings_to_the_dashboards_view_tab( $settings ) {
+		global $wp_roles;
+
+		$roles = [];
+
+		foreach ( $wp_roles->roles as $role => $data ) {
+			$roles[ $role ] = $data['name'];
+		}
+
 		return array_merge(
 			$settings,
 			[
@@ -81,6 +89,7 @@ class ViewSettings {
 							'[/url]' => '</a>',
 						]
 					),
+					'roles'       => $roles,
 					'value'       => [ 'administrator' ],
 					'type'        => 'custom',
 					'requires'    => self::SETTINGS_PREFIX . '_enable',
@@ -163,14 +172,7 @@ class ViewSettings {
 		$placeholder    = $settings[ $setting_key ]['placeholder'] ?? '';
 		$selected_roles = $settings_values[ $setting_key ] ?? [];
 		$requires       = $settings[ $setting_key ]['requires'] ?? '';
-
-		$roles = [
-			'administrator' => esc_html__( 'Administrator', 'gk-gravityview-dashboard-views' ),
-			'editor'        => esc_html__( 'Editor', 'gk-gravityview-dashboard-views' ),
-			'author'        => esc_html__( 'Author', 'gk-gravityview-dashboard-views' ),
-			'contributor'   => esc_html__( 'Contributor', 'gk-gravityview-dashboard-views' ),
-			'subscriber'    => esc_html__( 'Subscriber', 'gk-gravityview-dashboard-views' ),
-		];
+		$roles          = $settings[ $setting_key ]['roles'] ?? [];
 
 		?>
 
