@@ -9,10 +9,4 @@ document.addEventListener( 'DOMContentLoaded', function () {
 	}
 
 	const userRolesSelectElement = new TomSelect( userRolesSelectElementId );
-
-	userRolesSelectElement.on( 'item_remove', function ( value ) {
-		if ( userRolesSelectElement.getValue().length === 0 ) {
-			userRolesSelectElement.addItem( 'administrator' );
-		}
-	} );
 } );

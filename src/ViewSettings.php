@@ -61,6 +61,10 @@ class ViewSettings {
 		$roles = [];
 
 		foreach ( $wp_roles->roles as $role => $data ) {
+			if ( 'administrator' === $role ) {
+				continue;
+			}
+
 			$roles[ $role ] = $data['name'];
 		}
 
@@ -90,7 +94,7 @@ class ViewSettings {
 						]
 					),
 					'roles'       => $roles,
-					'value'       => [ 'administrator' ],
+					'value'       => [],
 					'type'        => 'custom',
 					'requires'    => self::SETTINGS_PREFIX . '_enable',
 					'callback'    => [ $this, 'render_limit_access_to_user_roles_setting' ],
@@ -185,7 +189,7 @@ class ViewSettings {
 							<?php
 							foreach ( $roles as $role => $title ) {
 								?>
-								<option value="<?php echo esc_html( $role ); ?>" <?php echo in_array( $role, $selected_roles, true ) || 'administrator' === 'role' ? 'selected' : ''; ?>>
+								<option value="<?php echo esc_html( $role ); ?>" <?php echo in_array( $role, $selected_roles, true ) ? 'selected' : ''; ?>>
 									<?php echo esc_html( $title ); ?>
 								</option>
 								<?php
