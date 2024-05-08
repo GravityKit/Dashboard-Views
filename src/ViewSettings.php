@@ -68,13 +68,20 @@ class ViewSettings {
 			$roles[ $role ] = $data['name'];
 		}
 
+		$wp_post   = get_post( $_REQUEST['post'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$view_name = '';
+
+		if ( $wp_post instanceof WP_Post ) {
+			$view_name = $wp_post->post_title;
+		}
+
 		return array_merge(
 			$settings,
 			[
-				self::SETTINGS_PREFIX . '_enable'     => [
+				self::SETTINGS_PREFIX . '_enable'      => [
 					'label' => esc_html__( 'Show in Dashboard?', 'gk-gravityview-dashboard-views' ),
 					'desc'  => strtr(
-						esc_html__( 'This will make the View accessible in the WordPress Dashboard. Visit [url]GravityView settings[/url] for additional configuration options that apply to all Dashboard Views.', 'gk-gravityview-dashboard-views' ),
+						esc_html_x( 'This will make the View accessible in the WordPress Dashboard. Visit [url]GravityView settings[/url] for additional configuration options that apply to all Dashboard Views.', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
 						[
 							'[url]'  => '<a href="' . esc_url( GravityKitFoundation::settings()->get_plugin_settings_url( GravityViewPluginSettings::SETTINGS_PLUGIN_ID ) . '&s=3' ) . '">',
 							'[/url]' => '</a>',
@@ -83,7 +90,19 @@ class ViewSettings {
 					'type'  => 'checkbox',
 					'value' => 0,
 				],
-				self::SETTINGS_PREFIX . '_user_roles' => [
+				self::SETTINGS_PREFIX . '_custom_name' => [
+					'label' => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
+					'desc'  => strtr(
+						esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard.', 'gk-gravityview-dashboard-views' ),
+						[
+							'[url]'  => '<a href="' . esc_url( GravityKitFoundation::settings()->get_plugin_settings_url( GravityViewPluginSettings::SETTINGS_PLUGIN_ID ) . '&s=3' ) . '">',
+							'[/url]' => '</a>',
+						]
+					),
+					'type'  => 'text',
+					'value' => $view_name,
+				],
+				self::SETTINGS_PREFIX . '_user_roles'  => [
 					'label'       => esc_html__( 'Limit Access to User Role(s)', 'gk-gravityview-dashboard-views' ),
 					'placeholder' => esc_html__( 'Select user role(s)…', 'gk-gravityview-dashboard-views' ),
 					'desc'        => strtr(

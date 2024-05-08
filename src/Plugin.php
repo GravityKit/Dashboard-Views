@@ -68,7 +68,7 @@ class Plugin {
 		foreach ( $views as $view ) {
 			$view_settings = gravityview_get_template_settings( $view->ID );
 
-			if ( ! (bool) ( $view_settings['dashboard_views_enable'] ?? 0 ) ) {
+			if ( empty( $view_settings['dashboard_views_enable'] ) ) {
 				continue;
 			}
 
@@ -78,7 +78,7 @@ class Plugin {
 					[ 'page' => AdminMenu::get_view_submenu_slug( (int) $view->ID ) ],
 					admin_url( 'admin.php' )
 				),
-				'title' => get_the_title( $view ),
+				'title' => $view_settings[ ViewSettings::SETTINGS_PREFIX . '_custom_name' ] ?? $view->post_title,
 			];
 		}
 
