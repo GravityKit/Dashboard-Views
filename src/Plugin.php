@@ -17,6 +17,8 @@ use GV\Plugin_Settings as GravityViewPluginSettings;
 use WP_Post;
 
 class Plugin {
+	const DEFAULT_ACCESS_ROLE = 'administrator';
+
 	const UI_ASSETS_PREFIX = 'dashboard-view';
 
 	/**

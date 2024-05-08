@@ -61,7 +61,8 @@ class ViewSettings {
 		$roles = [];
 
 		foreach ( $wp_roles->roles as $role => $data ) {
-			if ( 'administrator' === $role ) {
+			// Exclude the default access role from selectable roles.
+			if ( Plugin::DEFAULT_ACCESS_ROLE === $role ) {
 				continue;
 			}
 

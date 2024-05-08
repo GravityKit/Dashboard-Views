@@ -11,8 +11,6 @@ use GV\Plugin_Settings as GravityViewPluginSettings;
 class AdminMenu {
 	const WP_ADMIN_MENU_SLUG = '_gk_gravityview_dashboard_views';
 
-	const DEFAULT_ACCESS_ROLE = 'administrator';
-
 	/**
 	 * Submenus of the top menu.
 	 *
@@ -278,7 +276,7 @@ class AdminMenu {
 				'id'         => self::get_view_submenu_slug( (int) $dashboard_view['id'] ),
 				'page_title' => $dashboard_view['title'],
 				'menu_title' => $dashboard_view['title'],
-				'capability' => $user_first_met_role ?? self::DEFAULT_ACCESS_ROLE,
+				'capability' => $user_first_met_role ?? Plugin::DEFAULT_ACCESS_ROLE,
 				'callback'   => function () use ( $dashboard_view ) {
 					$_REQUEST['_dashboard_view'] = $dashboard_view['id']; // This is used by the Request class to determine the current View ID.
 
