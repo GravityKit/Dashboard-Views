@@ -68,13 +68,6 @@ class ViewSettings {
 			$roles[ $role ] = $data['name'];
 		}
 
-		$wp_post   = get_post( $_REQUEST['post'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$view_name = '';
-
-		if ( $wp_post instanceof WP_Post ) {
-			$view_name = $wp_post->post_title;
-		}
-
 		return array_merge(
 			$settings,
 			[
@@ -91,16 +84,17 @@ class ViewSettings {
 					'value' => 0,
 				],
 				self::SETTINGS_PREFIX . '_custom_name' => [
-					'label' => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
-					'desc'  => strtr(
+					'label'    => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
+					'desc'     => strtr(
 						esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard.', 'gk-gravityview-dashboard-views' ),
 						[
 							'[url]'  => '<a href="' . esc_url( GravityKitFoundation::settings()->get_plugin_settings_url( GravityViewPluginSettings::SETTINGS_PLUGIN_ID ) . '&s=3' ) . '">',
 							'[/url]' => '</a>',
 						]
 					),
-					'type'  => 'text',
-					'value' => $view_name,
+					'requires' => self::SETTINGS_PREFIX . '_enable',
+					'type'     => 'text',
+					'value'    => get_the_title( $_REQUEST['post'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				],
 				self::SETTINGS_PREFIX . '_user_roles'  => [
 					'label'       => esc_html__( 'Limit Access to User Role(s)', 'gk-gravityview-dashboard-views' ),
@@ -193,9 +187,9 @@ class ViewSettings {
 		$label          = $settings[ $setting_key ]['label'] ?? '';
 		$description    = $settings[ $setting_key ]['desc'] ?? '';
 		$placeholder    = $settings[ $setting_key ]['placeholder'] ?? '';
-		$selected_roles = $settings_values[ $setting_key ] ?? [];
 		$requires       = $settings[ $setting_key ]['requires'] ?? '';
 		$roles          = $settings[ $setting_key ]['roles'] ?? [];
+		$selected_roles = $settings_values[ $setting_key ] ?? [];
 
 		?>
 		<tr style="vertical-align: top;" class="alternate">
