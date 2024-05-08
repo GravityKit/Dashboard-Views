@@ -47,7 +47,7 @@ class ViewSettings {
 	}
 
 	/**
-	 * Add settings to the Dashboard Views tab in the View editor.
+	 * Adds settings to the Dashboard Views tab in the View editor.
 	 *
 	 * @since TBD
 	 *
@@ -106,7 +106,7 @@ class ViewSettings {
 	}
 
 	/**
-	 * Render the Dashboard Views settings tab content.
+	 * Renders the Dashboard Views settings tab content.
 	 *
 	 * @since TBD
 	 *
