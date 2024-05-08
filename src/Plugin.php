@@ -135,16 +135,7 @@ class Plugin {
 	 * @return void
 	 */
 	public static function render_view() {
-		echo '
-		<style> 
- 
-		</style>';
-
-		if ( version_compare( \GV\Plugin::$version, '2.16', '>=' ) ) {
-			$view = gravityview()->request->is_view( true );
-		} else {
-			$view = gravityview()->request->is_view();
-		}
+		$view = gravityview()->request->is_view();
 
 		if ( ! $view ) {
 			return;
@@ -164,15 +155,46 @@ class Plugin {
 			gravityview()->plugin->include_legacy_frontend( true );
 		}
 
+		$layout = 'directory';
+
 		if ( gravityview()->request->is_edit_entry() ) {
+			$layout = 'edit_entry';
+
 			$output = ( new Edit_Entry_Renderer() )->render( gravityview()->request->is_entry(), $view, gravityview()->request ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( gravityview()->request->is_entry() ) {
+			$layout = 'single_entry';
+
 			$output = ( new Entry_Renderer() )->render( gravityview()->request->is_entry(), $view, gravityview()->request ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
 			$output = ( new View_Renderer() )->render( $view ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
-		echo "<div class='wrap dashboard-view'>{$output}</div>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		/**
+		 * Modifies the View output.
+		 *
+		 * @since  TBD
+		 * @filter `gk/gravityview/dashboard-views/view/output`
+		 *
+		 * @param string $view_template The View template.
+		 * @param View   $view          The View.
+		 * @param string $layout        The layout.
+		 */
+		$output = apply_filters( 'gk/gravityview/dashboard-views/view/output', $output, $view, $layout );
+
+		$view_template = '<div class="wrap dashboard-view">[output]</div>';
+
+		/**
+		 * Modifies the View template.
+		 *
+		 * @since  TBD
+		 * @filter `gk/gravityview/dashboard-views/view/template`
+		 *
+		 * @param string $view_template The View template.
+		 * @param View   $view          The View.
+		 */
+		$view_template = apply_filters( 'gk/gravityview/dashboard-views/view/template', $view_template, $view );
+
+		echo str_replace( '[output]', $output, $view_template ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		$view_data = GravityView_View_Data::getInstance();
 		$view_data->add_view( $view->ID );
