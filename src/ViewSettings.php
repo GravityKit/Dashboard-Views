@@ -85,13 +85,7 @@ class ViewSettings {
 				],
 				self::SETTINGS_PREFIX . '_custom_name' => [
 					'label'    => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
-					'desc'     => strtr(
-						esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard.', 'gk-gravityview-dashboard-views' ),
-						[
-							'[url]'  => '<a href="' . esc_url( GravityKitFoundation::settings()->get_plugin_settings_url( GravityViewPluginSettings::SETTINGS_PLUGIN_ID ) . '&s=3' ) . '">',
-							'[/url]' => '</a>',
-						]
-					),
+					'desc'     => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard.', 'gk-gravityview-dashboard-views' ),
 					'requires' => self::SETTINGS_PREFIX . '_enable',
 					'type'     => 'text',
 					'value'    => get_the_title( $_REQUEST['post'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -99,13 +93,7 @@ class ViewSettings {
 				self::SETTINGS_PREFIX . '_user_roles'  => [
 					'label'       => esc_html__( 'Limit Access to User Role(s)', 'gk-gravityview-dashboard-views' ),
 					'placeholder' => esc_html__( 'Select user role(s)…', 'gk-gravityview-dashboard-views' ),
-					'desc'        => strtr(
-						esc_html__( 'The View will only be accessible to users with the selected role(s). Administrators always have access.', 'gk-gravityview-dashboard-views' ),
-						[
-							'[url]'  => '<a href="' . esc_url( GravityKitFoundation::settings()->get_plugin_settings_url( GravityViewPluginSettings::SETTINGS_PLUGIN_ID ) . '&s=3' ) . '">',
-							'[/url]' => '</a>',
-						]
-					),
+					'desc'        => esc_html__( 'The View will only be accessible to users with the selected role(s). Administrators always have access.', 'gk-gravityview-dashboard-views' ),
 					'roles'       => $roles,
 					'value'       => [],
 					'type'        => 'custom',
