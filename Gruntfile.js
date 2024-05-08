@@ -40,15 +40,15 @@ module.exports = function ( grunt ) {
 			},
 			dist: {
 				files: {
-					'build/css/_pico.postcss.css': 'node_modules/@picocss/pico/css/pico.min.css',
-					'build/css/_simple.postcss.css': 'node_modules/simpledotcss/simple.min.css',
-					'build/css/_marx.postcss.css': 'node_modules/marx-css/css/marx.min.css',
-					'build/css/_mvp.postcss.css': 'node_modules/mvp.css/mvp.css',
-					'build/css/_sakura.postcss.css': 'node_modules/sakura.css/css/sakura.css',
-					'build/css/_pure.postcss.css': 'node_modules/purecss/build/pure-min.css',
-					'build/css/_picnic.postcss.css': 'node_modules/picnic/releases/picnic.min.css',
-					'build/css/_chota.postcss.css': 'node_modules/chota/dist/chota.min.css',
-					'build/css/_cirrus.postcss.css': 'node_modules/cirrus-ui/dist/cirrus-all.css',
+					'build/css/_dashboard-view-pico.postcss.css': 'node_modules/@picocss/pico/css/pico.min.css',
+					'build/css/_dashboard-view-simple.postcss.css': 'node_modules/simpledotcss/simple.min.css',
+					'build/css/_dashboard-view-marx.postcss.css': 'node_modules/marx-css/css/marx.min.css',
+					'build/css/_dashboard-view-mvp.postcss.css': 'node_modules/mvp.css/mvp.css',
+					'build/css/_dashboard-view-sakura.postcss.css': 'node_modules/sakura.css/css/sakura.css',
+					'build/css/_dashboard-view-pure.postcss.css': 'node_modules/purecss/build/pure-min.css',
+					'build/css/_dashboard-view-picnic.postcss.css': 'node_modules/picnic/releases/picnic.min.css',
+					'build/css/_dashboard-view-chota.postcss.css': 'node_modules/chota/dist/chota.min.css',
+					'build/css/_dashboard-view-cirrus.postcss.css': 'node_modules/cirrus-ui/dist/cirrus-all.css',
 				}
 			}
 		},
@@ -81,27 +81,27 @@ module.exports = function ( grunt ) {
 			},
 			picoCss: {
 				src: [ 'build/css/_dashboard-view-pico.postcss.css', 'build/css/_dashboard-view-pico.sass.css' ],
-				dest: 'build/css/pico.css',
+				dest: 'build/css/dashboard-view-pico.css',
 			},
 			simpleCss: {
 				src: [ 'build/css/_dashboard-view-simple.postcss.css', 'build/css/_dashboard-view-simple.sass.css' ],
-				dest: 'build/css/simple.css',
+				dest: 'build/css/dashboard-view-simple.css',
 			},
 			marxCss: {
 				src: [ 'build/css/_dashboard-view-marx.postcss.css', 'build/css/_dashboard-view-marx.sass.css' ],
-				dest: 'build/css/marx.css',
+				dest: 'build/css/dashboard-view-marx.css',
 			},
 			mvpCss: {
 				src: [ 'build/css/_dashboard-view-mvp.postcss.css', 'build/css/_dashboard-view-mvp.sass.css' ],
-				dest: 'build/css/mvp.css',
+				dest: 'build/css/dashboard-view-mvp.css',
 			},
 			sakuraCss: {
 				src: [ 'build/css/_dashboard-view-sakura.postcss.css', 'build/css/_dashboard-view-sakura.sass.css' ],
-				dest: 'build/css/sakura.css',
+				dest: 'build/css/dashboard-view-sakura.css',
 			},
 			pureCss: {
 				src: [ 'build/css/_dashboard-view-pure.postcss.css', 'build/css/_dashboard-view-pure.sass.css' ],
-				dest: 'build/css/pure.css',
+				dest: 'build/css/dashboard-view-pure.css',
 			},
 			picnicCss: {
 				src: [ 'build/css/_dashboard-view-picnic.postcss.css', 'build/css/_dashboard-view-picnic.sass.css' ],
