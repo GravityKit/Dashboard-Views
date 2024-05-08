@@ -256,11 +256,31 @@ class AdminMenu {
 		}
 
 		foreach ( $dashboard_views as $dashboard_view ) {
+			$view_settings = gravityview_get_template_settings( $dashboard_view['id'] );
+
+			if ( ! array( $view_settings['dashboard_views_user_roles'] ?? [] ) ) {
+				continue;
+			}
+
+			$user_first_met_role = null;
+
+			foreach ( $view_settings['dashboard_views_user_roles'] as $role ) {
+				if ( current_user_can( $role ) ) {
+					$user_first_met_role = $role;
+
+					break;
+				}
+			}
+
+			if ( ! $user_first_met_role ) {
+				continue;
+			}
+
 			$submenus['top'][] = [
 				'id'         => self::get_view_submenu_slug( (int) $dashboard_view['id'] ),
 				'page_title' => $dashboard_view['title'],
 				'menu_title' => $dashboard_view['title'],
-				'capability' => 'gravityview_view_entries',
+				'capability' => $user_first_met_role ?? 'gravityview_view_entries',
 				'callback'   => function () use ( $dashboard_view ) {
 					$_REQUEST['_dashboard_view'] = $dashboard_view['id']; // This is used by the Request class to determine the current View ID.
 

@@ -179,9 +179,8 @@ class ViewSettings {
 		$roles          = $settings[ $setting_key ]['roles'] ?? [];
 
 		?>
-
 		<tr style="vertical-align: top;" class="alternate">
-			<td scope="row" colspan="2">
+			<td colspan="2">
 				<div class="gv-setting-container gv-setting-container-<?php echo esc_attr( $setting_key ); ?>" <?php echo $requires ? 'data-requires=' . esc_attr( $requires ) : ''; ?>>
 					<label for="gravityview_se_<?php echo esc_attr( $setting_key ); ?>">
 						<?php echo esc_html( $label ); ?> <span class="howto"><?php echo esc_html( $description ); ?></span>
