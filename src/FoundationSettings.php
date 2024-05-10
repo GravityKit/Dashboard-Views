@@ -4,6 +4,7 @@ namespace GravityKit\GravityView\DashboardViews;
 
 use GravityKitFoundation;
 use GV\Plugin_Settings as GravityViewPluginSettings;
+use GV\Plugin as GravityViewPlugin;
 
 /**
  * Global GravityView settings in Foundation.
@@ -102,9 +103,44 @@ class FoundationSettings {
 			]
 		);
 
-		$settings[ $gravityview_settings_id ]['sections'][] = [
-			'title'    => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
-			'settings' => [
+		$dashboard_views_settings = [];
+
+		if ( empty( Plugin::get_dashboard_views() ) ) {
+			$notice = strtr(
+				esc_html_x( 'You do not have any Views configured for display in the Dashboard. Visit the [url]list of Views[/url] and edit one or more to enable Dashboard display under the Dashboard Views tab.', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
+				[
+					'[url]'  => '<a href="' . admin_url( 'admin.php?page=' . GravityViewPlugin::ALL_VIEWS_SLUG ) . '" class="gk-link">',
+					'[/url]' => '</a>',
+				]
+			);
+
+			$dashboard_views_settings = [
+				[
+					'id'   => 'legacy_settings_notice',
+					'html' => <<<HTML
+<div class="bg-yellow-50 p-4 rounded-md">
+	<div class="flex">
+		<div class="flex-shrink-0">
+			<svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+				<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+			</svg>
+		</div>
+		<div class="ml-3">
+			<p class="text-sm">
+				{$notice}
+			</p>
+		</div>
+	</div>
+</div>
+HTML
+					,
+				],
+			];
+		}
+
+		$dashboard_views_settings = array_merge(
+            $dashboard_views_settings,
+            [
 				[
 					'id'          => 'dashboard_views_menu_name',
 					'title'       => esc_html__( 'Menu Name', 'gk-gravityview-dashboard-views' ),
@@ -170,7 +206,12 @@ class FoundationSettings {
 						],
 					],
 				],
-			],
+			]
+        );
+
+		$settings[ $gravityview_settings_id ]['sections'][] = [
+			'title'    => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
+			'settings' => $dashboard_views_settings,
 		];
 
 		return $settings;

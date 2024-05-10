@@ -55,7 +55,8 @@ class Plugin {
 	 */
 	public static function get_dashboard_views() {
 		$dashboard_views = [];
-		$views           = get_posts(
+
+		$views = get_posts(
 			[
 				'post_type'   => 'gravityview',
 				'post_status' => 'any',
@@ -68,7 +69,8 @@ class Plugin {
 		}
 
 		foreach ( $views as $view ) {
-			$view_settings = gravityview_get_template_settings( $view->ID );
+			// gravityview_get_template_settings() can be used, but it adds hooks that result in degraded performance with some plugins.
+			$view_settings = get_post_meta( $view->ID, '_gravityview_template_settings', true );
 
 			if ( empty( $view_settings['dashboard_views_enable'] ) ) {
 				continue;
