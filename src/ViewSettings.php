@@ -20,8 +20,8 @@ class ViewSettings {
 	 * @since TBD
 	 */
 	public function __construct() {
-		add_filter( 'gravityview/metaboxes/default', [ $this, 'add_dashboard_views_settings_tab' ] );
-		add_filter( 'gravityview/view/settings/defaults', [ $this, 'add_settings_to_the_dashboards_view_tab' ] );
+		add_filter( 'gravityview/metaboxes/default', [ $this, 'add_dashboard_views_settings_tab' ], 11 );
+		add_filter( 'gravityview/view/settings/defaults', [ $this, 'add_settings_to_the_dashboards_view_tab' ], 11 );
 	}
 
 	/**

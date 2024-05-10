@@ -83,12 +83,22 @@ class FoundationSettings {
 			];
 		}
 
+		$admin_menu_choices = [];
+
+		foreach ( AdminMenu::get_menus() as $menu ) {
+			$admin_menu_choices[] = [
+				'title' => $menu['title'],
+				'value' => $menu['id'],
+			];
+		}
+
 		$settings[ $gravityview_settings_id ]['defaults'] = array_merge(
 			$settings[ $gravityview_settings_id ]['defaults'],
 			[
 				'dashboard_views_stylesheet'        => 'unstyled',
 				'dashboard_views_stylesheet_custom' => $site_url,
 				'dashboard_views_menu_name'         => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
+				'dashboard_views_menu_position'     => 'toplevel_page_' . GravityKitFoundation::admin_menu()::WP_ADMIN_MENU_SLUG, // GravityKit menu.
 			]
 		);
 
@@ -108,6 +118,14 @@ class FoundationSettings {
 							'message' => esc_html__( 'Please enter a menu name', 'gk-gravityview-dashboard-views' ),
 						],
 					],
+				],
+				[
+					'id'          => 'dashboard_views_menu_position',
+					'type'        => 'select',
+					'title'       => esc_html__( 'Menu Position', 'gk-gravityview-dashboard-views' ),
+					'description' => esc_html__( 'Select the menu below which to place the Dashboard Views menu item.', 'gk-gravityview-dashboard-views' ),
+					'value'       => $gravityview_settings['dashboard_views_menu_position'] ?? $settings['gravityview']['defaults']['dashboard_views_menu_position'],
+					'choices'     => $admin_menu_choices,
 				],
 				[
 					'id'          => 'dashboard_views_stylesheet',
