@@ -109,7 +109,7 @@ class FoundationSettings {
 			$notice = strtr(
 				esc_html_x( 'You do not have any Views configured for display in the Dashboard. Visit the [url]list of Views[/url] and edit one or more to enable Dashboard display under the Dashboard Views tab.', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
 				[
-					'[url]'  => '<a href="' . admin_url( 'admin.php?page=' . GravityViewPlugin::ALL_VIEWS_SLUG ) . '" class="gk-link">',
+					'[url]'  => '<a href="' . admin_url( 'admin.php?page=' . GravityViewPlugin::ALL_VIEWS_SLUG ) . '" class="font-medium gk-link hover:text-yellow-600">',
 					'[/url]' => '</a>',
 				]
 			);
@@ -126,7 +126,7 @@ class FoundationSettings {
 			</svg>
 		</div>
 		<div class="ml-3">
-			<p class="text-sm">
+			<p class="text-sm text-yellow-700">
 				{$notice}
 			</p>
 		</div>
