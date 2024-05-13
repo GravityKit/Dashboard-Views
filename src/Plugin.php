@@ -12,6 +12,7 @@ use GravityView_View_Data;
 use GV\Edit_Entry_Renderer;
 use GV\Entry_Renderer;
 use GV\Field_Collection;
+use GV\GF_Entry;
 use GV\GF_Field;
 use GV\View;
 use GV\View_Renderer;
@@ -233,8 +234,8 @@ class Plugin {
 	 *
 	 * @since TBD
 	 *
-	 * @param string $link  The single entry link.
-	 * @param Entry  $entry The Gravity Forms entry.
+	 * @param string   $link  The single entry link.
+	 * @param GF_Entry $entry The Gravity Forms entry.
 	 *
 	 * @return string The update single entry link.
 	 */
