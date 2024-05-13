@@ -73,23 +73,52 @@ class ViewSettings {
 			$settings,
 			[
 				self::SETTINGS_PREFIX . '_enable'      => [
-					'label' => esc_html__( 'Show in Dashboard?', 'gk-gravityview-dashboard-views' ),
-					'desc'  => strtr(
+					'label'      => esc_html__( 'Show in Dashboard', 'gk-gravityview-dashboard-views' ),
+					'desc'       => strtr(
 						esc_html_x( 'This will make the View accessible in the WordPress Dashboard. Visit [url]GravityView settings[/url] for additional configuration options that apply to all Dashboard Views.', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
 						[
 							'[url]'  => '<a href="' . esc_url( GravityKitFoundation::settings()->get_plugin_settings_url( GravityViewPluginSettings::SETTINGS_PLUGIN_ID ) . '&s=3' ) . '">',
 							'[/url]' => '</a>',
 						]
 					),
-					'type'  => 'checkbox',
-					'value' => 0,
+					'type'       => 'checkbox',
+					'class'      => 'widefat',
+					'full_width' => true,
+					'value'      => 0,
 				],
 				self::SETTINGS_PREFIX . '_custom_name' => [
-					'label'    => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
-					'desc'     => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard.', 'gk-gravityview-dashboard-views' ),
-					'requires' => self::SETTINGS_PREFIX . '_enable',
-					'type'     => 'text',
-					'value'    => get_the_title( $_REQUEST['post'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					'label'      => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard.', 'gk-gravityview-dashboard-views' ),
+					'requires'   => self::SETTINGS_PREFIX . '_enable',
+					'type'       => 'text',
+					'class'      => 'widefat',
+					'full_width' => true,
+					'value'      => get_the_title( $_REQUEST['post'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				],
+				self::SETTINGS_PREFIX . '_group'       => [
+					'label'      => esc_html__( 'Group', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Views can be organized into groups within the Dashboard menu, with each group separated by a divider. Select the appropriate group to assign this View.', 'gk-gravityview-dashboard-views' ),
+					'value'      => 'group1',
+					'type'       => 'select',
+					'options'    => [
+						'group1' => __( 'Group 1', 'gk-gravityview-dashboard-views' ),
+						'group2' => __( 'Group 2', 'gk-gravityview-dashboard-views' ),
+						'group3' => __( 'Group 3', 'gk-gravityview-dashboard-views' ),
+						'group4' => __( 'Group 4', 'gk-gravityview-dashboard-views' ),
+						'group5' => __( 'Group 5', 'gk-gravityview-dashboard-views' ),
+					],
+					'class'      => 'widefat',
+					'full_width' => true,
+					'requires'   => self::SETTINGS_PREFIX . '_enable',
+				],
+				self::SETTINGS_PREFIX . '_group_order' => [
+					'label'      => esc_html__( 'Group Order', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Views can be organized into groups within the Dashboard menu, with each group separated by a divider. Select the appropriate group to assign this View.', 'gk-gravityview-dashboard-views' ),
+					'value'      => 1,
+					'type'       => 'number',
+					'class'      => 'widefat',
+					'full_width' => true,
+					'requires'   => self::SETTINGS_PREFIX . '_enable',
 				],
 				self::SETTINGS_PREFIX . '_user_roles'  => [
 					'label'       => esc_html__( 'Limit Access to User Role(s)', 'gk-gravityview-dashboard-views' ),

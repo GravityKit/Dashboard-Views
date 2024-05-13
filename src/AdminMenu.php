@@ -11,6 +11,8 @@ use GV\Plugin_Settings as GravityViewPluginSettings;
 class AdminMenu {
 	const WP_ADMIN_MENU_SLUG = '_gk_gravityview_dashboard_views';
 
+	const DEFAULT_SUBMENU_GROUP = 'group1';
+
 	/**
 	 * Submenus of the top menu.
 	 *
@@ -19,9 +21,11 @@ class AdminMenu {
 	 * @var array
 	 */
 	private static $_submenus = [
-		'top'    => [],
-		'center' => [],
-		'bottom' => [],
+		'group1' => [],
+		'group2' => [],
+		'group3' => [],
+		'group4' => [],
+		'group5' => [],
 	];
 
 	/**
@@ -221,11 +225,11 @@ class AdminMenu {
 	 * @since TBD
 	 *
 	 * @param array  $submenu  The submenu data.
-	 * @param string $position The position of the submenu. Default: 'top'.
+	 * @param string $position The position of the submenu. Default: 'group1'.
 	 *
 	 * @retun void
 	 */
-	public static function add_submenu_item( $submenu, $position = 'top' ) {
+	public static function add_submenu_item( $submenu, $position = self::DEFAULT_SUBMENU_GROUP ) {
 		if ( ! isset( $submenu['id'] ) ) {
 			return;
 		}
@@ -270,9 +274,11 @@ class AdminMenu {
 		foreach ( $admin_menus as $dashboard_view ) {
 			$view_settings = gravityview_get_template_settings( $dashboard_view['id'] );
 
-			if ( ! array( $view_settings['dashboard_views_user_roles'] ?? [] ) ) {
+			if ( ! is_array( $view_settings['dashboard_views_user_roles'] ?? [] ) ) {
 				continue;
 			}
+
+			$group = $view_settings[ ViewSettings::SETTINGS_PREFIX . '_group' ] ?? self::DEFAULT_SUBMENU_GROUP;
 
 			$user_first_met_role = null;
 
@@ -284,7 +290,7 @@ class AdminMenu {
 				}
 			}
 
-			$submenus['top'][] = [
+			$submenus[ $group ][] = [
 				'id'         => self::get_view_submenu_slug( (int) $dashboard_view['id'] ),
 				'page_title' => $dashboard_view['title'],
 				'menu_title' => $dashboard_view['title'],
@@ -297,6 +303,10 @@ class AdminMenu {
 					echo Plugin::render_view(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				},
 			];
+
+			$order = array_column( $submenus[ $group ], 'order' );
+
+			array_multisort( $submenus[ $group ], SORT_NUMERIC, $order );
 		}
 
 		/**
