@@ -70,6 +70,9 @@ class ViewSettings {
 			$roles[ $role ] = $data['name'];
 		}
 
+		$wp_post   = get_post( $_REQUEST['post'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$view_name = $wp_post instanceof WP_Post ? $wp_post->post_title : '';
+
 		return array_merge(
 			$settings,
 			[
@@ -103,7 +106,7 @@ class ViewSettings {
 					'type'       => 'text',
 					'class'      => 'widefat',
 					'full_width' => true,
-					'value'      => get_the_title( $_REQUEST['post'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					'value'      => $view_name,
 				],
 				self::SETTINGS_PREFIX . '_group'       => [
 					'label'      => esc_html__( 'Group', 'gk-gravityview-dashboard-views' ),
