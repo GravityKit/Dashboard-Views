@@ -266,6 +266,7 @@ class AdminMenu {
 	 */
 	public static function get_submenus() {
 		$admin_menus = Plugin::get_dashboard_views();
+		$submenus    = self::$_submenus;
 
 		if ( empty( $admin_menus ) ) {
 			return self::$_submenus;
