@@ -279,6 +279,7 @@ class AdminMenu {
 			}
 
 			$group = $view_settings[ ViewSettings::SETTINGS_PREFIX . '_group' ] ?? self::DEFAULT_SUBMENU_GROUP;
+			$order = $view_settings[ ViewSettings::SETTINGS_PREFIX . '_group_order' ] ?? 1;
 
 			$user_first_met_role = null;
 
@@ -295,6 +296,7 @@ class AdminMenu {
 				'page_title' => $dashboard_view['title'],
 				'menu_title' => $dashboard_view['title'],
 				'capability' => $user_first_met_role ?? Plugin::DEFAULT_ACCESS_ROLE,
+				'order'      => $order,
 				'callback'   => function () use ( $dashboard_view ) {
 					$_REQUEST['_dashboard_view'] = $dashboard_view['id']; // This is used by the Request class to determine the current View ID.
 
