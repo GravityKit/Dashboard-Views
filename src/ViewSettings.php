@@ -87,6 +87,15 @@ class ViewSettings {
 					'full_width' => true,
 					'value'      => 0,
 				],
+				self::SETTINGS_PREFIX . '_show_in_frontend' => [
+					'label'      => esc_html__( 'Show in Frontend', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Unchecking this option will prevent the View from rendering in the frontend.', 'gk-gravityview-dashboard-views' ),
+					'requires'   => self::SETTINGS_PREFIX . '_enable',
+					'type'       => 'checkbox',
+					'class'      => 'widefat',
+					'full_width' => true,
+					'value'      => 1,
+				],
 				self::SETTINGS_PREFIX . '_custom_name' => [
 					'label'      => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
 					'desc'       => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard.', 'gk-gravityview-dashboard-views' ),

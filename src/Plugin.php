@@ -44,6 +44,7 @@ class Plugin {
 		add_filter( 'gravityview_page_links_args', [ $this, 'rewrite_pagination_links' ] );
 
 		add_filter( 'gravityview/view/get', [ $this, 'modify_view' ] );
+		add_filter( 'pre_do_shortcode_tag', [ $this, 'prevent_gravityview_shortcode_output' ], 10, 3 );
 
 		new FoundationSettings();
 		new ViewSettings();
@@ -374,7 +375,7 @@ class Plugin {
 	 * @return mixed The updated View.
 	 */
 	public function modify_view( $view ) {
-		if ( ! $view->settings->get( 'dashboard_views_enable' ) ) {
+		if ( ! $view instanceof View || ! $view->settings->get( 'dashboard_views_enable' ) ) {
 			return $view;
 		}
 
@@ -415,6 +416,31 @@ class Plugin {
 		$view = apply_filters( 'gk/gravityview/dashboard-views/view', $view );
 
 		return $view;
+	}
+
+	/**
+	 * Conditionally prevents the [gravityview] shortcode output.
+	 *
+	 * @since TBD
+	 *
+	 * @param string $output The shortcode output.
+	 * @param string $tag    The shortcode tag.
+	 * @param array  $attr   The shortcode attributes array.
+	 *
+	 * @return string The shortcode output.
+	 */
+	public function prevent_gravityview_shortcode_output( $output, $tag, $attr ) {
+		if ( 'gravityview' !== $tag || empty( $attr['id'] ) ) {
+			return $output;
+		}
+
+		$view_settings = gravityview_get_template_settings( $attr['id'] );
+
+		if ( ! empty( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_enable' ] ) && empty( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ) ) {
+			return '';
+		}
+
+		return $output;
 	}
 
 	/**
