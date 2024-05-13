@@ -22,6 +22,7 @@ class ViewSettings {
 	public function __construct() {
 		add_filter( 'gravityview/metaboxes/default', [ $this, 'add_dashboard_views_settings_tab' ], 11 );
 		add_filter( 'gravityview/view/settings/defaults', [ $this, 'add_settings_to_the_dashboards_view_tab' ], 11 );
+		add_filter( 'gravityview_template_field_options', [ $this, 'modify_view_field_options' ] );
 	}
 
 	/**
@@ -231,5 +232,26 @@ class ViewSettings {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * Adds View field option to exclude it from being displayed in the Dashboard.
+	 *
+	 * @since TBD
+	 *
+	 * @param array $field_options The field options.
+	 *
+	 * @return array The modified field options.
+	 */
+	public function modify_view_field_options( $field_options ) {
+		$field_options[ self::SETTINGS_PREFIX . '_show_field' ] = [
+			'type'     => 'checkbox',
+			'label'    => esc_html__( 'Show in Dashboard', 'gk-gravityview-dashboard-views' ),
+			'value'    => true,
+			'priority' => 4000,
+			'group'    => 'visibility',
+		];
+
+		return $field_options;
 	}
 }
