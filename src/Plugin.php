@@ -11,6 +11,8 @@ use GravityView_frontend;
 use GravityView_View_Data;
 use GV\Edit_Entry_Renderer;
 use GV\Entry_Renderer;
+use GV\Field_Collection;
+use GV\GF_Field;
 use GV\View;
 use GV\View_Renderer;
 use GV\Plugin_Settings as GravityViewPluginSettings;
@@ -40,6 +42,8 @@ class Plugin {
 		add_filter( 'gravityview/widget/search/form/action', [ $this, 'rewrite_search_action_link' ] );
 		add_filter( 'gk/gravityview/widget/search/clear-button/params', [ $this, 'rewrite_search_clear_link' ] );
 		add_filter( 'gravityview_page_links_args', [ $this, 'rewrite_pagination_links' ] );
+
+		add_filter( 'gravityview/view/get', [ $this, 'modify_view' ] );
 
 		new FoundationSettings();
 		new ViewSettings();
@@ -357,6 +361,60 @@ class Plugin {
 		$params['base'] = ! self::is_dashboard_view() ? ( $param['base'] ?? '' ) : $this->add_query_args_to_url( [ 'pagenum' => '%#%' ] );
 
 		return $params;
+	}
+
+	/**
+	 * Modifies View before display.
+	 * More specifically, it hides fields that are configured to be hidden in the Dashboard View.
+	 *
+	 * @since TBD
+	 *
+	 * @param View $view The View.
+	 *
+	 * @return mixed The updated View.
+	 */
+	public function modify_view( $view ) {
+		if ( ! $view->settings->get( 'dashboard_views_enable' ) ) {
+			return $view;
+		}
+
+		$updated_fields = new Field_Collection();
+
+		foreach ( $view->fields->all() as $field ) {
+			$is_visible = ! ! empty( $field->dashboard_views_show_field );
+
+			/**
+			 * Sets the View's field visibility (hidden or not).
+			 *
+			 * @since  TBD
+			 * @filter `gk/gravityview/dashboard-views/view/field/visibility`
+			 *
+			 * @param bool     $is_visible Whether the field is visible.
+			 * @param GF_Field $field      The field.
+			 * @param View     $view       The View.
+			 */
+			$is_visible = apply_filters( 'gk/gravityview/dashboard-views/view/field/visibility', $is_visible, $field, $view );
+
+			if ( $is_visible ) {
+				continue;
+			}
+
+			$updated_fields->add( $field );
+		}
+
+		$view->fields = $updated_fields;
+
+		/**
+		 * Modifies the View object.
+		 *
+		 * @since  TBD
+		 * @filter `gk/gravityview/dashboard-views/view`
+		 *
+		 * @param View $view The View.
+		 */
+		$view = apply_filters( 'gk/gravityview/dashboard-views/view', $view );
+
+		return $view;
 	}
 
 	/**
