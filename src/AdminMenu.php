@@ -108,7 +108,7 @@ class AdminMenu {
 		// Add top-level menu.
 		$page_title         = $gravityview_settings['dashboard_views_menu_name'] ?? esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' );
 		$menu_title         = $gravityview_settings['dashboard_views_menu_name'] ?? esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' );
-		$menu_temp_position = base_convert( substr( md5( self::WP_ADMIN_MENU_SLUG ), - 4 ), 16, 10 ) * 0.00001; // Taken from WP's add_menu_page() code.
+		$menu_temp_position = base_convert( substr( md5( self::WP_ADMIN_MENU_SLUG ), -4 ), 16, 10 ) * 0.00001; // Taken from WP's add_menu_page() code.
 
 		/**
 		 * Controls the position of the top-level admin menu.
@@ -417,16 +417,18 @@ class AdminMenu {
 	}
 
 	/**
-	 * Checks if the provided menu slug is a View submenu.
+	 * Returns View ID that's part of the submenu slug.
 	 *
 	 * @since TBD
 	 *
-	 * @param string $slug The submenu slug.
+	 * @param string $slug      The submenu slug.
 	 *
-	 * @return false|int
+	 * @return false|int|null
 	 */
-	public static function is_view_submenu( $slug ) {
-		return preg_match( '/' . self::get_view_submenu_prefix() . '-\d+/', $slug );
+	public static function get_submenu_view_id( $slug ) {
+		preg_match( '/' . self::get_view_submenu_prefix() . '-(\d+)/', $slug, $matches );
+
+		return $matches[1] ?? null;
 	}
 
 	/**

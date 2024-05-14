@@ -44,32 +44,9 @@ class Request extends GravityViewRequest {
 	 * @return bool
 	 */
 	public function is_dashboard_view() {
-		global $current_screen;
+		$view_id = AdminMenu::get_submenu_view_id( $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		if ( $current_screen && ! get_current_screen() ) {
-			return false;
-		}
-
-		if ( $current_screen && ! AdminMenu::is_view_submenu( $current_screen->id ) ) {
-			return false;
-		}
-
-		if ( $this->doing_datatables_ajax_request() ) {
-			return true;
-		}
-
-		return $this->is_admin() && AdminMenu::is_view_submenu( $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	}
-
-	/**
-	 * Checks whether we're in a DT Ajax request.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool True: We're inside a DataTables request in an admin View. False: We're not!
-	 */
-	private function doing_datatables_ajax_request() {
-		return 'gv_datatables_data' === ( $_REQUEST['action'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return $view_id && ( $this->is_admin() || wp_doing_ajax() );
 	}
 
 	/**
@@ -82,11 +59,19 @@ class Request extends GravityViewRequest {
 	 * @return false|View
 	 */
 	public function is_view( $return_view = true ) {
+		static $view;
+
+		if ( $view ) {
+			return $return_view ? $view : true;
+		}
+
 		if ( ! $this->is_dashboard_view() ) {
 			return false;
 		}
 
-		return View::by_id( $_REQUEST['_dashboard_view'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$view = View::by_id( AdminMenu::get_submenu_view_id( $_REQUEST['page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		return $return_view ? $view : ! ! $view;
 	}
 
 	/**

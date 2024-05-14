@@ -30,10 +30,11 @@ class Plugin {
 	 * @since TBD
 	 */
 	public function __construct() {
+		// Initialize custom GravityView request object.
 		add_action( 'current_screen', [ $this, 'set_request' ], 1 );
+		add_filter( 'gravityview/view/get', [ $this, 'modify_view' ] );
 
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_ui_assets' ] );
-
+		// Rewrite links.
 		add_filter( 'gravityview/view/links/directory', [ $this, 'rewrite_directory_link' ], 10, 2 );
 		add_filter( 'gravityview/entry/permalink', [ $this, 'rewrite_single_entry_link' ], 10, 3 );
 		add_filter( 'gravityview/template/links/back/url', [ $this, 'rewrite_single_entry_back_link' ] );
@@ -43,9 +44,12 @@ class Plugin {
 		add_filter( 'gravityview/widget/search/form/action', [ $this, 'rewrite_search_action_link' ] );
 		add_filter( 'gk/gravityview/widget/search/clear-button/params', [ $this, 'rewrite_search_clear_link' ] );
 		add_filter( 'gravityview_page_links_args', [ $this, 'rewrite_pagination_links' ] );
-
-		add_filter( 'gravityview/view/get', [ $this, 'modify_view' ] );
 		add_filter( 'pre_do_shortcode_tag', [ $this, 'prevent_gravityview_shortcode_output' ], 10, 3 );
+
+		// Handle entry duplication/deletion.
+		add_action( 'current_screen', [ $this, 'handle_entry_duplication_and_deletion' ] );
+
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_ui_assets' ] );
 
 		new FoundationSettings();
 		new ViewSettings();
@@ -121,20 +125,12 @@ class Plugin {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return null|false|Request null: Not GV request. false: Not an Admin View request. Otherwise, returns Dashboard Views request.
+	 * @return false|Request null: Not GV request. false: Not an Admin View request. Otherwise, returns Dashboard Views request.
 	 */
 	public static function is_dashboard_view() {
 		$request = gravityview()->request;
 
-		if ( ! $request ) {
-			return null;
-		}
-
-		if ( ! method_exists( $request, 'is_dashboard_view' ) || ! $request->is_dashboard_view() ) {
-			return false;
-		}
-
-		return $request;
+		return $request instanceof Request && $request->is_dashboard_view() ? $request : false;
 	}
 
 	/**
@@ -226,7 +222,7 @@ class Plugin {
 	 * @return string The update directory link.
 	 */
 	public function rewrite_directory_link( $link ) {
-		return ! self::is_dashboard_view() ? $link : $this->add_query_args_to_url();
+		return ! $this->is_dashboard_view() ? $link : $this->get_base_url();
 	}
 
 	/**
@@ -240,7 +236,20 @@ class Plugin {
 	 * @return string The update single entry link.
 	 */
 	public function rewrite_single_entry_link( $link, $entry ) {
-		return ! self::is_dashboard_view() ? $link : $this->add_query_args_to_url( [ 'entry_id' => $entry->ID ] );
+		return ! $this->is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry->ID ], $this->get_base_url() );
+	}
+
+	/**
+	 * Rewrites the single entry back link.
+	 *
+	 * @since TBD
+	 *
+	 * @param string $link The single entry back link.
+	 *
+	 * @return string The updated single entry back link.
+	 */
+	public function rewrite_single_entry_back_link( $link ) {
+		return ! $this->is_dashboard_view() ? $link : $this->get_base_url();
 	}
 
 	/**
@@ -255,29 +264,17 @@ class Plugin {
 	 * @return string The updated edit entry link.
 	 */
 	public function rewrite_edit_entry_link( $link, $entry, $view ) {
-		if ( ! self::is_dashboard_view() ) {
+		if ( ! $this->is_dashboard_view() ) {
 			return $link;
 		}
 
-		return $this->add_query_args_to_url(
+		return add_query_arg(
 			[
 				'entry_id' => $entry['id'],
 				'edit'     => wp_create_nonce( GravityView_Edit_Entry::get_nonce_key( $view->ID, $entry['form_id'], $entry['id'] ) ),
-			]
+			],
+			$this->get_base_url()
 		);
-	}
-
-	/**
-	 * Rewrites the single entry back link.
-	 *
-	 * @since TBD
-	 *
-	 * @param string $link The single entry back link.
-	 *
-	 * @return string The updated single entry back link.
-	 */
-	public function rewrite_single_entry_back_link( $link ) {
-		return ! self::is_dashboard_view() ? $link : $this->add_query_args_to_url();
 	}
 
 	/**
@@ -294,7 +291,7 @@ class Plugin {
 	 * @return string Entry update message with the updated back link.
 	 */
 	public function rewrite_edit_entry_back_link( $message, $view_id, $entry, $back_link, $redirect_url ) {
-		if ( ! self::is_dashboard_view() || $redirect_url ) {
+		if ( ! $this->is_dashboard_view() || $redirect_url ) {
 			return $message;
 		}
 
@@ -319,7 +316,7 @@ class Plugin {
 	 * @return string The updated edit entry cancel link.
 	 */
 	public function rewrite_edit_entry_cancel_link( $link, $form, $entry ) {
-		return ! self::is_dashboard_view() ? $link : $this->add_query_args_to_url( [ 'entry_id' => $entry['id'] ] );
+		return ! $this->is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry['id'] ], $this->get_base_url() );
 	}
 
 	/**
@@ -332,7 +329,7 @@ class Plugin {
 	 * @return string The updated search action link.
 	 */
 	public function rewrite_search_action_link( $link ) {
-		return ! self::is_dashboard_view() ? $link : $this->add_query_args_to_url();
+		return ! $this->is_dashboard_view() ? $link : $this->get_base_url();
 	}
 
 	/**
@@ -345,7 +342,7 @@ class Plugin {
 	 * @return array The updated search clear link parameters.
 	 */
 	public function rewrite_search_clear_link( $params ) {
-		$params['url'] = ! self::is_dashboard_view() ? ( $params['url'] ?? '' ) : $this->add_query_args_to_url();
+		$params['url'] = ! $this->is_dashboard_view() ? ( $params['url'] ?? '' ) : $this->get_base_url();
 
 		return $params;
 	}
@@ -360,14 +357,13 @@ class Plugin {
 	 * @return array The updated pagination link parameters.
 	 */
 	public function rewrite_pagination_links( array $params ) {
-		$params['base'] = ! self::is_dashboard_view() ? ( $param['base'] ?? '' ) : $this->add_query_args_to_url( [ 'pagenum' => '%#%' ] );
+		$params['base'] = ! $this->is_dashboard_view() ? ( $param['base'] ?? '' ) : add_query_arg( [ 'pagenum' => '%#%' ], $this->get_base_url() );
 
 		return $params;
 	}
 
 	/**
-	 * Modifies View before display.
-	 * More specifically, it hides fields that are configured to be hidden in the Dashboard View.
+	 * Modifies the View object when it's retrieved by GravityView.
 	 *
 	 * @since TBD
 	 *
@@ -376,10 +372,11 @@ class Plugin {
 	 * @return mixed The updated View.
 	 */
 	public function modify_view( $view ) {
-		if ( ! $view instanceof View || ! $view->settings->get( 'dashboard_views_enable' ) ) {
+		if ( ! $this->is_dashboard_view() ) {
 			return $view;
 		}
 
+		// Optionally hide fields.
 		$updated_fields = new Field_Collection();
 
 		foreach ( $view->fields->all() as $field ) {
@@ -473,7 +470,7 @@ class Plugin {
 			return;
 		}
 
-		if ( ! self::is_dashboard_view() ) {
+		if ( ! $this->is_dashboard_view() ) {
 			return;
 		}
 
@@ -614,28 +611,17 @@ class Plugin {
 	}
 
 	/**
-	 * Adds provided query args to the request URL.
-	 * This also sets the "page" query arg so that requests are correctly routed to the Dashboard View {@see Request::is_dashboard_view()}.
+	 * Returns the base URL for the Dashboard View.
 	 *
 	 * @since TBD
 	 *
-	 * @param array  $args (optional) The query args to add. If not provided, only the current Dashboard View "page" query arg will be set.
-	 * @param string $url  (optional) The URL to add the query args to. Defaults to the admin URL.
-	 *
-	 * @return string The updated URL with the query args.
+	 * @return string The base URL for the Dashboard View.
 	 */
-	private function add_query_args_to_url( $args = [], $url = '' ) {
-		$view = gravityview()->request->is_view();
+	public function get_base_url() {
+		$url = admin_url( 'admin.php' );
 
-		if ( $view ) {
-			$args = array_merge(
-				[
-					'page' => AdminMenu::get_view_submenu_slug( (int) $view->ID ),
-				],
-				$args
-			);
-		}
+		$page = $_REQUEST['page'] ?? false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		return add_query_arg( $args, $url ?: admin_url( 'admin.php' ) ); // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+		return $page ? add_query_arg( [ 'page' => $page ], $url ) : $url;
 	}
 }
