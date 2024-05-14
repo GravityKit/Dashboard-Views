@@ -1,0 +1,70 @@
+version: 2.1
+
+anchors:
+  context: &context
+    context: shared
+
+  default_job_config: &default_job_config
+    working_directory: /home/circleci/plugin
+    machine:
+      image: default
+
+jobs:
+  build_package_release:
+    <<: *default_job_config
+    steps:
+      - checkout
+      - run:
+          name: Getting GK test/build tools
+          command: |
+            git clone git@github.com:GravityKit/Tooling.git /home/circleci/tooling
+      - restore_cache:
+          key: node-dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: Installing dependencies
+          command: |
+            /home/circleci/tooling/build-tools/build_tools.sh npm -o install
+            /home/circleci/tooling/build-tools/build_tools.sh composer -o "install --no-dev"
+      - save_cache:
+          key: node-dependencies-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Building and packaging
+          command: |
+            /home/circleci/tooling/build-tools/build_tools.sh grunt
+            if [ "${CIRCLE_BRANCH}" != "main" ]; then
+              /home/circleci/tooling/build-tools/build_tools.sh package_build -o "gravityview-dashboard gravityview-dashboard-views.php --include-hash"
+            else
+              /home/circleci/tooling/build-tools/build_tools.sh package_build -o "gravityview-dashboard gravityview-dashboard-views.php $([[ $(git log -n 1 | grep "\[skip release\]") ]] && echo --include-hash)"
+            fi
+            mkdir -p gravityview-dashboard
+            mv vendor gravityview-dashboard
+            mv build gravityview-dashboard
+            zip -gr $(ls gravityview-dashboard-*.zip) gravityview-dashboard build
+            mkdir .release
+            cp gravityview-dashboard-*.zip .release
+      - run:
+          name: Creating a GitHub release
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+              git config user.email "support@gravitykit.com"
+              git config user.name "GravityKit - CI"
+              /home/circleci/tooling/build-tools/build_tools.sh create_release -o "gravityview-dashboard-views.php $(ls gravityview-dashboard-*.zip)"
+            fi
+      - run:
+          name: Notifying GravityKit Release Manager
+          command: |
+            if ! [[ $(git log -n 1 | grep "\[skip notify\]") ]]; then
+              /home/circleci/tooling/build-tools/build_tools.sh announce_build -o "gravityview-dashboard-views.php $(ls gravityview-dashboard-*.zip) --with-circle"
+            fi
+      - store_artifacts:
+          path: .release
+          destination: release
+
+workflows:
+  version: 2
+  test_and_package:
+    jobs:
+      - build_package_release:
+          <<: *context
