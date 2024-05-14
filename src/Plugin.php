@@ -58,6 +58,8 @@ class Plugin {
 		new FoundationSettings();
 		new ViewSettings();
 		new AdminMenu();
+
+		new Integrations\GravityFlow();
 	}
 
 	/**
