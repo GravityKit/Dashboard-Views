@@ -50,6 +50,9 @@ class Plugin {
 		add_filter( 'gravityview_page_links_args', [ $this, 'rewrite_pagination_links' ] );
 		add_filter( 'pre_do_shortcode_tag', [ $this, 'prevent_gravityview_shortcode_output' ], 10, 3 );
 
+		// Modify GravityView's View list table.
+		add_filter( 'post_row_actions', [ $this, 'modify_gravityview_list_table_view_actions' ], 10, 2 );
+
 		// Handle entry duplication/deletion.
 		add_action( 'current_screen', [ $this, 'handle_entry_duplication_and_deletion' ] );
 
@@ -98,7 +101,7 @@ class Plugin {
 					[ 'page' => AdminMenu::get_view_submenu_slug( (int) $view->ID ) ],
 					admin_url( 'admin.php' )
 				),
-				'title' => $view_settings[ ViewSettings::SETTINGS_PREFIX . '_custom_name' ] ?? $view->post_title,
+				'title' => $view_settings[ ViewSettings::SETTINGS_PREFIX . '_custom_name' ] ?: $view->post_title, // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
 			];
 		}
 
@@ -664,6 +667,46 @@ class Plugin {
 		);
 
 		$unload_wp_styles();
+	}
+
+	/**
+	 * Adds a "View in Dashboard" link to View actions in the GravityView list table.
+	 *
+	 * @since TBD
+	 *
+	 * @param array   $actions View actions.
+	 * @param WP_Post $post    The post.
+	 *
+	 * @return array The updated View actions.
+	 */
+	public function modify_gravityview_list_table_view_actions( $actions, $post ) {
+		if ( 'gravityview' !== get_post_type( $post ) ) {
+			return $actions;
+		}
+
+		foreach ( self::get_dashboard_views() as $dashboard_view ) {
+			if ( $dashboard_view['id'] !== $post->ID ) {
+				continue;
+			}
+
+			$position = array_search( 'view', array_keys( $actions ), true ) + 1;
+
+			$actions = array_merge(
+				array_slice( $actions, 0, $position ),
+				[
+					'view_in_dashboard' => sprintf(
+						'<a href="%s">%s</a>',
+						esc_url( $dashboard_view['link'] ),
+						esc_html__( 'View in Dashboard', 'gk-gravityview-dashboard-views' )
+					),
+				],
+				array_slice( $actions, $position )
+			);
+
+			break;
+		}
+
+		return $actions;
 	}
 
 	/**
