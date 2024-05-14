@@ -4,6 +4,8 @@ namespace GravityKit\GravityView\DashboardViews;
 
 use Exception;
 use GravityKitFoundation;
+use GravityView_Delete_Entry;
+use GravityView_Duplicate_Entry;
 use GravityView_Edit_Entry;
 use GravityView_Field_Notes;
 use GravityView_Fields;
@@ -43,6 +45,8 @@ class Plugin {
 		add_filter( 'gravityview/edit_entry/cancel_link', [ $this, 'rewrite_edit_entry_cancel_link' ], 10, 3 );
 		add_filter( 'gravityview/widget/search/form/action', [ $this, 'rewrite_search_action_link' ] );
 		add_filter( 'gk/gravityview/widget/search/clear-button/params', [ $this, 'rewrite_search_clear_link' ] );
+		add_filter( 'wp_redirect', [ $this, 'rewrite_entry_duplication_redirect_link' ] );
+		add_filter( 'wp_redirect', [ $this, 'rewrite_entry_deletion_redirect_link' ] );
 		add_filter( 'gravityview_page_links_args', [ $this, 'rewrite_pagination_links' ] );
 		add_filter( 'pre_do_shortcode_tag', [ $this, 'prevent_gravityview_shortcode_output' ], 10, 3 );
 
@@ -70,7 +74,7 @@ class Plugin {
 			[
 				'post_type'   => 'gravityview',
 				'post_status' => 'any',
-				'numberposts' => - 1,
+				'numberposts' => -1,
 			]
 		);
 
@@ -360,6 +364,56 @@ class Plugin {
 		$params['base'] = ! $this->is_dashboard_view() ? ( $param['base'] ?? '' ) : add_query_arg( [ 'pagenum' => '%#%' ], $this->get_base_url() );
 
 		return $params;
+	}
+
+	/**
+	 * Rewrites entry deletion redirect link.
+	 *
+	 * @since TBD
+	 *
+	 * @param string $link The entry deletion redirect link.
+	 *
+	 * @return string The updated entry deletion redirect link.
+	 */
+	public function rewrite_entry_deletion_redirect_link( $link ) {
+		if ( ! $this->is_dashboard_view() || ! preg_match( '/(?=.*delete=)(?=.*status=)/', $link ) ) {
+			return $link;
+		}
+
+		return $this->get_base_url();
+	}
+
+	/**
+	 * Rewrites entry duplication redirect link.
+	 *
+	 * @since TBD
+	 *
+	 * @param string $link The entry duplication redirect link.
+	 *
+	 * @return string The updated entry duplication redirect link.
+	 */
+	public function rewrite_entry_duplication_redirect_link( $link ) {
+		if ( ! $this->is_dashboard_view() || ! preg_match( '/(?=.*duplicate=)(?=.*status=)/', $link ) ) {
+			return $link;
+		}
+
+		return $this->get_base_url();
+	}
+
+	/**
+	 * Calls the entry duplication and deletion handlers if these actions are being performed.
+	 *
+	 * @since TBD
+	 *
+	 * @return void
+	 */
+	public function handle_entry_duplication_and_deletion() {
+		if ( ! $this->is_dashboard_view() ) {
+			return;
+		}
+
+		GravityView_Delete_Entry::getInstance()->process_delete();
+		GravityView_Duplicate_Entry::getInstance()->process_duplicate();
 	}
 
 	/**
