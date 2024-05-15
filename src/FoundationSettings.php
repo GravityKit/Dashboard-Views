@@ -96,7 +96,7 @@ class FoundationSettings {
 		$settings[ $gravityview_settings_id ]['defaults'] = array_merge(
 			$settings[ $gravityview_settings_id ]['defaults'],
 			[
-				'dashboard_views_stylesheet'        => 'unstyled',
+				'dashboard_views_stylesheet'        => 'pico',
 				'dashboard_views_stylesheet_custom' => $site_url,
 				'dashboard_views_menu_name'         => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
 				'dashboard_views_menu_position'     => 'toplevel_page_' . GravityKitFoundation::admin_menu()::WP_ADMIN_MENU_SLUG, // GravityKit menu.
