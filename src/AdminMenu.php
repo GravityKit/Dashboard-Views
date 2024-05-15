@@ -263,7 +263,7 @@ class AdminMenu {
 	 * @return array
 	 */
 	public static function get_submenus() {
-		$dashboard_views = Plugin::get_dashboard_views();
+		$dashboard_views = View::get_dashboard_views();
 		$submenus        = self::$_submenus;
 
 		if ( empty( $dashboard_views ) ) {
@@ -273,16 +273,17 @@ class AdminMenu {
 		foreach ( $dashboard_views as $dashboard_view ) {
 			$view_settings = gravityview_get_template_settings( $dashboard_view['id'] );
 
-			if ( ! is_array( $view_settings['dashboard_views_user_roles'] ?? [] ) ) {
-				continue;
-			}
-
 			$group = $view_settings[ ViewSettings::SETTINGS_PREFIX . '_group' ] ?? self::DEFAULT_SUBMENU_GROUP;
 			$order = $view_settings[ ViewSettings::SETTINGS_PREFIX . '_group_order' ] ?? 1;
 
+			$user_required_roles = array_merge(
+				$view_settings['dashboard_views_user_roles'] ?? [],
+				[ View::DEFAULT_ACCESS_ROLE ]
+			);
+
 			$user_first_met_role = null;
 
-			foreach ( $view_settings['dashboard_views_user_roles'] as $role ) {
+			foreach ( $user_required_roles as $role ) {
 				if ( current_user_can( $role ) ) {
 					$user_first_met_role = $role;
 
@@ -290,18 +291,22 @@ class AdminMenu {
 				}
 			}
 
+			if ( ! $user_first_met_role ) {
+				continue;
+			}
+
 			$submenus[ $group ][] = [
 				'id'         => self::get_view_submenu_slug( (int) $dashboard_view['id'] ),
 				'page_title' => $dashboard_view['title'],
 				'menu_title' => $dashboard_view['title'],
-				'capability' => $user_first_met_role ?? Plugin::DEFAULT_ACCESS_ROLE,
+				'capability' => $user_first_met_role,
 				'order'      => $order,
 				'callback'   => function () use ( $dashboard_view ) {
 					$_REQUEST['_dashboard_view'] = $dashboard_view['id']; // This is used by the Request class to determine the current View ID.
 
 					gravityview()->request = new Request();
 
-					echo Plugin::render_view(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo View::render_view(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				},
 			];
 

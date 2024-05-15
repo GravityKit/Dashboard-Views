@@ -105,7 +105,7 @@ class FoundationSettings {
 
 		$dashboard_views_settings = [];
 
-		if ( empty( Plugin::get_dashboard_views() ) ) {
+		if ( empty( View::get_dashboard_views() ) ) {
 			$notice = strtr(
 				esc_html_x( 'You do not have any Views configured for display in the Dashboard. Visit the [url]list of Views[/url] and edit one or more to enable Dashboard display under the Dashboard Views tab.', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
 				[
