@@ -193,13 +193,6 @@ class AdminMenu {
 					'style' => '#toplevel_page_' . self::WP_ADMIN_MENU_SLUG . ' div.wp-menu-image.svg { background-size: 1.5em auto; }',
 				];
 
-				// Hide the first submenu item or else it will appear empty.
-				$styles[] = [
-					'style' => '#toplevel_page_' . self::WP_ADMIN_MENU_SLUG . ' ul.wp-submenu li:nth-child(2) {
-						display: none;
-					}',
-				];
-
 				// Styles for submenus that should be hidden.
 				$hide_styles = [];
 
