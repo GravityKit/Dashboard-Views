@@ -16,7 +16,7 @@ class FoundationSettings {
 	 * @since TBD
 	 */
 	public function __construct() {
-		add_filter( 'gk/foundation/settings/data/plugins', [ $this, 'add_global_gravityview_settings' ], 11 );
+		add_filter( 'gk/foundation/settings/data/plugins', [ $this, 'add_global_gravityview_settings' ], 11 ); // 11 to run after GravityView initializes its settings.
 	}
 
 	/**
@@ -96,10 +96,11 @@ class FoundationSettings {
 		$settings[ $gravityview_settings_id ]['defaults'] = array_merge(
 			$settings[ $gravityview_settings_id ]['defaults'],
 			[
-				'dashboard_views_stylesheet'        => 'pico',
-				'dashboard_views_stylesheet_custom' => $site_url,
-				'dashboard_views_menu_name'         => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
-				'dashboard_views_menu_position'     => 'toplevel_page_' . GravityKitFoundation::admin_menu()::WP_ADMIN_MENU_SLUG, // GravityKit menu.
+				'dashboard_views_stylesheet'             => 'pico',
+				'dashboard_views_stylesheet_custom'      => $site_url,
+				'dashboard_views_menu_name'              => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
+				'dashboard_views_menu_position'          => 'toplevel_page_' . GravityKitFoundation::admin_menu()::WP_ADMIN_MENU_SLUG, // GravityKit menu.
+				'dashboard_views_menu_position_fallback' => 'menu-dashboard', // Dashboard menu.
 			]
 		);
 
@@ -139,8 +140,8 @@ HTML
 		}
 
 		$dashboard_views_settings = array_merge(
-            $dashboard_views_settings,
-            [
+			$dashboard_views_settings,
+			[
 				[
 					'id'          => 'dashboard_views_menu_name',
 					'title'       => esc_html__( 'Menu Name', 'gk-gravityview-dashboard-views' ),
@@ -159,8 +160,16 @@ HTML
 					'id'          => 'dashboard_views_menu_position',
 					'type'        => 'select',
 					'title'       => esc_html__( 'Menu Position', 'gk-gravityview-dashboard-views' ),
-					'description' => esc_html__( 'Select the menu below which to place the Dashboard Views menu item.', 'gk-gravityview-dashboard-views' ),
+					'description' => esc_html__( 'Select the menu below which to place the Dashboard Views menu.', 'gk-gravityview-dashboard-views' ),
 					'value'       => $gravityview_settings['dashboard_views_menu_position'] ?? $settings['gravityview']['defaults']['dashboard_views_menu_position'],
+					'choices'     => $admin_menu_choices,
+				],
+				[
+					'id'          => 'dashboard_views_menu_position_fallback',
+					'type'        => 'select',
+					'title'       => esc_html__( 'Fallback Menu Position', 'gk-gravityview-dashboard-views' ),
+					'description' => esc_html__( "If users don't have access to the first menu, select the fallback menu below which to place the Dashboard Views menu.", 'gk-gravityview-dashboard-views' ),
+					'value'       => $gravityview_settings['dashboard_views_menu_position_fallback'] ?? $settings['gravityview']['defaults']['dashboard_views_menu_position_fallback'],
 					'choices'     => $admin_menu_choices,
 				],
 				[
@@ -207,7 +216,7 @@ HTML
 					],
 				],
 			]
-        );
+		);
 
 		$settings[ $gravityview_settings_id ]['sections'][] = [
 			'title'    => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),

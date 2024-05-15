@@ -34,8 +34,8 @@ class AdminMenu {
 	 * @since TBD
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', [ $this, 'add_admin_menu' ], 100 );
-		add_action( 'network_admin_menu', [ $this, 'add_admin_menu' ], 100 );
+		add_action( 'admin_menu', [ $this, 'add_admin_menu' ], 101 );
+		add_action( 'network_admin_menu', [ $this, 'add_admin_menu' ], 101 );
 	}
 
 	/**
@@ -117,11 +117,12 @@ class AdminMenu {
 		 *
 		 * @since  TBD
 		 *
-		 * @param float $menu_position
+		 * @param int|float $menu_position The position of the top-level admin menu.
+		 *                                 Default: The position of the first submenu that the user has met.
 		 */
 		$menu_position = apply_filters(
 			'gk/gravityview/dashboard-views/admin-menu/position',
-			$this->get_menu_position_by_id( $gravityview_settings['dashboard_views_menu_position'] ?? '' )
+			$this->get_menu_position_by_id( $gravityview_settings['dashboard_views_menu_position'] ?? '' ) ?? $this->get_menu_position_by_id( $gravityview_settings['dashboard_views_menu_position_fallback'] ?? '' )
 		);
 
 		add_menu_page(
