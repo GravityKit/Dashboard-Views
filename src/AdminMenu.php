@@ -140,8 +140,6 @@ class AdminMenu {
 
 		$menu = $this->insert_menu_item_after_position( $menu, $menu_item, $menu_position ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
-		uksort( $menu, 'strnatcmp' );
-
 		// Add submenus.
 		foreach ( $filtered_submenus as $index => $filtered_submenu ) {
 			add_submenu_page(
@@ -421,7 +419,7 @@ class AdminMenu {
 	 *
 	 * @since TBD
 	 *
-	 * @param string $slug      The submenu slug.
+	 * @param string $slug The submenu slug.
 	 *
 	 * @return false|int|null
 	 */
@@ -511,6 +509,8 @@ class AdminMenu {
 	 * @return array|mixed The updated menu items.
 	 */
 	public function insert_menu_item_after_position( array $menus, $new_menu, $after_position ) {
+		uksort( $menus, 'strnatcmp' );
+
 		if ( ! isset( $menus[ (string) $after_position ] ) ) {
 			$menus[ (string) $after_position ] = $new_menu;
 
@@ -550,6 +550,8 @@ class AdminMenu {
 
 			++$index;
 		}
+
+		uksort( $menus, 'strnatcmp' );
 
 		return $menus;
 	}
