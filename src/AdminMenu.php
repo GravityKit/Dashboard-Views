@@ -263,14 +263,14 @@ class AdminMenu {
 	 * @return array
 	 */
 	public static function get_submenus() {
-		$admin_menus = Plugin::get_dashboard_views();
-		$submenus    = self::$_submenus;
+		$dashboard_views = Plugin::get_dashboard_views();
+		$submenus        = self::$_submenus;
 
-		if ( empty( $admin_menus ) ) {
+		if ( empty( $dashboard_views ) ) {
 			return self::$_submenus;
 		}
 
-		foreach ( $admin_menus as $dashboard_view ) {
+		foreach ( $dashboard_views as $dashboard_view ) {
 			$view_settings = gravityview_get_template_settings( $dashboard_view['id'] );
 
 			if ( ! is_array( $view_settings['dashboard_views_user_roles'] ?? [] ) ) {
