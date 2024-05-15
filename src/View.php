@@ -79,14 +79,27 @@ class View {
 				continue;
 			}
 
-			$dashboard_views[] = [
-				'id'       => $view->ID,
-				'link'     => add_query_arg(
-					[ 'page' => AdminMenu::get_view_submenu_slug( (int) $view->ID ) ],
+			$user_required_roles = array_merge(
+				$view_settings['dashboard_views_user_roles'] ?? [],
+				[ self::DEFAULT_ACCESS_ROLE ]
+			);
+
+			$filtered_roles = array_values(
+				array_filter( $user_required_roles, 'current_user_can' )
+			);
+
+			$user_first_met_role = array_shift( $filtered_roles );
+
+			$dashboard_views[ $view->ID ] = [
+				'id'                      => $view->ID,
+				'link'                    => add_query_arg(
+					[ 'page' => AdminMenu::get_view_submenu_slug( $view->ID ) ],
 					admin_url( 'admin.php' )
 				),
-				'title'    => $view_settings[ ViewSettings::SETTINGS_PREFIX . '_custom_name' ] ?: $view->post_title, // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
-				'settings' => $view_settings,
+				'title'                   => $view_settings[ ViewSettings::SETTINGS_PREFIX . '_custom_name' ] ?: $view->post_title, // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+				'current_user_accessible' => ! ! $user_first_met_role,
+				'current_user_role_match' => $user_first_met_role,
+				'settings'                => $view_settings,
 			];
 		}
 
@@ -168,9 +181,13 @@ class View {
 	 * @return void
 	 */
 	public static function render_view() {
+		if ( ! self::is_dashboard_view() ) {
+			return;
+		}
+
 		$view = gravityview()->request->is_view();
 
-		if ( ! $view ) {
+		if ( ! $view || empty( self::get_dashboard_views()[ $view->ID ]['current_user_accessible'] ) ) {
 			return;
 		}
 
@@ -481,7 +498,7 @@ class View {
 		}
 
 		foreach ( self::get_dashboard_views() as $dashboard_view ) {
-			if ( $dashboard_view['id'] !== $post->ID ) {
+			if ( $dashboard_view['id'] !== $post->ID || ! $dashboard_view['current_user_accessible'] ) {
 				continue;
 			}
 

@@ -276,22 +276,7 @@ class AdminMenu {
 			$group = $view_settings[ ViewSettings::SETTINGS_PREFIX . '_group' ] ?? self::DEFAULT_SUBMENU_GROUP;
 			$order = $view_settings[ ViewSettings::SETTINGS_PREFIX . '_group_order' ] ?? 1;
 
-			$user_required_roles = array_merge(
-				$view_settings['dashboard_views_user_roles'] ?? [],
-				[ View::DEFAULT_ACCESS_ROLE ]
-			);
-
-			$user_first_met_role = null;
-
-			foreach ( $user_required_roles as $role ) {
-				if ( current_user_can( $role ) ) {
-					$user_first_met_role = $role;
-
-					break;
-				}
-			}
-
-			if ( ! $user_first_met_role ) {
+			if ( empty( $dashboard_view['current_user_role_match'] ) ) {
 				continue;
 			}
 
@@ -299,7 +284,7 @@ class AdminMenu {
 				'id'         => self::get_view_submenu_slug( (int) $dashboard_view['id'] ),
 				'page_title' => $dashboard_view['title'],
 				'menu_title' => $dashboard_view['title'],
-				'capability' => $user_first_met_role,
+				'capability' => $dashboard_view['current_user_role_match'],
 				'order'      => $order,
 				'callback'   => function () use ( $dashboard_view ) {
 					$_REQUEST['_dashboard_view'] = $dashboard_view['id']; // This is used by the Request class to determine the current View ID.
