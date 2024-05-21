@@ -435,7 +435,7 @@ class AdminMenu {
 			}
 
 			$menu_items[] = [
-				'id'             => $item[5],
+				'id'             => $item[2],
 				'title'          => preg_match( '/^(.*?)(?=<(?:a|b|code|div|em|h[1-6]|i|p|span|ul))/i', $item[0], $matches ) ? trim( $matches[1] ) : $item[0], // Titles can contain HTML markup with update count/etc., so this is a crude way of removing everything up to first most probable tag.
 				'title_original' => $item[0],
 				'position'       => $position,
@@ -481,8 +481,6 @@ class AdminMenu {
 	 * - If the position is a float, the new menu item is added after it and subsequent floats are renumbered.
 	 *
 	 * The renumbering logic is not aggressive and only renumbers floats that are directly after the specified position, or creates a new float if the position is an integer.
-	 *
-	 * @todo  Use Foundation's `insert_menu_item_after_position` method once it's available (https://github.com/GravityKit/Foundation/commit/b0d8a9958e482de6cce8e78d6cf92d92e234bac4)
 	 *
 	 * @since TBD
 	 *
