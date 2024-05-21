@@ -181,6 +181,8 @@ class View {
 	 * @return void
 	 */
 	public static function render_view() {
+		global $post, $current_screen;
+
 		if ( ! self::is_dashboard_view() ) {
 			return;
 		}
@@ -190,6 +192,12 @@ class View {
 		if ( ! $view || empty( self::get_dashboard_views()[ $view->ID ]['current_user_accessible'] ) ) {
 			return;
 		}
+
+		$_current_screen = $current_screen;
+		$_post           = $post;
+
+		set_current_screen( 'front' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( $view->ID ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		/**
 		 * Triggers before the View is rendered.
@@ -254,6 +262,9 @@ class View {
 
 		wp_print_scripts();
 		wp_print_styles();
+
+		$current_screen = $_current_screen; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post           = $_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	}
 
 	/**
@@ -289,7 +300,7 @@ class View {
 	 *
 	 * @param string $link The directory link.
 	 *
-	 * @return string The update directory link.
+	 * @return string The updated directory link.
 	 */
 	public function rewrite_directory_link( $link ) {
 		return ! self::is_dashboard_view() ? $link : Plugin::get_base_url();
