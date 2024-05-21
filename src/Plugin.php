@@ -6,6 +6,7 @@ use Exception;
 use GravityKitFoundation;
 use GravityView_Field_Notes;
 use GravityView_Fields;
+use GravityView_Lightbox_Provider_FancyBox;
 use GV\Plugin_Settings as GravityViewPluginSettings;
 use WP_Post;
 
@@ -96,8 +97,17 @@ class Plugin {
 		$approval_field = GravityView_Fields::get_instance( 'entry_approval' );
 		$approval_field->register_scripts_and_styles();
 
+		// Lightbox assets.
+		do_action( 'gravityview/lightbox/provider' );
+
+		$lightbox = new GravityView_Lightbox_Provider_FancyBox();
+
+		$lightbox->enqueue_scripts();
+		$lightbox->enqueue_styles();
+
 		// Field Notes assets.
 		$enqueue_scripts = $wp_filter['wp_enqueue_scripts'];
+
 		if ( ! $enqueue_scripts ) {
 			return;
 		}
