@@ -9,6 +9,10 @@ use GV\Request as GravityViewRequest;
 
 /**
  * The default Dashboard View Request class.
+ *
+ * It's initialized in the Plugin class on the 'current_screen' action, which only runs in the admin.
+ *
+ * {@see Plugin::set_request()}
  */
 class Request extends GravityViewRequest {
 	/**
@@ -44,9 +48,19 @@ class Request extends GravityViewRequest {
 	 * @return bool
 	 */
 	public function is_dashboard_view() {
-		$view_id = AdminMenu::get_submenu_view_id( $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return ! ! AdminMenu::get_submenu_view_id( $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	}
 
-		return $view_id && ( $this->is_admin() || wp_doing_ajax() );
+	/**
+	 * Returns false to fake that we're not inside an admin screen unless it's an Ajax request.
+	 * This response is expected by various GravityKit plugins/extensions to determine whether to initialize, load their assets, etc.
+	 *
+	 * @since TBD
+	 *
+	 * @return bool
+	 */
+	public static function is_admin() {
+		return wp_doing_ajax() || false;
 	}
 
 	/**
