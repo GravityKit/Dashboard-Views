@@ -102,7 +102,7 @@ class FoundationSettings {
 				'dashboard_views_stylesheet_custom'      => $site_url,
 				'dashboard_views_menu_name'              => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
 				'dashboard_views_menu_position'          => GravityKitFoundation::admin_menu()::WP_ADMIN_MENU_SLUG, // GravityKit menu.
-				'dashboard_views_menu_position_fallback' => 'menu-dashboard', // Dashboard menu.
+				'dashboard_views_menu_position_fallback' => 'index.php', // Dashboard menu.
 			]
 		);
 
