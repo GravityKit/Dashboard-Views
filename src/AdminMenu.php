@@ -289,13 +289,7 @@ class AdminMenu {
 				'menu_title' => $dashboard_view['title'],
 				'capability' => $dashboard_view['current_user_role_match'],
 				'order'      => $order,
-				'callback'   => function () use ( $dashboard_view ) {
-					$_REQUEST['_dashboard_view'] = $dashboard_view['id']; // This is used by the Request class to determine the current View ID.
-
-					gravityview()->request = new Request();
-
-					echo View::render_view(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				},
+				'callback'   => [ 'GravityKit\GravityView\DashboardViews\View', 'render_view' ],
 			];
 
 			$order = array_column( $submenus[ $group ], 'order' );
