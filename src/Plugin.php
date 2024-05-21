@@ -10,6 +10,11 @@ use GravityView_Lightbox_Provider_FancyBox;
 use GV\Plugin_Settings as GravityViewPluginSettings;
 use WP_Post;
 
+/**
+ * The main Dashboard Views plugin class that initializes the required components, loads assets, etc.
+ *
+ * @since TBD
+ */
 class Plugin {
 	const UI_ASSETS_PREFIX = 'dashboard-view';
 

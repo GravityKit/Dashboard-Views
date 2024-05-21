@@ -17,6 +17,11 @@ use GV\View as GV_View;
 use GV\View_Renderer;
 use WP_Post;
 
+/**
+ * This class modifies GravityView's View object and its output.
+ *
+ * @since TBD
+ */
 class View {
 	const DEFAULT_ACCESS_ROLE = 'administrator';
 

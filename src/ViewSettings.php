@@ -10,6 +10,8 @@ use GravityKitFoundation;
 
 /**
  * View-specific settings.
+ *
+ * @since TBD
  */
 class ViewSettings {
 	const SETTINGS_PREFIX = 'dashboard_views';

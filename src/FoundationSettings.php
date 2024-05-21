@@ -7,7 +7,9 @@ use GV\Plugin_Settings as GravityViewPluginSettings;
 use GV\Plugin as GravityViewPlugin;
 
 /**
- * Global GravityView settings in Foundation.
+ * This class modifies global GravityView settings in Foundation with Dashboard Views settings.
+ *
+ * @since TBD
  */
 class FoundationSettings {
 	/**

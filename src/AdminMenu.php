@@ -6,7 +6,9 @@ use GravityKitFoundation;
 use GV\Plugin_Settings as GravityViewPluginSettings;
 
 /**
- * Class to configure the Admin (Dashboard) menu.
+ * This class configures the Admin (Dashboard) menu.
+ *
+ * @since TBD
  */
 class AdminMenu {
 	const WP_ADMIN_MENU_SLUG = '_gk_gravityview_dashboard_views';

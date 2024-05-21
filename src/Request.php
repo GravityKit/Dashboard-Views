@@ -13,6 +13,8 @@ use GV\Request as GravityViewRequest;
  * It's initialized in the Plugin class on the 'current_screen' action, which only runs in the admin.
  *
  * {@see Plugin::set_request()}
+ *
+ * @since TBD
  */
 class Request extends GravityViewRequest {
 	/**
