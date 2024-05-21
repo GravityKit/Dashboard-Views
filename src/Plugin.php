@@ -27,6 +27,7 @@ class Plugin {
 		new AdminMenu();
 
 		new Integrations\GravityFlow();
+		new Integrations\DataTables();
 	}
 
 	/**
