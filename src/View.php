@@ -186,7 +186,7 @@ class View {
 	 * @return void
 	 */
 	public static function render_view() {
-		global $post, $current_screen;
+		global $post, $current_screen, $wp_current_filter;
 
 		if ( ! self::is_dashboard_view() ) {
 			return;
@@ -198,8 +198,9 @@ class View {
 			return;
 		}
 
-		$_current_screen = $current_screen;
-		$_post           = $post;
+		$_current_screen    = $current_screen;
+		$_wp_current_filter = $wp_current_filter;
+		$_post              = $post;
 
 		set_current_screen( 'front' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( $view->ID ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -262,14 +263,17 @@ class View {
 		$view_data = GravityView_View_Data::getInstance();
 		$view_data->add_view( $view->ID );
 
+		$wp_current_filter = [ 'wp_print_footer_scripts' ]; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
 		GravityView_frontend::getInstance()->setGvOutputData( $view_data );
 		GravityView_frontend::getInstance()->add_scripts_and_styles();
 
 		wp_print_scripts();
 		wp_print_styles();
 
-		$current_screen = $_current_screen; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		$post           = $_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$current_screen    = $_current_screen; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post              = $_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wp_current_filter = $_wp_current_filter; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	}
 
 	/**
