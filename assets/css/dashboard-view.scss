@@ -53,3 +53,7 @@ body {
     }
   }
 }
+
+.fancybox__container  {
+  z-index: 100000 !important;
+}
