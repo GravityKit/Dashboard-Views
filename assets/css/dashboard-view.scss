@@ -52,8 +52,20 @@ body {
       margin-right: 0;
     }
   }
+
+  .gk-maps-search-geolocation-address-autocomplete-container {
+    display: flex;
+
+    input.gk-maps-search-geolocation-address-autocomplete {
+      width: inherit;
+    }
+  }
+
+  .gk-maps-search-current-geolocation-radius {
+    width: auto;
+  }
 }
 
-.fancybox__container  {
+.fancybox__container {
   z-index: 100000 !important;
 }
