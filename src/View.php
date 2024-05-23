@@ -205,6 +205,8 @@ class View {
 		set_current_screen( 'front' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( $view->ID ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
+		wp_enqueue_scripts();
+
 		/**
 		 * Triggers before the View is rendered.
 		 *
@@ -258,6 +260,8 @@ class View {
 		 */
 		$view_template = apply_filters( 'gk/gravityview/dashboard-views/view/template', $view_template, $view );
 
+		echo str_replace( '[output]', $output, $view_template ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
 		$view_data = GravityView_View_Data::getInstance();
 		$view_data->add_view( $view->ID );
 
@@ -266,12 +270,8 @@ class View {
 		GravityView_frontend::getInstance()->setGvOutputData( $view_data );
 		GravityView_frontend::getInstance()->add_scripts_and_styles();
 
-		do_action( 'wp_enqueue_scripts' );
-
 		wp_print_scripts();
 		wp_print_styles();
-
-		echo str_replace( '[output]', $output, $view_template ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		$current_screen    = $_current_screen; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post              = $_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
