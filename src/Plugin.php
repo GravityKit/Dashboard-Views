@@ -32,8 +32,9 @@ class Plugin {
 		new ViewSettings();
 		new AdminMenu();
 
-		new Integrations\GravityFlow();
 		new Integrations\DataTables();
+		new Integrations\GravityMaps();
+		new Integrations\GravityFlow();
 	}
 
 	/**

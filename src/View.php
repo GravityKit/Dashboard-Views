@@ -325,7 +325,7 @@ class View {
 	 * @param string   $link  The single entry link.
 	 * @param GF_Entry $entry The Gravity Forms entry.
 	 *
-	 * @return string The update single entry link.
+	 * @return string The updated single entry link.
 	 */
 	public function rewrite_single_entry_link( $link, $entry ) {
 		return ! self::is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry->ID ], Plugin::get_base_url() );
