@@ -255,14 +255,24 @@ class ViewSettings {
 	 * @return array The modified field options.
 	 */
 	public function modify_view_field_options( $field_options ) {
-		$field_options[ self::SETTINGS_PREFIX . '_show_field' ] = [
-			'type'     => 'checkbox',
-			'label'    => esc_html__( 'Show in Dashboard', 'gk-gravityview-dashboard-views' ),
-			'value'    => true,
-			'priority' => 4000,
-			'group'    => 'visibility',
-		];
-
-		return $field_options;
+		return array_merge(
+            $field_options,
+            [
+				self::SETTINGS_PREFIX . '_show_field' => [
+					'type'     => 'checkbox',
+					'label'    => esc_html__( 'Show in Dashboard', 'gk-gravityview-dashboard-views' ),
+					'value'    => true,
+					'priority' => 4000,
+					'group'    => 'visibility',
+				],
+				self::SETTINGS_PREFIX . '_exclude_from_frontend' => [
+					'type'     => 'checkbox',
+					'label'    => esc_html__( 'Exclude from Frontend', 'gk-gravityview-dashboard-views' ),
+					'value'    => false,
+					'priority' => 4000,
+					'group'    => 'visibility',
+				],
+			]
+        );
 	}
 }

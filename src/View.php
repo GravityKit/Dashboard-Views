@@ -11,8 +11,10 @@ use GravityView_View_Data;
 use GV\Edit_Entry_Renderer;
 use GV\Entry_Renderer;
 use GV\Field_Collection;
+use GV\Frontend_Request;
 use GV\GF_Entry;
 use GV\GF_Field;
+use GV\Shortcodes\gravityview;
 use GV\View as GV_View;
 use GV\View_Renderer;
 use WP_Post;
@@ -139,10 +141,11 @@ class View {
 	public function modify_view( $view ) {
 		$view_settings = $view->settings->all();
 
-		if ( ! self::is_dashboard_view() ) {
-			if ( '1' !== $view_settings[ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ) {
-				add_filter( 'gravityview/request/is_renderable', '__return_false' );
-			}
+		$is_dashbord_view = self::is_dashboard_view();
+
+		// Prevent rendering in the frontend.
+		if ( ! $is_dashbord_view && '1' !== $view_settings[ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ) {
+			add_filter( 'gravityview/request/is_renderable', '__return_false' );
 
 			return $view;
 		}
@@ -151,21 +154,27 @@ class View {
 		$updated_fields = new Field_Collection();
 
 		foreach ( $view->fields->all() as $field ) {
-			$is_visible = ! ! empty( $field->dashboard_views_show_field );
+			if ( $is_dashbord_view ) {
+				$is_visible = ! ! empty( $field->{ViewSettings::SETTINGS_PREFIX . '_show_field'} );
 
-			/**
-			 * Sets the View's field visibility (hidden or not).
-			 *
-			 * @since  TBD
-			 * @filter `gk/gravityview/dashboard-views/view/field/visibility`
-			 *
-			 * @param bool     $is_visible Whether the field is visible.
-			 * @param GF_Field $field      The field.
-			 * @param GV_View  $view       The View.
-			 */
-			$is_visible = apply_filters( 'gk/gravityview/dashboard-views/view/field/visibility', $is_visible, $field, $view );
+				/**
+				 * Sets the View's field visibility (hidden or not).
+				 *
+				 * @since  TBD
+				 * @filter `gk/gravityview/dashboard-views/view/field/visibility`
+				 *
+				 * @param bool     $is_visible Whether the field is visible.
+				 * @param GF_Field $field      The field.
+				 * @param GV_View  $view       The View.
+				 */
+				$is_visible = apply_filters( 'gk/gravityview/dashboard-views/view/field/visibility', $is_visible, $field, $view );
 
-			if ( $is_visible ) {
+				if ( $is_visible ) {
+					continue;
+				}
+			}
+
+			if ( gravityview()->request instanceof Frontend_Request && $field->{ViewSettings::SETTINGS_PREFIX . '_exclude_from_frontend'} ) {
 				continue;
 			}
 
@@ -174,15 +183,17 @@ class View {
 
 		$view->fields = $updated_fields;
 
-		/**
-		 * Modifies the View object.
-		 *
-		 * @since  TBD
-		 * @filter `gk/gravityview/dashboard-views/view`
-		 *
-		 * @param GV_View $view The View.
-		 */
-		$view = apply_filters( 'gk/gravityview/dashboard-views/view', $view );
+		if ( self::is_dashboard_view() ) {
+			/**
+			 * Modifies the View object.
+			 *
+			 * @since  TBD
+			 * @filter `gk/gravityview/dashboard-views/view`
+			 *
+			 * @param GV_View $view The View.
+			 */
+			$view = apply_filters( 'gk/gravityview/dashboard-views/view', $view );
+		}
 
 		return $view;
 	}
