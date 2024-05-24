@@ -314,7 +314,7 @@ class View {
 	 * @return string The updated directory link.
 	 */
 	public function rewrite_directory_link( $link ) {
-		return ! self::is_dashboard_view() ? $link : Plugin::get_base_url();
+		return ! self::is_dashboard_view() ? $link : Request::get_base_url();
 	}
 
 	/**
@@ -328,7 +328,7 @@ class View {
 	 * @return string The updated single entry link.
 	 */
 	public function rewrite_single_entry_link( $link, $entry ) {
-		return ! self::is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry->ID ], Plugin::get_base_url() );
+		return ! self::is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry->ID ], Request::get_base_url() );
 	}
 
 	/**
@@ -341,7 +341,7 @@ class View {
 	 * @return string The updated single entry back link.
 	 */
 	public function rewrite_single_entry_back_link( $link ) {
-		return ! self::is_dashboard_view() ? $link : Plugin::get_base_url();
+		return ! self::is_dashboard_view() ? $link : Request::get_base_url();
 	}
 
 	/**
@@ -365,7 +365,7 @@ class View {
 				'entry_id' => $entry['id'],
 				'edit'     => wp_create_nonce( GravityView_Edit_Entry::get_nonce_key( $view->ID, $entry['form_id'], $entry['id'] ) ),
 			],
-			Plugin::get_base_url()
+			Request::get_base_url()
 		);
 	}
 
@@ -408,7 +408,7 @@ class View {
 	 * @return string The updated edit entry cancel link.
 	 */
 	public function rewrite_edit_entry_cancel_link( $link, $form, $entry ) {
-		return ! self::is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry['id'] ], Plugin::get_base_url() );
+		return ! self::is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry['id'] ], Request::get_base_url() );
 	}
 
 	/**
@@ -421,7 +421,7 @@ class View {
 	 * @return string The updated search action link.
 	 */
 	public function rewrite_search_action_link( $link ) {
-		return ! self::is_dashboard_view() ? $link : Plugin::get_base_url();
+		return ! self::is_dashboard_view() ? $link : Request::get_base_url();
 	}
 
 	/**
@@ -434,7 +434,7 @@ class View {
 	 * @return array The updated search clear link parameters.
 	 */
 	public function rewrite_search_clear_link( $params ) {
-		$params['url'] = ! self::is_dashboard_view() ? ( $params['url'] ?? '' ) : Plugin::get_base_url();
+		$params['url'] = ! self::is_dashboard_view() ? ( $params['url'] ?? '' ) : Request::get_base_url();
 
 		return $params;
 	}
@@ -449,7 +449,7 @@ class View {
 	 * @return array The updated pagination link parameters.
 	 */
 	public function rewrite_pagination_links( array $params ) {
-		$params['base'] = ! self::is_dashboard_view() ? ( $param['base'] ?? '' ) : add_query_arg( [ 'pagenum' => '%#%' ], Plugin::get_base_url() );
+		$params['base'] = ! self::is_dashboard_view() ? ( $param['base'] ?? '' ) : add_query_arg( [ 'pagenum' => '%#%' ], Request::get_base_url() );
 
 		return $params;
 	}
@@ -468,7 +468,7 @@ class View {
 			return $link;
 		}
 
-		return Plugin::get_base_url();
+		return Request::get_base_url();
 	}
 
 	/**
@@ -485,7 +485,7 @@ class View {
 			return $link;
 		}
 
-		return Plugin::get_base_url();
+		return Request::get_base_url();
 	}
 
 	/**

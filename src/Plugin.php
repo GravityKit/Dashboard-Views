@@ -235,19 +235,4 @@ class Plugin {
 
 		$unload_wp_styles();
 	}
-
-	/**
-	 * Returns the base URL for the Dashboard View.
-	 *
-	 * @since TBD
-	 *
-	 * @return string The base URL for the Dashboard View.
-	 */
-	public static function get_base_url() {
-		$url = admin_url( 'admin.php' );
-
-		$page = $_REQUEST['page'] ?? false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		return $page ? add_query_arg( [ 'page' => $page ], $url ) : $url;
-	}
 }

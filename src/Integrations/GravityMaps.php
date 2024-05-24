@@ -2,7 +2,7 @@
 
 namespace GravityKit\GravityView\DashboardViews\Integrations;
 
-use GravityKit\GravityView\DashboardViews\Plugin;
+use GravityKit\GravityView\DashboardViews\Request;
 use GravityKit\GravityView\DashboardViews\View;
 
 /**
@@ -31,6 +31,6 @@ class GravityMaps {
 	 * @return string The updated single entry link.
 	 */
 	public function rewrite_single_entry_link( $link, $entry ) {
-		return ! View::is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry['id'] ], Plugin::get_base_url() );
+		return ! View::is_dashboard_view() ? $link : add_query_arg( [ 'entry_id' => $entry['id'] ], Request::get_base_url() );
 	}
 }
