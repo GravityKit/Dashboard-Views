@@ -134,7 +134,13 @@ class View {
 	 * @return mixed The updated View.
 	 */
 	public function modify_view( $view ) {
+		$view_settings = $view->settings->all();
+
 		if ( ! self::is_dashboard_view() ) {
+			if ( '1' !== $view_settings[ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ) {
+				add_filter( 'gravityview/request/is_renderable', '__return_false' );
+			}
+
 			return $view;
 		}
 
@@ -537,6 +543,10 @@ class View {
 				],
 				array_slice( $actions, $position )
 			);
+
+			if ( '1' !== ( $dashboard_view['settings'][ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ?? '' ) ) {
+				unset( $actions['view'] );
+			}
 
 			break;
 		}
