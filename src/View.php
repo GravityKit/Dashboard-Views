@@ -124,9 +124,15 @@ class View {
 	 * @return false|Request null: Not GV request. false: Not an Admin View request. Otherwise, returns Dashboard Views request.
 	 */
 	public static function is_dashboard_view() {
-		$request = gravityview()->request;
+		static $response;
 
-		return $request instanceof Request && $request->is_dashboard_view() ? $request : false;
+		if ( ! $response ) {
+			$request = gravityview()->request;
+
+			$response = $request instanceof Request && $request->is_dashboard_view() ? $request : false;
+		}
+
+		return $response;
 	}
 
 	/**
@@ -141,10 +147,8 @@ class View {
 	public function modify_view( $view ) {
 		$view_settings = $view->settings->all();
 
-		$is_dashbord_view = self::is_dashboard_view();
-
 		// Prevent rendering in the frontend.
-		if ( ! $is_dashbord_view && '1' !== $view_settings[ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ) {
+		if ( ! self::is_dashboard_view() && '1' !== $view_settings[ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ) {
 			add_filter( 'gravityview/request/is_renderable', '__return_false' );
 
 			return $view;
@@ -154,7 +158,7 @@ class View {
 		$updated_fields = new Field_Collection();
 
 		foreach ( $view->fields->all() as $field ) {
-			if ( $is_dashbord_view ) {
+			if ( self::is_dashboard_view() ) {
 				$is_visible = ! ! empty( $field->{ViewSettings::SETTINGS_PREFIX . '_show_field'} );
 
 				/**
