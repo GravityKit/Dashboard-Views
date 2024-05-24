@@ -52,6 +52,9 @@ class View {
 
 		// Handle entry duplication/deletion.
 		add_action( 'current_screen', [ $this, 'handle_entry_duplication_and_deletion' ] );
+
+		// Localize the View editor script.
+		add_filter( 'gk/gravityview/dashboard-views/view/editor/localization', [ $this, 'localize_view_editor' ] );
 	}
 
 	/**
@@ -552,5 +555,23 @@ class View {
 		}
 
 		return $actions;
+	}
+
+	/**
+	 * Localizes the View editor script {@see Plugin::enqueue_ui_assets}.
+	 *
+	 * @since TBD
+	 *
+	 * @param array $localization Localization strings.
+	 *
+	 * @return array Updated localization strings.
+	 */
+	public function localize_view_editor( $localization ) {
+		return array_merge(
+			$localization,
+			[
+				'frontend_display_disabled_notice' => esc_html__( 'This View is configured for display in the Dashboard only. You can disable this under the Dashboard Views tab.', 'gk-gravityview-dashboard-views' ),
+			]
+		);
 	}
 }

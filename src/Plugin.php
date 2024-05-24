@@ -78,6 +78,8 @@ class Plugin {
 				]
 			);
 
+			wp_localize_script( $asset_prefix, 'gkDashboardViews', apply_filters( 'gk/gravityview/dashboard-views/view/editor/localization', [] ) );
+
 			$this->enqueue_styles(
 				[
 					$asset_prefix => "build/css/{$asset_prefix}.min.css",
