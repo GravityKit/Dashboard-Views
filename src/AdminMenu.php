@@ -2,15 +2,15 @@
 
 namespace GravityKit\GravityView\DashboardViews;
 
+use GravityKit\GravityView\Foundation\WP\AdminMenu as FoundationAdminMenu;
 use GravityKitFoundation;
 use GV\Plugin_Settings as GravityViewPluginSettings;
-
 /**
  * This class configures the Admin (Dashboard) menu.
  *
  * @since TBD
  */
-class AdminMenu {
+class AdminMenu extends FoundationAdminMenu {
 	const WP_ADMIN_MENU_SLUG = '_gk_gravityview_dashboard_views';
 
 	const DEFAULT_SUBMENU_GROUP = 'group1';
@@ -221,44 +221,6 @@ class AdminMenu {
 	}
 
 	/**
-	 * Adds a submenu to the top-level Dashboard Views admin menu.
-	 *
-	 * @since TBD
-	 *
-	 * @param array  $submenu  The submenu data.
-	 * @param string $position The position of the submenu. Default: 'group1'.
-	 *
-	 * @retun void
-	 */
-	public static function add_submenu_item( $submenu, $position = self::DEFAULT_SUBMENU_GROUP ) {
-		if ( ! isset( $submenu['id'] ) ) {
-			return;
-		}
-
-		$submenus = self::get_submenus();
-
-		$submenus[ $position ] = $submenus[ $position ] ?? [];
-
-		if ( ! isset( $submenu['order'] ) ) {
-			$order = array_column( $submenus[ $position ], 'order' );
-
-			if ( empty( $order ) ) {
-				$submenu['order'] = 1;
-			} else {
-				$submenu['order'] = max( $order ) + 100;
-			}
-		}
-
-		$submenus[ $position ][ $submenu['id'] ] = $submenu;
-
-		$order = array_column( $submenus[ $position ], 'order' );
-
-		array_multisort( $submenus[ $position ], SORT_NUMERIC, $order );
-
-		self::$_submenus = $submenus;
-	}
-
-	/**
 	 * Returns submenus optionally modified by a filter.
 	 *
 	 * @since TBD
@@ -307,56 +269,6 @@ class AdminMenu {
 		 * @param array $submenus Submenus.
 		 */
 		return apply_filters( 'gk/gravityview/dashboard-views/admin-menu/submenus', $submenus );
-	}
-
-	/**
-	 * Removes a submenu from the top-level menu in WP admin and if the top-level menu is empty, removes it as well.
-	 *
-	 * @since TBD
-	 *
-	 * @global array $submenu
-	 *
-	 * @param string $id The submenu ID.
-	 *
-	 * @retun void
-	 */
-	public static function remove_submenu_item( $id ) {
-		global $submenu;
-
-		if ( ! isset( $submenu[ self::WP_ADMIN_MENU_SLUG ] ) ) {
-			return;
-		}
-
-		foreach ( $submenu[ self::WP_ADMIN_MENU_SLUG ] as $index => $submenu_item ) {
-			if ( $submenu_item[2] === $id ) {
-				unset( $submenu[ self::WP_ADMIN_MENU_SLUG ][ $index ] );
-			}
-		}
-
-		if ( ! empty( $submenu[ self::WP_ADMIN_MENU_SLUG ] ) ) {
-			return;
-		}
-
-		self::remove_admin_menu();
-	}
-
-	/**
-	 * Removes the top-level menu from WP admin.
-	 *
-	 * @since TBD
-	 *
-	 * @global array $menu
-	 *
-	 * @retun void
-	 */
-	public static function remove_admin_menu() {
-		global $menu;
-
-		foreach ( $menu as $index => $menu_item ) {
-			if ( self::WP_ADMIN_MENU_SLUG === $menu_item[2] ) {
-				unset( $menu[ $index ] );
-			}
-		}
 	}
 
 	/**
@@ -446,91 +358,5 @@ class AdminMenu {
 		);
 
 		return $menu_items;
-	}
-
-	/**
-	 * Returns the position of a WP admin menu item by its ID.
-	 *
-	 * @since TBD
-	 *
-	 * @param string $id The menu item ID.
-	 *
-	 * @return int|string|null
-	 */
-	public static function get_menu_position_by_id( $id ) {
-		$menus = array_filter(
-			self::get_menus(),
-			function ( $menu ) use ( $id ) {
-				return ( $menu['id'] ?? '' ) === $id;
-			}
-		);
-
-		$menu = reset( $menus );
-
-		return $menu ? $menu['position'] : null;
-	}
-
-	/**
-	 * Inserts a new menu item after a specified position:
-	 * - If the position doesn't exist, the new menu item is added at the end.
-	 * - If the position is an integer, a new float is created.
-	 * - If the position is a float, the new menu item is added after it and subsequent floats are renumbered.
-	 *
-	 * The renumbering logic is not aggressive and only renumbers floats that are directly after the specified position, or creates a new float if the position is an integer.
-	 *
-	 * @since TBD
-	 *
-	 * @param array      $menus          The menu items.
-	 * @param mixed      $new_menu       The new menu item.
-	 * @param int|string $after_position The position after which the new menu item should be inserted.
-	 *
-	 * @return array|mixed The updated menu items.
-	 */
-	public function insert_menu_item_after_position( array $menus, $new_menu, $after_position ) {
-		uksort( $menus, 'strnatcmp' );
-
-		if ( ! isset( $menus[ (string) $after_position ] ) ) {
-			$menus[ (string) $after_position ] = $new_menu;
-
-			return $menus;
-		}
-
-		$positions_to_renumber = array_filter(
-			$menus,
-			function ( $key ) use ( $after_position ) {
-				return preg_match( '/^' . (int) $after_position . '(\..*)?$/', $key );
-			},
-			ARRAY_FILTER_USE_KEY
-		);
-
-		$menus = array_diff_key( $menus, $positions_to_renumber );
-
-		$index = 0;
-
-		foreach ( $positions_to_renumber as $current_position => $value ) {
-			if ( version_compare( $after_position, $current_position ) === 0 ) {
-				$menus[ (string) $current_position ] = $value;
-
-				$new_key = array_keys( $positions_to_renumber )[ $index + 1 ] ?? $current_position + 0.01;
-
-				$menus[ (string) $new_key ] = $new_menu;
-
-				continue;
-			}
-
-			if ( ! preg_match( '/\./', $current_position ) ) {
-				$current_position = (int) $current_position;
-			} elseif ( version_compare( $after_position, $current_position ) < 0 ) {
-				$current_position = $current_position + 0.01;
-			}
-
-			$menus[ (string) $current_position ] = $value;
-
-			++$index;
-		}
-
-		uksort( $menus, 'strnatcmp' );
-
-		return $menus;
 	}
 }
