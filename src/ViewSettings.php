@@ -72,9 +72,6 @@ class ViewSettings {
 			$roles[ $role ] = $data['name'];
 		}
 
-		$wp_post   = get_post( $_REQUEST['post'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$view_name = $wp_post instanceof WP_Post ? $wp_post->post_title : '';
-
 		return array_merge(
 			$settings,
 			[
@@ -103,12 +100,12 @@ class ViewSettings {
 				],
 				self::SETTINGS_PREFIX . '_custom_name' => [
 					'label'      => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
-					'desc'       => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard.', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard. The default View title will be used if left blank.', 'gk-gravityview-dashboard-views' ),
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
 					'type'       => 'text',
 					'class'      => 'widefat',
 					'full_width' => true,
-					'value'      => $view_name,
+					'value'      => '',
 				],
 				self::SETTINGS_PREFIX . '_group'       => [
 					'label'      => esc_html__( 'Group', 'gk-gravityview-dashboard-views' ),
