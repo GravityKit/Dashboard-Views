@@ -19,6 +19,30 @@ define( 'GV_DASHBOARD_VIEWS_PLUGIN_FILE', __FILE__ );
 add_action(
 	'gravityview/loaded',
 	function () {
+		$required_gv_version = '2.23';
+
+		if ( ! defined( 'GV_PLUGIN_VERSION' ) || version_compare( GV_PLUGIN_VERSION, $required_gv_version, '<' ) ) {
+			add_action(
+				'admin_notices',
+				function () use ( $required_gv_version ) {
+					$notice = wpautop(
+						strtr(
+							esc_html__( '[plugin] requires [requirement] [version] or newer.', 'gk-gravityview-dashboard-views' ),
+							[
+								'[plugin]'      => 'Dashboard Views',
+								'[requirement]' => '<a href="https://www.gravitykit.com/products/gravityview/">GravityView</a>',
+								'[version]'     => $required_gv_version,
+							]
+						)
+					);
+
+					echo "<div class='error' style='padding: 1.25em 0 1.25em 1em;'>$notice</div>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+			);
+
+			return;
+		}
+
 		if ( ! class_exists( 'GravityKit\GravityView\Foundation\Core' ) ) {
 			return;
 		}
