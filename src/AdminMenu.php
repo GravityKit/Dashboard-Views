@@ -5,6 +5,7 @@ namespace GravityKit\GravityView\DashboardViews;
 use GravityKit\GravityView\Foundation\WP\AdminMenu as FoundationAdminMenu;
 use GravityKitFoundation;
 use GV\Plugin_Settings as GravityViewPluginSettings;
+
 /**
  * This class configures the Admin (Dashboard) menu.
  *
@@ -279,6 +280,12 @@ class AdminMenu extends FoundationAdminMenu {
 	 * @return string
 	 */
 	public static function get_view_submenu_prefix() {
+		static $prefix;
+
+		if ( $prefix ) {
+			return $prefix;
+		}
+
 		$gravityview_settings = GravityKitFoundation::settings()->get_plugin_settings( GravityViewPluginSettings::SETTINGS_PLUGIN_ID );
 
 		$prefix = sanitize_title( $gravityview_settings['dashboard_views_menu_name'] ?? esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ) );
