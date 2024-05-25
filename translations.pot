@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later
 msgid ""
 msgstr ""
-"Project-Id-Version: GravityView - Dashboard Views 1.1-beta\n"
+"Project-Id-Version: GravityView - Dashboard Views 2.0.0-beta.1\n"
 "Report-Msgid-Bugs-To: https://www.gravitykit.com/support\n"
 "Last-Translator: GravityKit <support@gravitykit.com>\n"
 "Language-Team: GravityKit <support@gravitykit.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-01T20:16:58+00:00\n"
+"POT-Creation-Date: 2024-05-24T21:17:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -17,6 +17,10 @@ msgstr ""
 
 #. Plugin Name of the plugin
 msgid "GravityView - Dashboard Views"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://www.gravitykit.com/products/dashboard-views/"
 msgstr ""
 
 #. Description of the plugin
@@ -31,25 +35,184 @@ msgstr ""
 msgid "https://www.gravitykit.com"
 msgstr ""
 
-#: class-gravityview-dashboard-views.php:412
+#: gravityview-dashboard-views.php:30
+msgid "[plugin] requires [requirement] [version] or newer."
+msgstr ""
+
+#: PluginLegacy.php:322
+#: src/View.php:544
 msgid "View in Dashboard"
 msgstr ""
 
-#: class-gravityview-dashboard-views.php:442
+#: PluginLegacy.php:352
 msgid "The user must have the {cap} capability. {link}Read a guide about modifying capabilities{/link}."
 msgstr ""
 
 #. translators: %s: View title.
-#: class-gravityview-dashboard-views.php:459
+#: PluginLegacy.php:369
 msgid "%s &lsaquo; Admin View"
 msgstr ""
 
 #. translators: %s: View title.
-#: class-gravityview-dashboard-views.php:460
+#: PluginLegacy.php:370
 msgid "Dashboard View"
 msgstr ""
 
 #. translators: %s: View ID.
-#: class-gravityview-dashboard-views.php:491
+#: PluginLegacy.php:401
 msgid "View #%s not found."
+msgstr ""
+
+#: src/AdminMenu.php:111
+#: src/AdminMenu.php:112
+#: src/AdminMenu.php:284
+#: src/FoundationSettings.php:103
+#: src/FoundationSettings.php:224
+#: src/ViewSettings.php:42
+msgid "Dashboard Views"
+msgstr ""
+
+#: src/FoundationSettings.php:82
+msgctxt "Placeholders inside [] are not to be translated."
+msgid "CSS framework: [framework]"
+msgstr ""
+
+#: src/FoundationSettings.php:113
+msgctxt "Placeholders inside [] are not to be translated."
+msgid "You do not have any Views configured for display in the Dashboard. Visit the [url]list of Views[/url] and edit one or more to enable Dashboard display under the Dashboard Views tab."
+msgstr ""
+
+#: src/FoundationSettings.php:149
+msgid "Menu Name"
+msgstr ""
+
+#: src/FoundationSettings.php:150
+msgid "Enter the name of the Dashboard menu item under which the Views will appear."
+msgstr ""
+
+#: src/FoundationSettings.php:157
+msgid "Please enter a menu name"
+msgstr ""
+
+#: src/FoundationSettings.php:164
+msgid "Menu Position"
+msgstr ""
+
+#: src/FoundationSettings.php:165
+msgid "Select the menu below which to place the Dashboard Views menu."
+msgstr ""
+
+#: src/FoundationSettings.php:172
+msgid "Fallback Menu Position"
+msgstr ""
+
+#: src/FoundationSettings.php:173
+msgid "If users don't have access to the first menu, select the fallback menu below which to place the Dashboard Views menu."
+msgstr ""
+
+#: src/FoundationSettings.php:180
+msgid "Default Style"
+msgstr ""
+
+#: src/FoundationSettings.php:181
+msgid "Choose how you would like to style your Views."
+msgstr ""
+
+#: src/FoundationSettings.php:186
+msgid "Unstyled"
+msgstr ""
+
+#: src/FoundationSettings.php:190
+msgid "Custom Stylesheet"
+msgstr ""
+
+#: src/FoundationSettings.php:199
+msgid "Custom Stylesheet URL"
+msgstr ""
+
+#: src/FoundationSettings.php:200
+msgid "Enter the URL of a custom stylesheet."
+msgstr ""
+
+#: src/FoundationSettings.php:216
+msgid "Please enter a valid URL"
+msgstr ""
+
+#: src/View.php:573
+msgid "This View is configured for display in the Dashboard only. You can disable this under the Dashboard Views tab."
+msgstr ""
+
+#: src/ViewSettings.php:79
+#: src/ViewSettings.php:261
+msgid "Show in Dashboard"
+msgstr ""
+
+#: src/ViewSettings.php:81
+msgctxt "Placeholders inside [] are not to be translated."
+msgid "This will make the View accessible in the WordPress Dashboard. Visit [url]GravityView settings[/url] for additional configuration options that apply to all Dashboard Views."
+msgstr ""
+
+#: src/ViewSettings.php:93
+msgid "Show in Frontend"
+msgstr ""
+
+#: src/ViewSettings.php:94
+msgid "Unchecking this option will prevent the View from rendering in the frontend."
+msgstr ""
+
+#: src/ViewSettings.php:102
+msgid "Custom View Name"
+msgstr ""
+
+#: src/ViewSettings.php:103
+msgid "Use this field to specify the View name as it will appear in the Dashboard. The default View title will be used if left blank."
+msgstr ""
+
+#: src/ViewSettings.php:111
+msgid "Group"
+msgstr ""
+
+#: src/ViewSettings.php:112
+#: src/ViewSettings.php:128
+msgid "Views can be organized into groups within the Dashboard menu, with each group separated by a divider. Select the appropriate group to assign this View."
+msgstr ""
+
+#: src/ViewSettings.php:116
+msgid "Group 1"
+msgstr ""
+
+#: src/ViewSettings.php:117
+msgid "Group 2"
+msgstr ""
+
+#: src/ViewSettings.php:118
+msgid "Group 3"
+msgstr ""
+
+#: src/ViewSettings.php:119
+msgid "Group 4"
+msgstr ""
+
+#: src/ViewSettings.php:120
+msgid "Group 5"
+msgstr ""
+
+#: src/ViewSettings.php:127
+msgid "Group Order"
+msgstr ""
+
+#: src/ViewSettings.php:136
+msgid "Limit Access to User Role(s)"
+msgstr ""
+
+#: src/ViewSettings.php:137
+msgid "Select user role(s)…"
+msgstr ""
+
+#: src/ViewSettings.php:138
+msgid "The View will only be accessible to users with the selected role(s). Administrators always have access."
+msgstr ""
+
+#: src/ViewSettings.php:268
+msgid "Exclude from Frontend"
 msgstr ""
