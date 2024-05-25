@@ -31,8 +31,6 @@ class FoundationSettings {
 	 * @return array The modified settings object.
 	 */
 	public function add_global_gravityview_settings( $settings ) {
-		static $dashboard_views_settings;
-
 		if ( empty( $settings['gravityview']['sections'] ) || ! class_exists( 'GravityKitFoundation' ) ) {
 			return $settings;
 		}
@@ -40,15 +38,6 @@ class FoundationSettings {
 		$gravityview_settings_id = GravityViewPluginSettings::SETTINGS_PLUGIN_ID;
 		$gravityview_settings    = GravityKitFoundation::settings()->get_plugin_settings( $gravityview_settings_id );
 		$site_url                = is_multisite() ? network_home_url() : home_url();
-
-		if ( $dashboard_views_settings ) {
-			$settings[ $gravityview_settings_id ]['sections'][] = [
-				'title'    => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
-				'settings' => $dashboard_views_settings,
-			];
-
-			return $settings;
-		}
 
 		$supported_css_frameworks = [
 			'chota'  => [
