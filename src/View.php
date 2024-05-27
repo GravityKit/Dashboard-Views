@@ -58,6 +58,8 @@ class View {
 		// Localize the View editor script.
 		add_filter( 'gk/gravityview/dashboard-views/view/editor/localization', [ $this, 'localize_view_editor' ] );
 
+		add_filter( 'get_sample_permalink_html', [ $this, 'filter_sample_permalink_html' ], 10, 2 );
+
 		// Filter messages when updating Views.
 		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ], 20 );
 		add_filter( 'bulk_post_updated_messages', [ $this, 'post_updated_messages' ], 20 );
@@ -82,6 +84,25 @@ class View {
 		$view_settings = gravityview_get_template_settings( $view_id );
 
 		return ( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_enable' ] ?? '' ) && ! empty( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_internal_only' ] ?? 1 );
+	}
+
+	/**
+	 * Filter the sample permalink HTML to remove the front-end link if the View is internal-only.
+	 *
+	 * @since TBD
+	 *
+	 * @param string $permalink_html  The sample permalink HTML.
+	 * @param int    $post_id The post ID.
+	 *
+	 * @return string The updated sample permalink HTML.
+	 */
+	public function filter_sample_permalink_html( $permalink_html, $post_id ) {
+
+		if ( $this->is_internal_only( $post_id, true ) ) {
+			return '';
+		}
+
+		return $permalink_html;
 	}
 
 	/**
