@@ -148,8 +148,10 @@ class View {
 		$view_settings = $view->settings->all();
 
 		// Prevent rendering in the frontend.
-		if ( ! self::is_dashboard_view() && '1' !== $view_settings[ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ) {
-			add_filter( 'gravityview/request/is_renderable', '__return_false' );
+		if ( ! self::is_dashboard_view() ) {
+			if ( ( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_enable' ] ?? '' ) && ! ( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ?? '' ) ) {
+				add_filter( 'gravityview/request/is_renderable', '__return_false' );
+			}
 
 			return $view;
 		}
@@ -562,7 +564,7 @@ class View {
 				array_slice( $actions, $position )
 			);
 
-			if ( '1' !== ( $dashboard_view['settings'][ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ?? '' ) ) {
+			if ( $dashboard_view['settings'][ ViewSettings::SETTINGS_PREFIX . '_show_in_frontend' ] ?? '' ) {
 				unset( $actions['view'] );
 			}
 
