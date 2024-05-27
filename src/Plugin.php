@@ -66,7 +66,6 @@ class Plugin {
 	 * @return void
 	 */
 	public function enqueue_ui_assets() {
-		global $wp_filter;
 		global $post;
 
 		if ( $post instanceof WP_Post && 'gravityview' === $post->post_type && 'edit' === $post->filter ) {
