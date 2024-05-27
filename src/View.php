@@ -78,8 +78,12 @@ class View {
 	 */
 	public function filter_posts( $posts ) {
 
+		if ( is_admin() || ! is_array( $posts ) ) {
+			return $posts;
+		}
+
 		foreach ( $posts as $key => $post ) {
-			if ( $this->is_internal_only( $post->ID ) ) {
+			if ( $this->is_internal_only( $post->ID, true ) ) {
 				unset( $posts[ $key ] );
 			}
 		}
@@ -283,7 +287,6 @@ class View {
 	 * @return mixed The updated View.
 	 */
 	public function modify_view( $view ) {
-		$view_settings = $view->settings->all();
 
 		// Prevent rendering in the frontend.
 		if ( ! self::is_dashboard_view() ) {
