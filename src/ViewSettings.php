@@ -90,13 +90,13 @@ class ViewSettings {
 					'value'      => 0,
 				],
 				self::SETTINGS_PREFIX . '_show_in_frontend' => [
-					'label'      => esc_html__( 'Show in Frontend', 'gk-gravityview-dashboard-views' ),
-					'desc'       => esc_html__( 'Unchecking this option will prevent the View from rendering in the frontend.', 'gk-gravityview-dashboard-views' ),
+					'label'      => esc_html__( 'Restrict to Internal-Only View', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Enable this setting to prevent the View from ever rendering in the front-end.', 'gk-gravityview-dashboard-views' ),
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
 					'type'       => 'checkbox',
 					'class'      => 'widefat',
 					'full_width' => true,
-					'value'      => 1,
+					'value'      => 0,
 				],
 				self::SETTINGS_PREFIX . '_custom_name' => [
 					'label'      => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),

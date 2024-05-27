@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-24T21:17:42+00:00\n"
+"POT-Creation-Date: 2024-05-27T19:33:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.10.0\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: gk-gravityview-dashboard-views\n"
 
@@ -39,33 +39,9 @@ msgstr ""
 msgid "[plugin] requires [requirement] [version] or newer."
 msgstr ""
 
-#: PluginLegacy.php:322
-#: src/View.php:544
-msgid "View in Dashboard"
-msgstr ""
-
-#: PluginLegacy.php:352
-msgid "The user must have the {cap} capability. {link}Read a guide about modifying capabilities{/link}."
-msgstr ""
-
-#. translators: %s: View title.
-#: PluginLegacy.php:369
-msgid "%s &lsaquo; Admin View"
-msgstr ""
-
-#. translators: %s: View title.
-#: PluginLegacy.php:370
-msgid "Dashboard View"
-msgstr ""
-
-#. translators: %s: View ID.
-#: PluginLegacy.php:401
-msgid "View #%s not found."
-msgstr ""
-
-#: src/AdminMenu.php:111
 #: src/AdminMenu.php:112
-#: src/AdminMenu.php:284
+#: src/AdminMenu.php:113
+#: src/AdminMenu.php:291
 #: src/FoundationSettings.php:103
 #: src/FoundationSettings.php:224
 #: src/ViewSettings.php:42
@@ -138,12 +114,16 @@ msgstr ""
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: src/View.php:573
+#: src/View.php:562
+msgid "View in Dashboard"
+msgstr ""
+
+#: src/View.php:591
 msgid "This View is configured for display in the Dashboard only. You can disable this under the Dashboard Views tab."
 msgstr ""
 
 #: src/ViewSettings.php:79
-#: src/ViewSettings.php:261
+#: src/ViewSettings.php:263
 msgid "Show in Dashboard"
 msgstr ""
 
@@ -153,11 +133,11 @@ msgid "This will make the View accessible in the WordPress Dashboard. Visit [url
 msgstr ""
 
 #: src/ViewSettings.php:93
-msgid "Show in Frontend"
+msgid "Restrict to Internal-Only View"
 msgstr ""
 
 #: src/ViewSettings.php:94
-msgid "Unchecking this option will prevent the View from rendering in the frontend."
+msgid "Enable this setting to prevent the View from ever rendering in the front-end."
 msgstr ""
 
 #: src/ViewSettings.php:102
@@ -213,6 +193,6 @@ msgstr ""
 msgid "The View will only be accessible to users with the selected role(s). Administrators always have access."
 msgstr ""
 
-#: src/ViewSettings.php:268
+#: src/ViewSettings.php:270
 msgid "Exclude from Frontend"
 msgstr ""
