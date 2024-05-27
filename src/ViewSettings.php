@@ -98,6 +98,16 @@ class ViewSettings {
 					'full_width' => true,
 					'value'      => 0,
 				],
+				self::SETTINGS_PREFIX . '_user_roles'    => [
+					'label'       => esc_html__( 'Limit Access to User Role(s)', 'gk-gravityview-dashboard-views' ),
+					'placeholder' => esc_html__( 'Select user role(s)…', 'gk-gravityview-dashboard-views' ),
+					'desc'        => esc_html__( 'The View will only be accessible to users with the selected role(s). Administrators always have access.', 'gk-gravityview-dashboard-views' ),
+					'roles'       => $roles,
+					'value'       => [],
+					'type'        => 'custom',
+					'requires'    => self::SETTINGS_PREFIX . '_enable',
+					'callback'    => [ $this, 'render_limit_access_to_user_roles_setting' ],
+				],
 				self::SETTINGS_PREFIX . '_custom_name'   => [
 					'label'      => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
 					'desc'       => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard. The default View title will be used if left blank.', 'gk-gravityview-dashboard-views' ),
@@ -131,16 +141,6 @@ class ViewSettings {
 					'class'      => 'widefat',
 					'full_width' => true,
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
-				],
-				self::SETTINGS_PREFIX . '_user_roles'    => [
-					'label'       => esc_html__( 'Limit Access to User Role(s)', 'gk-gravityview-dashboard-views' ),
-					'placeholder' => esc_html__( 'Select user role(s)…', 'gk-gravityview-dashboard-views' ),
-					'desc'        => esc_html__( 'The View will only be accessible to users with the selected role(s). Administrators always have access.', 'gk-gravityview-dashboard-views' ),
-					'roles'       => $roles,
-					'value'       => [],
-					'type'        => 'custom',
-					'requires'    => self::SETTINGS_PREFIX . '_enable',
-					'callback'    => [ $this, 'render_limit_access_to_user_roles_setting' ],
 				],
 			]
 		);
