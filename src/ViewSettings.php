@@ -41,7 +41,7 @@ class ViewSettings {
 			'id'            => self::SETTINGS_PREFIX,
 			'title'         => esc_html__( 'Dashboard Views', 'gk-gravityview-dashboard-views' ),
 			'file'          => null,
-			'icon-class'    => 'dashicons-admin-generic', // @todo Change to a more appropriate icon.
+			'icon-class'    => 'dashicons-welcome-widgets-menus',
 			'callback'      => [ $this, 'render_settings' ],
 			'callback_args' => null,
 		];
