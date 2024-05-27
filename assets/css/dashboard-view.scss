@@ -64,6 +64,11 @@ body {
   .gk-maps-search-current-geolocation-radius {
     width: auto;
   }
+
+  // Prevent the DataTables length <select> from being displayed as a block, causing three lines of height.
+  .dataTables_length select {
+    display: inline-block;
+  }
 }
 
 .fancybox__container {
