@@ -91,7 +91,7 @@ class ViewSettings {
 				],
 				self::SETTINGS_PREFIX . '_internal_only' => [
 					'label'      => esc_html__( 'Restrict to Internal-Only View', 'gk-gravityview-dashboard-views' ),
-					'desc'       => esc_html__( 'Enable this setting to prevent the View from ever rendering in the front-end.', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Enable this setting to prevent the View from ever rendering in the frontend.', 'gk-gravityview-dashboard-views' ),
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
 					'type'       => 'checkbox',
 					'class'      => 'widefat',
@@ -110,7 +110,7 @@ class ViewSettings {
 				],
 				self::SETTINGS_PREFIX . '_custom_name'   => [
 					'label'      => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
-					'desc'       => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard. The default View title will be used if left blank.', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Override the View name as it appears in the Dashboard. The default View title will be used if left blank.', 'gk-gravityview-dashboard-views' ),
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
 					'type'       => 'text',
 					'class'      => 'widefat',
