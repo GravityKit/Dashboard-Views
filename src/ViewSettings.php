@@ -75,7 +75,7 @@ class ViewSettings {
 		return array_merge(
 			$settings,
 			[
-				self::SETTINGS_PREFIX . '_enable'      => [
+				self::SETTINGS_PREFIX . '_enable'        => [
 					'label'      => esc_html__( 'Show in Dashboard', 'gk-gravityview-dashboard-views' ),
 					'desc'       => strtr(
 						esc_html_x( 'This will make the View accessible in the WordPress Dashboard. Visit [url]GravityView settings[/url] for additional configuration options that apply to all Dashboard Views.', 'Placeholders inside [] are not to be translated.', 'gk-gravityview-dashboard-views' ),
@@ -89,7 +89,7 @@ class ViewSettings {
 					'full_width' => true,
 					'value'      => 0,
 				],
-				self::SETTINGS_PREFIX . '_show_in_frontend' => [
+				self::SETTINGS_PREFIX . '_internal_only' => [
 					'label'      => esc_html__( 'Restrict to Internal-Only View', 'gk-gravityview-dashboard-views' ),
 					'desc'       => esc_html__( 'Enable this setting to prevent the View from ever rendering in the front-end.', 'gk-gravityview-dashboard-views' ),
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
@@ -98,7 +98,7 @@ class ViewSettings {
 					'full_width' => true,
 					'value'      => 0,
 				],
-				self::SETTINGS_PREFIX . '_custom_name' => [
+				self::SETTINGS_PREFIX . '_custom_name'   => [
 					'label'      => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
 					'desc'       => esc_html__( 'Use this field to specify the View name as it will appear in the Dashboard. The default View title will be used if left blank.', 'gk-gravityview-dashboard-views' ),
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
@@ -107,7 +107,7 @@ class ViewSettings {
 					'full_width' => true,
 					'value'      => '',
 				],
-				self::SETTINGS_PREFIX . '_group'       => [
+				self::SETTINGS_PREFIX . '_group'         => [
 					'label'      => esc_html__( 'Group', 'gk-gravityview-dashboard-views' ),
 					'desc'       => esc_html__( 'Views can be organized into groups within the Dashboard menu, with each group separated by a divider. Select the appropriate group to assign this View.', 'gk-gravityview-dashboard-views' ),
 					'value'      => 'group1',
@@ -123,7 +123,7 @@ class ViewSettings {
 					'full_width' => true,
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
 				],
-				self::SETTINGS_PREFIX . '_group_order' => [
+				self::SETTINGS_PREFIX . '_group_order'   => [
 					'label'      => esc_html__( 'Group Order', 'gk-gravityview-dashboard-views' ),
 					'desc'       => esc_html__( 'Views can be organized into groups within the Dashboard menu, with each group separated by a divider. Select the appropriate group to assign this View.', 'gk-gravityview-dashboard-views' ),
 					'value'      => 1,
@@ -132,7 +132,7 @@ class ViewSettings {
 					'full_width' => true,
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
 				],
-				self::SETTINGS_PREFIX . '_user_roles'  => [
+				self::SETTINGS_PREFIX . '_user_roles'    => [
 					'label'       => esc_html__( 'Limit Access to User Role(s)', 'gk-gravityview-dashboard-views' ),
 					'placeholder' => esc_html__( 'Select user role(s)…', 'gk-gravityview-dashboard-views' ),
 					'desc'        => esc_html__( 'The View will only be accessible to users with the selected role(s). Administrators always have access.', 'gk-gravityview-dashboard-views' ),
