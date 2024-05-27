@@ -1,3 +1,7 @@
 .ts-wrapper * {
   font-size: inherit;
 }
+
+.ts-wrapper {
+  z-index: 20; /** Show above the Yoast SEO tabbed interface, set to 12. */
+}
