@@ -101,10 +101,6 @@ class Plugin {
 			]
 		);
 
-		// Entry Approval assets.
-		$approval_field = GravityView_Fields::get_instance( 'entry_approval' );
-		$approval_field->register_scripts_and_styles();
-
 		// Lightbox assets.
 		do_action( 'gravityview/lightbox/provider' );
 
@@ -112,22 +108,6 @@ class Plugin {
 
 		$lightbox->enqueue_scripts();
 		$lightbox->enqueue_styles();
-
-		// Field Notes assets.
-		$enqueue_scripts = $wp_filter['wp_enqueue_scripts'];
-
-		if ( ! $enqueue_scripts ) {
-			return;
-		}
-
-		// @todo Do this the getInstance() way or something, or convert the method to static.
-		if ( $enqueue_scripts->callbacks['10'] ) {
-			foreach ( $enqueue_scripts->callbacks['10'] as $id => $callback ) {
-				if ( strpos( $id, 'register_scripts' ) && ( $callback['function'][0] ?? '' ) instanceof GravityView_Field_Notes ) {
-					call_user_func( $callback['function'] );
-				}
-			}
-		}
 	}
 
 	/**
