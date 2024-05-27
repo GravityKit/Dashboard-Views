@@ -57,6 +57,82 @@ class View {
 
 		// Localize the View editor script.
 		add_filter( 'gk/gravityview/dashboard-views/view/editor/localization', [ $this, 'localize_view_editor' ] );
+
+		// Filter messages when updating Views.
+		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ], 20 );
+		add_filter( 'bulk_post_updated_messages', [ $this, 'post_updated_messages' ], 20 );
+	}
+
+	/**
+	 * Filter admin messages to remove the front-end link if the View is internal-only.
+	 *
+	 * @since TODO
+	 *
+	 * @param  array $messages Existing messages.
+	 * @param  array $bulk_counts Array of status => count of items being modified.
+	 *
+	 * @return array Messages with GravityView messages added, if Internal-Only is enabled.
+	 */
+	public function post_updated_messages( $messages, $bulk_counts = null ) {
+		global $post;
+
+		$post_id = get_the_ID();
+
+		$view_settings = gravityview_get_template_settings( $post_id );
+
+		if ( ! ( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_enable' ] ?? '' ) || empty( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_internal_only' ] ?? 1 ) ) {
+			return $messages;
+		}
+
+		// By default, there will only be one item being modified.
+		// When in the `bulk_post_updated_messages` filter, there will be passed a number
+		// of modified items that will override this array.
+		$bulk_counts = is_null( $bulk_counts ) ? array(
+			'updated'   => 1,
+			'locked'    => 1,
+			'deleted'   => 1,
+			'trashed'   => 1,
+			'untrashed' => 1,
+		) : $bulk_counts;
+
+		$messages['gravityview'] = array(
+			0           => '', // Unused. Messages start at index 1.
+			1           => __( 'View updated.', 'gk-gravityview-dashboard-views' ),
+			2           => __( 'View updated.', 'gk-gravityview-dashboard-views' ),
+			3           => __( 'View deleted.', 'gk-gravityview-dashboard-views' ),
+			4           => __( 'View updated.', 'gk-gravityview-dashboard-views' ),
+			/* translators: %s: date and time of the revision */
+			5           => isset( $_GET['revision'] ) ? sprintf( __( 'View restored to revision from %s', 'gk-gravityview-dashboard-views' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false, // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			6           => __( 'View published.', 'gk-gravityview-dashboard-views' ),
+			7           => __( 'View saved.', 'gk-gravityview-dashboard-views' ),
+			8           => __( 'View submitted.', 'gk-gravityview-dashboard-views' ),
+			9           => sprintf(
+								/* translators: Date and time the View is scheduled to be published */
+                __( 'View scheduled for: %1$s.', 'gk-gravityview-dashboard-views' ),
+                // translators: Publish box date format, see http://php.net/date.
+								date_i18n( __( 'M j, Y @ G:i', 'gk-gravityview-dashboard-views' ), strtotime( $post->post_date ?? '' ) )
+            ),
+			/* translators: %s and %s are HTML tags linking to the View on the website */
+			10          => __( 'View draft updated.', 'gk-gravityview-dashboard-views' ),
+
+			/**
+			 * These apply to `bulk_post_updated_messages`
+			 *
+			 * @file wp-admin/edit.php
+			 */
+			// translators: %s: number of Views.
+			'updated'   => _n( '%s View updated.', '%s Views updated.', $bulk_counts['updated'], 'gk-gravityview-dashboard-views' ),
+			// translators: %s: number of Views.
+			'locked'    => _n( '%s View not updated, somebody is editing it.', '%s Views not updated, somebody is editing them.', $bulk_counts['locked'], 'gk-gravityview-dashboard-views' ),
+			// translators: %s: number of Views.
+			'deleted'   => _n( '%s View permanently deleted.', '%s Views permanently deleted.', $bulk_counts['deleted'], 'gk-gravityview-dashboard-views' ),
+			// translators: %s: number of Views.
+			'trashed'   => _n( '%s View moved to the Trash.', '%s Views moved to the Trash.', $bulk_counts['trashed'], 'gk-gravityview-dashboard-views' ),
+			// translators: %s: number of Views.
+			'untrashed' => _n( '%s View restored from the Trash.', '%s Views restored from the Trash.', $bulk_counts['untrashed'], 'gk-gravityview-dashboard-views' ),
+		);
+
+		return $messages;
 	}
 
 	/**
