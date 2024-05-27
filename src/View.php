@@ -34,6 +34,7 @@ class View {
 	 */
 	public function __construct() {
 		add_filter( 'gravityview/view/get', [ $this, 'modify_view' ] );
+		add_filter( 'the_posts', [ $this, 'filter_posts' ], 10, 2 );
 		add_filter( 'pre_do_shortcode_tag', [ $this, 'prevent_gravityview_shortcode_output' ], 10, 3 );
 
 		// Rewrite links.
@@ -63,8 +64,6 @@ class View {
 		// Filter messages when updating Views.
 		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ], 20 );
 		add_filter( 'bulk_post_updated_messages', [ $this, 'post_updated_messages' ], 20 );
-
-		add_filter( 'the_posts', [ $this, 'filter_posts' ], 10, 2 );
 	}
 
 	/**
@@ -77,7 +76,6 @@ class View {
 	 * @return array The updated posts.
 	 */
 	public function filter_posts( $posts ) {
-
 		if ( is_admin() || ! is_array( $posts ) ) {
 			return $posts;
 		}
@@ -96,13 +94,12 @@ class View {
 	 *
 	 * @since TBD
 	 *
-	 * @param int  $view_id The View ID.
+	 * @param int  $view_id         The View ID.
 	 * @param bool $check_post_type Whether to confirm that "gravityview" is the post type.
 	 *
 	 * @return bool Whether the View is internal-only.
 	 */
 	private function is_internal_only( $view_id, $check_post_type = false ) {
-
 		if ( $check_post_type && 'gravityview' !== get_post_type( $view_id ) ) {
 			return false;
 		}
@@ -113,17 +110,16 @@ class View {
 	}
 
 	/**
-	 * Filter the sample permalink HTML to remove the front-end link if the View is internal-only.
+	 * Filters the sample permalink HTML to remove the front-end link if the View is internal-only.
 	 *
 	 * @since TBD
 	 *
-	 * @param string $permalink_html  The sample permalink HTML.
-	 * @param int    $post_id The post ID.
+	 * @param string $permalink_html The sample permalink HTML.
+	 * @param int    $post_id        The post ID.
 	 *
 	 * @return string The updated sample permalink HTML.
 	 */
 	public function filter_sample_permalink_html( $permalink_html, $post_id ) {
-
 		if ( $this->is_internal_only( $post_id, true ) ) {
 			return '';
 		}
@@ -132,12 +128,12 @@ class View {
 	}
 
 	/**
-	 * Filter admin messages to remove the front-end link if the View is internal-only.
+	 * Filters admin messages to remove the front-end link if the View is internal-only.
 	 *
 	 * @since TODO
 	 *
-	 * @param  array $messages Existing messages.
-	 * @param  array $bulk_counts Array of status => count of items being modified.
+	 * @param array $messages    Existing messages.
+	 * @param array $bulk_counts Array of status => count of items being modified.
 	 *
 	 * @return array Messages with GravityView messages added, if Internal-Only is enabled.
 	 */
@@ -153,15 +149,15 @@ class View {
 		// By default, there will only be one item being modified.
 		// When in the `bulk_post_updated_messages` filter, there will be passed a number
 		// of modified items that will override this array.
-		$bulk_counts = is_null( $bulk_counts ) ? array(
+		$bulk_counts = is_null( $bulk_counts ) ? [
 			'updated'   => 1,
 			'locked'    => 1,
 			'deleted'   => 1,
 			'trashed'   => 1,
 			'untrashed' => 1,
-		) : $bulk_counts;
+		] : $bulk_counts;
 
-		$messages['gravityview'] = array(
+		$messages['gravityview'] = [
 			0           => '', // Unused. Messages start at index 1.
 			1           => __( 'View updated.', 'gk-gravityview-dashboard-views' ),
 			2           => __( 'View updated.', 'gk-gravityview-dashboard-views' ),
@@ -173,11 +169,11 @@ class View {
 			7           => __( 'View saved.', 'gk-gravityview-dashboard-views' ),
 			8           => __( 'View submitted.', 'gk-gravityview-dashboard-views' ),
 			9           => sprintf(
-								/* translators: Date and time the View is scheduled to be published */
-                __( 'View scheduled for: %1$s.', 'gk-gravityview-dashboard-views' ),
-                // translators: Publish box date format, see http://php.net/date.
-								date_i18n( __( 'M j, Y @ G:i', 'gk-gravityview-dashboard-views' ), strtotime( $post->post_date ?? '' ) )
-            ),
+			/* translators: Date and time the View is scheduled to be published */
+				__( 'View scheduled for: %1$s.', 'gk-gravityview-dashboard-views' ),
+				// translators: Publish box date format, see http://php.net/date.
+				date_i18n( __( 'M j, Y @ G:i', 'gk-gravityview-dashboard-views' ), strtotime( $post->post_date ?? '' ) )
+			),
 			/* translators: %s and %s are HTML tags linking to the View on the website */
 			10          => __( 'View draft updated.', 'gk-gravityview-dashboard-views' ),
 
@@ -196,7 +192,7 @@ class View {
 			'trashed'   => _n( '%s View moved to the Trash.', '%s Views moved to the Trash.', $bulk_counts['trashed'], 'gk-gravityview-dashboard-views' ),
 			// translators: %s: number of Views.
 			'untrashed' => _n( '%s View restored from the Trash.', '%s Views restored from the Trash.', $bulk_counts['untrashed'], 'gk-gravityview-dashboard-views' ),
-		);
+		];
 
 		return $messages;
 	}
@@ -287,7 +283,6 @@ class View {
 	 * @return mixed The updated View.
 	 */
 	public function modify_view( $view ) {
-
 		// Prevent rendering in the frontend.
 		if ( ! self::is_dashboard_view() ) {
 			if ( $this->is_internal_only( $view->ID ) ) {
