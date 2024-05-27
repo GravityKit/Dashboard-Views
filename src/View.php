@@ -64,6 +64,27 @@ class View {
 	}
 
 	/**
+	 * Check if the View is internal-only.
+	 *
+	 * @since TBD
+	 *
+	 * @param int  $view_id The View ID.
+	 * @param bool $check_post_type Whether to confirm that "gravityview" is the post type.
+	 *
+	 * @return bool Whether the View is internal-only.
+	 */
+	private function is_internal_only( $view_id, $check_post_type = false ) {
+
+		if ( $check_post_type && 'gravityview' !== get_post_type( $view_id ) ) {
+			return false;
+		}
+
+		$view_settings = gravityview_get_template_settings( $view_id );
+
+		return ( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_enable' ] ?? '' ) && ! empty( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_internal_only' ] ?? 1 );
+	}
+
+	/**
 	 * Filter admin messages to remove the front-end link if the View is internal-only.
 	 *
 	 * @since TODO
@@ -78,9 +99,7 @@ class View {
 
 		$post_id = get_the_ID();
 
-		$view_settings = gravityview_get_template_settings( $post_id );
-
-		if ( ! ( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_enable' ] ?? '' ) || empty( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_internal_only' ] ?? 1 ) ) {
+		if ( ! $this->is_internal_only( $post_id ) ) {
 			return $messages;
 		}
 
@@ -225,7 +244,7 @@ class View {
 
 		// Prevent rendering in the frontend.
 		if ( ! self::is_dashboard_view() ) {
-			if ( ( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_enable' ] ?? '' ) && ( $view_settings[ ViewSettings::SETTINGS_PREFIX . '_internal_only' ] ?? 1 ) ) {
+			if ( $this->is_internal_only( $view->ID ) ) {
 				add_filter( 'gravityview/request/is_renderable', '__return_false' );
 			}
 
