@@ -63,6 +63,28 @@ class View {
 		// Filter messages when updating Views.
 		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ], 20 );
 		add_filter( 'bulk_post_updated_messages', [ $this, 'post_updated_messages' ], 20 );
+
+		add_filter( 'the_posts', [ $this, 'filter_posts' ], 10, 2 );
+	}
+
+	/**
+	 * Filters the posts to remove internal-only Views.
+	 *
+	 * @since TBD
+	 *
+	 * @param array $posts The posts.
+	 *
+	 * @return array The updated posts.
+	 */
+	public function filter_posts( $posts ) {
+
+		foreach ( $posts as $key => $post ) {
+			if ( $this->is_internal_only( $post->ID ) ) {
+				unset( $posts[ $key ] );
+			}
+		}
+
+		return $posts;
 	}
 
 	/**
