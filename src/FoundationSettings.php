@@ -178,7 +178,14 @@ HTML
 					'id'          => 'dashboard_views_stylesheet',
 					'type'        => 'select',
 					'title'       => esc_html__( 'Default Style', 'gk-gravityview-dashboard-views' ),
-					'description' => esc_html__( 'Choose how you would like to style your Views.', 'gk-gravityview-dashboard-views' ),
+					'description' => strtr(
+						// translators: [link] is a placeholder for a link tag.
+						esc_html__( 'Choose how you would like to style your Views. [link]Learn more about the CSS framework options[/link].', 'gk-gravityview-dashboard-views' ),
+						[
+							'[link]'  => '<a class="underline" href="https://docs.gravitykit.com/article/1007-dashboard-views-css-frameworks" rel="external noopener noreferrer" target="_blank">',
+							'[/link]' => '<span class="screen-reader-text"> ' . esc_html__( '(This link opens in a new window.)', 'gk-gravityview-dashboard-views' ) . '</span></a>',
+						]
+					),
 					'value'       => $gravityview_settings['dashboard_views_stylesheet'] ?? $settings['gravityview']['defaults']['dashboard_views_stylesheet'],
 					'choices'     => array_merge(
 						[
