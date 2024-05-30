@@ -114,18 +114,16 @@ class Request extends GravityViewRequest {
 	 *
 	 * @param int $form_id The form ID, since slugs can be non-unique. Default: 0.
 	 *
-	 * @return bool Yes?
+	 * @return Entry|false The entry requested or false.
 	 */
 	public function is_edit_entry( $form_id = 0 ) {
-		if ( ! $this->is_entry( $form_id ) ) {
+		$entry = $this->is_entry( $form_id );
+
+		if ( ! $entry ) {
 			return false;
 		}
 
-		if ( empty( $_GET['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			return false;
-		}
-
-		return true;
+		return ! empty( $_GET['edit'] ) ? $entry : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
