@@ -109,7 +109,7 @@ class ViewSettings {
 					'callback'    => [ $this, 'render_limit_access_to_user_roles_setting' ],
 				],
 				self::SETTINGS_PREFIX . '_custom_name'   => [
-					'label'      => esc_html__( 'Custom View Name', 'gk-gravityview-dashboard-views' ),
+					'label'      => esc_html__( 'Customize the Menu Link', 'gk-gravityview-dashboard-views' ),
 					'desc'       => esc_html__( 'Override the View name as it appears in the Dashboard. The default View title will be used if left blank.', 'gk-gravityview-dashboard-views' ),
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
 					'type'       => 'text',
@@ -134,8 +134,8 @@ class ViewSettings {
 					'requires'   => self::SETTINGS_PREFIX . '_enable',
 				],
 				self::SETTINGS_PREFIX . '_group_order'   => [
-					'label'      => esc_html__( 'Group Order', 'gk-gravityview-dashboard-views' ),
-					'desc'       => esc_html__( 'Views can be organized into groups within the Dashboard menu, with each group separated by a divider. Select the appropriate group to assign this View.', 'gk-gravityview-dashboard-views' ),
+					'label'      => esc_html__( 'Set Group Order', 'gk-gravityview-dashboard-views' ),
+					'desc'       => esc_html__( 'Define the order of the View inside the selected group.', 'gk-gravityview-dashboard-views' ),
 					'value'      => 1,
 					'type'       => 'number',
 					'class'      => 'widefat',
