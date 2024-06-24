@@ -117,31 +117,6 @@ class ViewSettings {
 					'full_width' => true,
 					'value'      => '',
 				],
-				self::SETTINGS_PREFIX . '_group'         => [
-					'label'      => esc_html__( 'Group', 'gk-gravityview-dashboard-views' ),
-					'desc'       => esc_html__( 'Views can be organized into groups within the Dashboard menu, with each group separated by a divider. Select the appropriate group to assign this View.', 'gk-gravityview-dashboard-views' ),
-					'value'      => 'group1',
-					'type'       => 'select',
-					'options'    => [
-						'group1' => __( 'Group 1', 'gk-gravityview-dashboard-views' ),
-						'group2' => __( 'Group 2', 'gk-gravityview-dashboard-views' ),
-						'group3' => __( 'Group 3', 'gk-gravityview-dashboard-views' ),
-						'group4' => __( 'Group 4', 'gk-gravityview-dashboard-views' ),
-						'group5' => __( 'Group 5', 'gk-gravityview-dashboard-views' ),
-					],
-					'class'      => 'widefat',
-					'full_width' => true,
-					'requires'   => self::SETTINGS_PREFIX . '_enable',
-				],
-				self::SETTINGS_PREFIX . '_group_order'   => [
-					'label'      => esc_html__( 'Set Group Order', 'gk-gravityview-dashboard-views' ),
-					'desc'       => esc_html__( 'Define the order of the View inside the selected group.', 'gk-gravityview-dashboard-views' ),
-					'value'      => 1,
-					'type'       => 'number',
-					'class'      => 'widefat',
-					'full_width' => true,
-					'requires'   => self::SETTINGS_PREFIX . '_enable',
-				],
 			]
 		);
 	}
