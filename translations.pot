@@ -9,29 +9,34 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-27T19:33:43+00:00\n"
+"POT-Creation-Date: 2024-06-27T02:07:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.10.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: gk-gravityview-dashboard-views\n"
 
 #. Plugin Name of the plugin
+#: gravityview-dashboard-views.php
 msgid "GravityView - Dashboard Views"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: gravityview-dashboard-views.php
 msgid "https://www.gravitykit.com/products/dashboard-views/"
 msgstr ""
 
 #. Description of the plugin
+#: gravityview-dashboard-views.php
 msgid "Display Views in the WordPress Dashboard."
 msgstr ""
 
 #. Author of the plugin
+#: gravityview-dashboard-views.php
 msgid "GravityKit"
 msgstr ""
 
 #. Author URI of the plugin
+#: gravityview-dashboard-views.php
 msgid "https://www.gravitykit.com"
 msgstr ""
 
@@ -41,9 +46,9 @@ msgstr ""
 
 #: src/AdminMenu.php:112
 #: src/AdminMenu.php:113
-#: src/AdminMenu.php:291
+#: src/AdminMenu.php:310
 #: src/FoundationSettings.php:103
-#: src/FoundationSettings.php:224
+#: src/FoundationSettings.php:231
 #: src/ViewSettings.php:42
 msgid "Dashboard Views"
 msgstr ""
@@ -90,40 +95,122 @@ msgstr ""
 msgid "Default Style"
 msgstr ""
 
-#: src/FoundationSettings.php:181
-msgid "Choose how you would like to style your Views."
+#. translators: [link] is a placeholder for a link tag.
+#: src/FoundationSettings.php:183
+msgid "Choose how you would like to style your Views. [link]Learn more about the CSS framework options[/link]."
 msgstr ""
 
 #: src/FoundationSettings.php:186
+msgid "(This link opens in a new window.)"
+msgstr ""
+
+#: src/FoundationSettings.php:193
 msgid "Unstyled"
 msgstr ""
 
-#: src/FoundationSettings.php:190
+#: src/FoundationSettings.php:197
 msgid "Custom Stylesheet"
 msgstr ""
 
-#: src/FoundationSettings.php:199
+#: src/FoundationSettings.php:206
 msgid "Custom Stylesheet URL"
 msgstr ""
 
-#: src/FoundationSettings.php:200
+#: src/FoundationSettings.php:207
 msgid "Enter the URL of a custom stylesheet."
 msgstr ""
 
-#: src/FoundationSettings.php:216
+#: src/FoundationSettings.php:223
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: src/View.php:562
+#: src/View.php:162
+#: src/View.php:163
+#: src/View.php:165
+msgid "View updated."
+msgstr ""
+
+#: src/View.php:164
+msgid "View deleted."
+msgstr ""
+
+#. translators: %s: date and time of the revision
+#: src/View.php:167
+msgid "View restored to revision from %s"
+msgstr ""
+
+#: src/View.php:168
+msgid "View published."
+msgstr ""
+
+#: src/View.php:169
+msgid "View saved."
+msgstr ""
+
+#: src/View.php:170
+msgid "View submitted."
+msgstr ""
+
+#. translators: Date and time the View is scheduled to be published
+#: src/View.php:173
+msgid "View scheduled for: %1$s."
+msgstr ""
+
+#. translators: Publish box date format, see http://php.net/date.
+#: src/View.php:175
+msgid "M j, Y @ G:i"
+msgstr ""
+
+#. translators: %s and %s are HTML tags linking to the View on the website
+#: src/View.php:178
+msgid "View draft updated."
+msgstr ""
+
+#. translators: %s: number of Views.
+#: src/View.php:186
+msgid "%s View updated."
+msgid_plural "%s Views updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of Views.
+#: src/View.php:188
+msgid "%s View not updated, somebody is editing it."
+msgid_plural "%s Views not updated, somebody is editing them."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of Views.
+#: src/View.php:190
+msgid "%s View permanently deleted."
+msgid_plural "%s Views permanently deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of Views.
+#: src/View.php:192
+msgid "%s View moved to the Trash."
+msgid_plural "%s Views moved to the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of Views.
+#: src/View.php:194
+msgid "%s View restored from the Trash."
+msgid_plural "%s Views restored from the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/View.php:697
 msgid "View in Dashboard"
 msgstr ""
 
-#: src/View.php:591
+#: src/View.php:726
 msgid "This View is configured for display in the Dashboard only. You can disable this under the Dashboard Views tab."
 msgstr ""
 
 #: src/ViewSettings.php:79
-#: src/ViewSettings.php:263
+#: src/ViewSettings.php:238
 msgid "Show in Dashboard"
 msgstr ""
 
@@ -137,62 +224,29 @@ msgid "Restrict to Internal-Only View"
 msgstr ""
 
 #: src/ViewSettings.php:94
-msgid "Enable this setting to prevent the View from ever rendering in the front-end."
+msgid "Enable this setting to prevent the View from ever rendering in the frontend."
 msgstr ""
 
 #: src/ViewSettings.php:102
-msgid "Custom View Name"
-msgstr ""
-
-#: src/ViewSettings.php:103
-msgid "Use this field to specify the View name as it will appear in the Dashboard. The default View title will be used if left blank."
-msgstr ""
-
-#: src/ViewSettings.php:111
-msgid "Group"
-msgstr ""
-
-#: src/ViewSettings.php:112
-#: src/ViewSettings.php:128
-msgid "Views can be organized into groups within the Dashboard menu, with each group separated by a divider. Select the appropriate group to assign this View."
-msgstr ""
-
-#: src/ViewSettings.php:116
-msgid "Group 1"
-msgstr ""
-
-#: src/ViewSettings.php:117
-msgid "Group 2"
-msgstr ""
-
-#: src/ViewSettings.php:118
-msgid "Group 3"
-msgstr ""
-
-#: src/ViewSettings.php:119
-msgid "Group 4"
-msgstr ""
-
-#: src/ViewSettings.php:120
-msgid "Group 5"
-msgstr ""
-
-#: src/ViewSettings.php:127
-msgid "Group Order"
-msgstr ""
-
-#: src/ViewSettings.php:136
 msgid "Limit Access to User Role(s)"
 msgstr ""
 
-#: src/ViewSettings.php:137
+#: src/ViewSettings.php:103
 msgid "Select user role(s)…"
 msgstr ""
 
-#: src/ViewSettings.php:138
+#: src/ViewSettings.php:104
 msgid "The View will only be accessible to users with the selected role(s). Administrators always have access."
 msgstr ""
 
-#: src/ViewSettings.php:270
+#: src/ViewSettings.php:112
+msgid "Customize the Menu Link"
+msgstr ""
+
+#: src/ViewSettings.php:113
+msgid "Override the View name as it appears in the Dashboard. The default View title will be used if left blank."
+msgstr ""
+
+#: src/ViewSettings.php:245
 msgid "Exclude from Frontend"
 msgstr ""
