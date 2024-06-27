@@ -1,123 +1,229 @@
-module.exports = function(grunt) {
+module.exports = function ( grunt ) {
+	'use strict';
 
-	grunt.initConfig({
+	grunt.loadNpmTasks( 'grunt-exec' );
+	grunt.loadNpmTasks( 'grunt-wp-i18n' );
+	grunt.loadNpmTasks( 'grunt-contrib-watch' );
+	grunt.loadNpmTasks( 'grunt-contrib-concat' );
+	grunt.loadNpmTasks( 'grunt-contrib-sass' );
+	grunt.loadNpmTasks( '@lodder/grunt-postcss' );
+	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
+	grunt.loadNpmTasks( 'grunt-contrib-clean' );
+	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
+	grunt.loadNpmTasks( 'grunt-browserify' );
 
-		pkg: grunt.file.readJSON('package.json'),
-
-		dirs: {
-			lang: 'languages'
-		},
-
-		// Convert the .po files to .mo files
-		potomo: {
+	grunt.initConfig( {
+		browserify: {
 			dist: {
 				options: {
-					poDel: false
+					transform: [
+						[ 'babelify', {
+							presets: [ '@babel/preset-env' ],
+						} ],
+					],
 				},
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.lang %>',
-					src: ['*.po'],
-					dest: '<%= dirs.lang %>',
-					ext: '.mo',
-					nonull: true
-				}]
-			}
+				files: {
+					'build/js/_dashboard-view-editor.js': 'assets/js/dashboard-view-editor.js',
+				},
+			},
 		},
 
-		// Pull in the latest translations
-		exec: {
-			transifex: 'tx pull -a',
-
-			// Create a ZIP file
-			// Create a ZIP file
-			zip: {
-				cmd: function( version = '' ) {
-
-					var filename = ( version === '' ) ? 'gravityview-dashboard-views' : 'gravityview-dashboard-views-' + version;
-
-					// First, create the full archive
-					var command = 'git-archive-all gravityview-dashboard-views.zip &&';
-
-					command += 'unzip -o gravityview-dashboard-views.zip &&';
-
-					command += 'zip -r ../' + filename + '.zip "gravityview-dashboard-views" &&';
-
-					command += 'rm -rf "gravityview-dashboard-views/" && rm -f "gravityview-dashboard-views.zip"';
-
-					return command;
+		postcss: {
+			options: {
+				processors: [
+					require( 'postcss-selector-namespace' )( {
+						namespace: '.wrap.dashboard-view',
+						not: [ ':root', '@keyframes', '@font-face' ]
+					} ),
+					require( 'autoprefixer' )( { overrideBrowserslist: [ 'last 2 versions' ] } ),
+				]
+			},
+			dist: {
+				files: {
+					'build/css/_dashboard-view-pico.postcss.css': 'node_modules/@picocss/pico/css/pico.min.css',
+					'build/css/_dashboard-view-simple.postcss.css': 'node_modules/simpledotcss/simple.min.css',
+					'build/css/_dashboard-view-marx.postcss.css': 'node_modules/marx-css/css/marx.min.css',
+					'build/css/_dashboard-view-mvp.postcss.css': 'node_modules/mvp.css/mvp.css',
+					'build/css/_dashboard-view-sakura.postcss.css': 'node_modules/sakura.css/css/sakura.css',
+					'build/css/_dashboard-view-pure.postcss.css': 'node_modules/purecss/build/pure-min.css',
+					'build/css/_dashboard-view-picnic.postcss.css': 'node_modules/picnic/releases/picnic.min.css',
+					'build/css/_dashboard-view-chota.postcss.css': 'node_modules/chota/dist/chota.min.css',
+					'build/css/_dashboard-view-cirrus.postcss.css': 'node_modules/cirrus-ui/dist/cirrus-all.css',
 				}
 			}
 		},
 
-		// Build translations without POEdit
-		makepot: {
+		sass: {
+			options: {
+				style: 'expanded',
+				sourceMap: false
+			},
+			dist: {
+				files: {
+					'build/css/_dashboard-view-editor.sass.css': 'assets/css/dashboard-view-editor.scss',
+					'build/css/_dashboard-view-pico.sass.css': 'assets/css/dashboard-view.scss',
+					'build/css/_dashboard-view-simple.sass.css': 'assets/css/dashboard-view.scss',
+					'build/css/_dashboard-view-marx.sass.css': 'assets/css/dashboard-view.scss',
+					'build/css/_dashboard-view-mvp.sass.css': 'assets/css/dashboard-view.scss',
+					'build/css/_dashboard-view-sakura.sass.css': 'assets/css/dashboard-view.scss',
+					'build/css/_dashboard-view-pure.sass.css': 'assets/css/dashboard-view.scss',
+					'build/css/_dashboard-view-picnic.sass.css': 'assets/css/dashboard-view.scss',
+					'build/css/_dashboard-view-chota.sass.css': 'assets/css/dashboard-view.scss',
+					'build/css/_dashboard-view-cirrus.sass.css': 'assets/css/dashboard-view.scss',
+				}
+			}
+		},
+
+		concat: {
+			viewEditorCss: {
+				src: [ 'node_modules/tom-select/dist/css/tom-select.css', 'build/css/_dashboard-view-editor.sass.css' ],
+				dest: 'build/css/dashboard-view-editor.css',
+			},
+			picoCss: {
+				src: [ 'build/css/_dashboard-view-pico.postcss.css', 'build/css/_dashboard-view-pico.sass.css' ],
+				dest: 'build/css/dashboard-view-pico.css',
+			},
+			simpleCss: {
+				src: [ 'build/css/_dashboard-view-simple.postcss.css', 'build/css/_dashboard-view-simple.sass.css' ],
+				dest: 'build/css/dashboard-view-simple.css',
+			},
+			marxCss: {
+				src: [ 'build/css/_dashboard-view-marx.postcss.css', 'build/css/_dashboard-view-marx.sass.css' ],
+				dest: 'build/css/dashboard-view-marx.css',
+			},
+			mvpCss: {
+				src: [ 'build/css/_dashboard-view-mvp.postcss.css', 'build/css/_dashboard-view-mvp.sass.css' ],
+				dest: 'build/css/dashboard-view-mvp.css',
+			},
+			sakuraCss: {
+				src: [ 'build/css/_dashboard-view-sakura.postcss.css', 'build/css/_dashboard-view-sakura.sass.css' ],
+				dest: 'build/css/dashboard-view-sakura.css',
+			},
+			pureCss: {
+				src: [ 'build/css/_dashboard-view-pure.postcss.css', 'build/css/_dashboard-view-pure.sass.css' ],
+				dest: 'build/css/dashboard-view-pure.css',
+			},
+			picnicCss: {
+				src: [ 'build/css/_dashboard-view-picnic.postcss.css', 'build/css/_dashboard-view-picnic.sass.css' ],
+				dest: 'build/css/dashboard-view-picnic.css',
+			},
+			chotaCss: {
+				src: [ 'build/css/_dashboard-view-chota.postcss.css', 'build/css/_dashboard-view-chota.sass.css' ],
+				dest: 'build/css/dashboard-view-chota.css',
+			},
+			cirrusCss: {
+				src: [ 'build/css/_dashboard-view-cirrus.postcss.css', 'build/css/_dashboard-view-cirrus.sass.css' ],
+				dest: 'build/css/dashboard-view-cirrus.css',
+			}
+		},
+
+		cssmin: {
+			options: {
+				format: 'keep-breaks',
+				mergeIntoShorthands: false,
+				roundingPrecision: -1
+			},
 			target: {
-				options: {
-					mainFile: 'gravityview-dashboard-views.php',
-					type: 'wp-plugin',
-					domainPath: '/languages',
-					updateTimestamp: false,
-					exclude: ['node_modules/.*', 'assets/.*', 'tmp/.*', 'vendor/.*', 'includes/lib/xml-parsers/.*', 'includes/lib/jquery-cookie/.*' ],
-					potHeaders: {
-						poedit: true,
-						'x-poedit-keywordslist': true
-					},
-					processPot: function( pot, options ) {
-						pot.headers['language'] = 'en_US';
-						pot.headers['language-team'] = 'GravityKit <support@gravitykit.com>';
-						pot.headers['last-translator'] = 'GravityKit <support@gravitykit.com>';
-						pot.headers['report-msgid-bugs-to'] = 'https://www.gravitykit.com/support/';
-
-						var translation,
-							excluded_meta = [
-								'GravityView - Dashboard Views',
-								'Display Views in the WordPress Dashboard.',
-								'https://www.gravitykit.com',
-								'GravityView',
-								'https://www.gravitykit.com/extensions/dashboard-views/'
-							];
-
-						for ( translation in pot.translations[''] ) {
-							if ( 'undefined' !== typeof pot.translations[''][ translation ].comments.extracted ) {
-								if ( excluded_meta.indexOf( pot.translations[''][ translation ].msgid ) >= 0 ) {
-									console.log( 'Excluded meta: ' + pot.translations[''][ translation ].msgid );
-									delete pot.translations[''][ translation ];
-								}
-							}
-						}
-
-						return pot;
-					}
+				files: {
+					'build/css/dashboard-view-editor.min.css': [ 'build/css/dashboard-view-editor.css' ],
+					'build/css/dashboard-view-pico.min.css': [ 'build/css/dashboard-view-pico.css' ],
+					'build/css/dashboard-view-simple.min.css': [ 'build/css/dashboard-view-simple.css' ],
+					'build/css/dashboard-view-marx.min.css': [ 'build/css/dashboard-view-marx.css' ],
+					'build/css/dashboard-view-mvp.min.css': [ 'build/css/dashboard-view-mvp.css' ],
+					'build/css/dashboard-view-sakura.min.css': [ 'build/css/dashboard-view-sakura.css' ],
+					'build/css/dashboard-view-pure.min.css': [ 'build/css/dashboard-view-pure.css' ],
+					'build/css/dashboard-view-picnic.min.css': [ 'build/css/dashboard-view-picnic.css' ],
+					'build/css/dashboard-view-chota.min.css': [ 'build/css/dashboard-view-chota.css' ],
+					'build/css/dashboard-view-cirrus.min.css': [ 'build/css/dashboard-view-cirrus.css' ]
 				}
 			}
 		},
 
-		// Add textdomain to all strings, and modify existing textdomains in included packages.
+		uglify: {
+			dashboardView: {
+				files: {
+					'build/js/dashboard-view.min.js': 'assets/js/dashboard-view.js'
+				}
+			},
+			dashboardViewEditor: {
+				files: {
+					'build/js/dashboard-view-editor.min.js': 'build/js/_dashboard-view-editor.js'
+				}
+			}
+		},
+
+		clean: {
+			css: [
+				'build/css/*',
+				'!build/css/*.min.css',
+			],
+			js: [
+				'build/js/*',
+				'!build/js/*.min.js',
+			]
+		},
+
+		watch: {
+			css: {
+				files: [ 'assets/css/**/*.css', 'assets/css/**/*.scss' ],
+				tasks: [ 'styles' ],
+				options: {
+					spawn: false,
+				},
+			},
+			js: {
+				files: [ 'assets/js/**/*.js' ],
+				tasks: [ 'scripts' ],
+				options: {
+					spawn: false,
+				},
+			},
+		},
+
 		addtextdomain: {
 			options: {
-				textdomain: 'gravityview-dashboard-views',    // Project text domain.
-				updateDomains: [ 'gravityview', 'gravity-view', 'gravityforms', 'edd_sl', 'edd', 'easy-digital-downloads' ]  // List of text domains to replace.
+				textdomain: 'gk-gravityview-dashboard-views',
+				updateDomains: []
 			},
 			target: {
 				files: {
 					src: [
 						'*.php',
-						'**/*.php',
-						'!node_modules/**',
-						'!tests/**',
-						'!tmp/**',
-						'!vendor/**'
+						'templates/**',
 					]
 				}
 			}
+		},
+
+		exec: {
+			makepot: {
+				cmd: function () {
+					var fileComments = [
+						'Copyright (C) ' + new Date().getFullYear() + ' GravityKit',
+						'This file is distributed under the GPLv2 or later',
+					];
+
+					var headers = {
+						'Last-Translator': 'GravityKit <support@gravitykit.com>',
+						'Language-Team': 'GravityKit <support@gravitykit.com>',
+						'Language': 'en_US',
+						'Plural-Forms': 'nplurals=2; plural=(n != 1);',
+						'Report-Msgid-Bugs-To': 'https://www.gravitykit.com/support',
+					};
+
+					var command = 'wp i18n make-pot --exclude=build . translations.pot';
+
+					command += ' --file-comment="' + fileComments.join( '\n' ) + '"';
+
+					command += ' --headers=\'' + JSON.stringify( headers ) + '\'';
+
+					return command;
+				}
+			}
 		}
-	});
+	} );
 
-	grunt.loadNpmTasks('grunt-potomo');
-	grunt.loadNpmTasks('grunt-exec');
-	grunt.loadNpmTasks('grunt-wp-i18n');
-
-	grunt.registerTask( 'default', [ 'exec:transifex', 'potomo', 'addtextdomain', 'makepot' ] );
-
+	grunt.registerTask( 'default', [ 'styles', 'scripts', 'addtextdomain', 'exec:makepot' ] );
+	grunt.registerTask( 'styles', [ 'postcss', 'sass', 'concat', 'cssmin', 'clean:css' ] );
+	grunt.registerTask( 'scripts', [ 'browserify', 'uglify','clean:js' ] );
 };

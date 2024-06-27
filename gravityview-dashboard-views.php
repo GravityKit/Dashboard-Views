@@ -1,45 +1,54 @@
 <?php
 /**
- * Plugin Name: GravityView - Dashboard Views
- * Description: Display Views in the WordPress Dashboard.
- * Version: 1.1-beta
- * Author: GravityKit
- * Author URI: https://www.gravitykit.com
- * Text Domain: gk-gravityview-dashboard-views
- * Domain Path: /languages/
+ * Plugin Name:         GravityView - Dashboard Views
+ * Plugin URI:          https://www.gravitykit.com/products/dashboard-views/
+ * Description:         Display Views in the WordPress Dashboard.
+ * Version:             2.0.0-beta.1
+ * Author:              GravityKit
+ * Author URI:          https://www.gravitykit.com
+ * Text Domain:         gk-gravityview-dashboard-views
+ * License:             GPLv2 or later
+ * License URI:         https://www.gnu.org/licenses/gpl-2.0.en.html
  */
 
-/**
- * The plugin version.
- */
-define( 'GV_DASHBOARD_VIEWS_VERSION', '1.1-beta' );
+require_once __DIR__ . '/vendor/autoload.php';
 
-add_action( 'plugins_loaded', 'gv_extension_dashboard_views_load', 100 );
+define( 'GV_DASHBOARD_VIEWS_VERSION', '2.0.0-beta.1' );
+define( 'GV_DASHBOARD_VIEWS_PLUGIN_FILE', __FILE__ );
 
-/**
- * Wrapper function to make sure GravityView_Extension has loaded
- *
- * @return void
- */
-function gv_extension_dashboard_views_load() {
+add_action(
+	'gravityview/loaded',
+	function () {
+		$required_gv_version = '2.23';
 
-	if ( ! class_exists( 'GFAPI' ) ) {
-		return;
-	}
+		if ( ! defined( 'GV_PLUGIN_VERSION' ) || version_compare( GV_PLUGIN_VERSION, $required_gv_version, '<' ) ) {
+			add_action(
+				'admin_notices',
+				function () use ( $required_gv_version ) {
+					$notice = wpautop(
+						strtr(
+							esc_html__( '[plugin] requires [requirement] [version] or newer.', 'gk-gravityview-dashboard-views' ),
+							[
+								'[plugin]'      => 'Dashboard Views',
+								'[requirement]' => '<a href="https://www.gravitykit.com/products/gravityview/">GravityView</a>',
+								'[version]'     => $required_gv_version,
+							]
+						)
+					);
 
-	if ( ! class_exists( 'GravityView_Extension' ) ) {
+					echo "<div class='error' style='padding: 1.25em 0 1.25em 1em;'>$notice</div>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+			);
 
-		if ( class_exists( 'GravityView_Plugin' ) && is_callable( array( 'GravityView_Plugin', 'include_extension_framework' ) ) ) {
-			GravityView_Plugin::include_extension_framework();
-		} else {
-			// We prefer to use the one bundled with GravityView, but if it doesn't exist, go here.
-			include_once plugin_dir_path( __FILE__ ) . 'lib/class-gravityview-extension.php';
+			return;
 		}
-	}
 
-	if ( ! class_exists( '\GV\Extension' ) ) {
-		return;
-	}
+		if ( ! class_exists( 'GravityKit\GravityView\Foundation\Core' ) ) {
+			return;
+		}
 
-	include_once plugin_dir_path( __FILE__ ) . 'class-gravityview-dashboard-views.php';
-}
+		GravityKit\GravityView\Foundation\Core::register( GV_DASHBOARD_VIEWS_PLUGIN_FILE );
+
+		new GravityKit\GravityView\DashboardViews\Plugin();
+	}
+);
