@@ -1,8 +1,26 @@
 {
+  "name": "gravitykit/dashboard-views",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "GravityKit",
+      "email": "support@gravitykit.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=7.2.0"
+  },
   "require-dev": {
     "squizlabs/php_codesniffer": "*",
     "wp-coding-standards/wpcs": "^3.0",
     "phpcompatibility/phpcompatibility-wp": "^2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "GravityKit\\GravityView\\DashboardViews\\": "src"
+    }
   },
   "config": {
     "allow-plugins": {
