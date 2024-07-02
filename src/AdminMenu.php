@@ -9,7 +9,7 @@ use GV\Plugin_Settings as GravityViewPluginSettings;
 /**
  * This class configures the Admin (Dashboard) menu.
  *
- * @since TBD
+ * @since 2.0.0
  */
 class AdminMenu extends FoundationAdminMenu {
 	const WP_ADMIN_MENU_SLUG = '_gk_gravityview_dashboard_views';
@@ -19,7 +19,7 @@ class AdminMenu extends FoundationAdminMenu {
 	/**
 	 * Submenus of the top menu.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @var array
 	 */
@@ -34,7 +34,7 @@ class AdminMenu extends FoundationAdminMenu {
 	/**
 	 * Class constructor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'add_admin_menu' ], 101 );
@@ -44,7 +44,7 @@ class AdminMenu extends FoundationAdminMenu {
 	/**
 	 * Configures Dashboard Views top-level menu and submenus in WP admin.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @global array $menu
 	 * @global array $submenu
@@ -118,7 +118,7 @@ class AdminMenu extends FoundationAdminMenu {
 		 *
 		 * @filter 'gk/gravityview/dashboard-views/admin-menu/position'
 		 *
-		 * @since  TBD
+		 * @since  2.0.0
 		 *
 		 * @param int|float $menu_position The position of the top-level admin menu.
 		 *                                 Default: The position of the first submenu that the user has met.
@@ -133,7 +133,7 @@ class AdminMenu extends FoundationAdminMenu {
 		 *
 		 * @filter 'gk/gravityview/dashboard-views/admin-menu/icon-url'
 		 *
-		 * @since  TBD
+		 * @since  2.0.0
 		 *
 		 * @param string $icon_url The URL to the icon to be used for this menu.
 		 *                              * Pass a base64-encoded SVG using a data URI, which will be colored to match
@@ -243,7 +243,7 @@ class AdminMenu extends FoundationAdminMenu {
 	/**
 	 * Returns submenus optionally modified by a filter.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -284,7 +284,7 @@ class AdminMenu extends FoundationAdminMenu {
 		 *
 		 * @filter `gk/gravityview/dashboard-views/admin-menu/submenus`
 		 *
-		 * @since  TBD
+		 * @since  2.0.0
 		 *
 		 * @param array $submenus Submenus.
 		 */
@@ -294,7 +294,7 @@ class AdminMenu extends FoundationAdminMenu {
 	/**
 	 * Returns the View submenu prefix.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -312,7 +312,7 @@ class AdminMenu extends FoundationAdminMenu {
 		/**
 		 * @filter `gk/gravityview/dashboard-views/admin-menu/submenu-prefix`
 		 *
-		 * @since  TBD
+		 * @since  2.0.0
 		 *
 		 * @param string $prefix View prefix.
 		 */
@@ -322,7 +322,7 @@ class AdminMenu extends FoundationAdminMenu {
 	/**
 	 * Returns the submenu slug for a given View ID.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param int $view_id The View ID.
 	 *
@@ -335,7 +335,7 @@ class AdminMenu extends FoundationAdminMenu {
 	/**
 	 * Returns View ID that's part of the submenu slug.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $slug The submenu slug.
 	 *
@@ -350,7 +350,7 @@ class AdminMenu extends FoundationAdminMenu {
 	/**
 	 * Returns WP admin menu items sorted alphabetically.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

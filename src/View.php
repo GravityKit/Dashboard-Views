@@ -22,7 +22,7 @@ use WP_Post;
 /**
  * This class modifies GravityView's View object and its output.
  *
- * @since TBD
+ * @since 2.0.0
  */
 class View {
 	const DEFAULT_ACCESS_ROLE = 'administrator';
@@ -30,7 +30,7 @@ class View {
 	/**
 	 * Class constructor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_filter( 'gravityview/view/get', [ $this, 'modify_view' ] );
@@ -69,7 +69,7 @@ class View {
 	/**
 	 * Filters the posts to remove internal-only Views.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array $posts The posts.
 	 *
@@ -92,7 +92,7 @@ class View {
 	/**
 	 * Check if the View is internal-only.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param int  $view_id         The View ID.
 	 * @param bool $check_post_type Whether to confirm that "gravityview" is the post type.
@@ -112,7 +112,7 @@ class View {
 	/**
 	 * Filters the sample permalink HTML to remove the front-end link if the View is internal-only.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $permalink_html The sample permalink HTML.
 	 * @param int    $post_id        The post ID.
@@ -130,7 +130,7 @@ class View {
 	/**
 	 * Filters admin messages to remove the front-end link if the View is internal-only.
 	 *
-	 * @since TODO
+	 * @since 2.0.0
 	 *
 	 * @param array $messages    Existing messages.
 	 * @param array $bulk_counts Array of status => count of items being modified.
@@ -200,7 +200,7 @@ class View {
 	/**
 	 * Returns Views configured for display in the Dashboard.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -276,7 +276,7 @@ class View {
 	/**
 	 * Modifies the View object when it's retrieved by GravityView.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param GV_View $view The View.
 	 *
@@ -302,7 +302,7 @@ class View {
 				/**
 				 * Sets the View's field visibility (hidden or not).
 				 *
-				 * @since  TBD
+				 * @since  2.0.0
 				 * @filter `gk/gravityview/dashboard-views/view/field/visibility`
 				 *
 				 * @param bool     $is_visible Whether the field is visible.
@@ -329,7 +329,7 @@ class View {
 			/**
 			 * Modifies the View object.
 			 *
-			 * @since  TBD
+			 * @since  2.0.0
 			 * @filter `gk/gravityview/dashboard-views/view`
 			 *
 			 * @param GV_View $view The View.
@@ -372,7 +372,7 @@ class View {
 		/**
 		 * Triggers before the View is rendered.
 		 *
-		 * @since  TBD
+		 * @since  2.0.0
 		 * @filter `gk/gravityview/dashboard-views/view/before`
 		 *
 		 * @param GV_View $view The View.
@@ -400,7 +400,7 @@ class View {
 		/**
 		 * Modifies the View output.
 		 *
-		 * @since  TBD
+		 * @since  2.0.0
 		 * @filter `gk/gravityview/dashboard-views/view/output`
 		 *
 		 * @param string  $view_template The View template.
@@ -414,7 +414,7 @@ class View {
 		/**
 		 * Modifies the View template.
 		 *
-		 * @since  TBD
+		 * @since  2.0.0
 		 * @filter `gk/gravityview/dashboard-views/view/template`
 		 *
 		 * @param string  $view_template The View template.
@@ -443,7 +443,7 @@ class View {
 	/**
 	 * Conditionally prevents the [gravityview] shortcode output.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $output The shortcode output.
 	 * @param string $tag    The shortcode tag.
@@ -469,7 +469,7 @@ class View {
 	/**
 	 * Rewrites the View directory link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $link The directory link.
 	 *
@@ -482,7 +482,7 @@ class View {
 	/**
 	 * Rewrites the single entry link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string   $link  The single entry link.
 	 * @param GF_Entry $entry The Gravity Forms entry.
@@ -496,7 +496,7 @@ class View {
 	/**
 	 * Rewrites the single entry back link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $link The single entry back link.
 	 *
@@ -509,7 +509,7 @@ class View {
 	/**
 	 * Rewrites the edit entry link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string  $link  The edit entry link.
 	 * @param array   $entry The Gravity Forms entry.
@@ -534,7 +534,7 @@ class View {
 	/**
 	 * Rewrites the edit entry back link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string      $message      Entry update message.
 	 * @param int         $view_id      View ID.
@@ -561,7 +561,7 @@ class View {
 	/**
 	 * Rewrites the edit entry cancel link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $link  The edit entry cancel link.
 	 * @param array  $form  The Gravity Forms form.
@@ -576,7 +576,7 @@ class View {
 	/**
 	 * Rewrites the search action link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $link The search action link.
 	 *
@@ -589,7 +589,7 @@ class View {
 	/**
 	 * Rewrites the search clear link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array $params The search clear link parameters.
 	 *
@@ -604,7 +604,7 @@ class View {
 	/**
 	 * Rewrites pagination link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array $params Pagination link parameters.
 	 *
@@ -619,7 +619,7 @@ class View {
 	/**
 	 * Rewrites entry deletion redirect link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $link The entry deletion redirect link.
 	 *
@@ -636,7 +636,7 @@ class View {
 	/**
 	 * Rewrites entry duplication redirect link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $link The entry duplication redirect link.
 	 *
@@ -653,7 +653,7 @@ class View {
 	/**
 	 * Calls the entry duplication and deletion handlers if these actions are being performed.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -669,7 +669,7 @@ class View {
 	/**
 	 * Adds a "View in Dashboard" link to View actions in the GravityView list table.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array   $actions View actions.
 	 * @param WP_Post $post    The post.
@@ -713,7 +713,7 @@ class View {
 	/**
 	 * Localizes the View editor script {@see Plugin::enqueue_ui_assets}.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array $localization Localization strings.
 	 *

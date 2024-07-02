@@ -9,13 +9,13 @@ use GV\Plugin as GravityViewPlugin;
 /**
  * This class modifies global GravityView settings in Foundation with Dashboard Views settings.
  *
- * @since TBD
+ * @since 2.0.0
  */
 class FoundationSettings {
 	/**
 	 * Class constructor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_filter( 'gk/foundation/settings/data/plugins', [ $this, 'add_global_gravityview_settings' ], 11 ); // 11 to run after GravityView initializes its settings.
@@ -24,7 +24,7 @@ class FoundationSettings {
 	/**
 	 * Adds Dashboard Views settings to the GravityView settings in Foundation.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array $settings The settings object.
 	 *
