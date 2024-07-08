@@ -611,7 +611,7 @@ class View {
 	 * @return array The updated pagination link parameters.
 	 */
 	public function rewrite_pagination_links( array $params ) {
-		$params['base'] = ! self::is_dashboard_view() ? ( $param['base'] ?? '' ) : add_query_arg( [ 'pagenum' => '%#%' ], Request::get_base_url() );
+		$params['base'] = ! self::is_dashboard_view() ? ( $params['base'] ?? '' ) : add_query_arg( [ 'pagenum' => '%#%' ], Request::get_base_url() );
 
 		return $params;
 	}

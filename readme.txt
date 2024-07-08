@@ -16,6 +16,10 @@ Display Views in the WordPress Dashboard.
 
 == Changelog ==
 
+= develop =
+
+* Fixed: Frontend View's pagination not working when Dashboard Views is active
+
 = 2.0.0 on June 27, 2024 =
 
 * Liftoff!
