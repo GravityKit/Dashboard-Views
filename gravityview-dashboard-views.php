@@ -3,7 +3,7 @@
  * Plugin Name:         GravityView - Dashboard Views
  * Plugin URI:          https://www.gravitykit.com/products/dashboard-views/
  * Description:         Display Views in the WordPress Dashboard.
- * Version:             2.0.0
+ * Version:             2.0.1
  * Author:              GravityKit
  * Author URI:          https://www.gravitykit.com
  * Text Domain:         gk-gravityview-dashboard-views
@@ -13,7 +13,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'GV_DASHBOARD_VIEWS_VERSION', '2.0.0' );
+define( 'GV_DASHBOARD_VIEWS_VERSION', '2.0.1' );
 define( 'GV_DASHBOARD_VIEWS_PLUGIN_FILE', __FILE__ );
 
 add_action(

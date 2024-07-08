@@ -1,7 +1,7 @@
 === GravityView - Dashboard Views ===
 Tags: gravityview, dashboard, gravity forms
 Requires at least: 5.3
-Tested up to: 6.5.5
+Tested up to: 6.6
 Stable tag: trunk
 Contributors: The GravityKit Team
 License: GPL 2 or higher
@@ -16,9 +16,12 @@ Display Views in the WordPress Dashboard.
 
 == Changelog ==
 
-= develop =
+= 2.0.1 on July 8, 2024 =
 
-* Fixed: Frontend View's pagination not working when Dashboard Views is active
+This release fixes a pagination issue with non-Dashboard Views.
+
+#### 🐛 Fixed
+* Pagination not working for frontend Views when Dashboard Views is active.
 
 = 2.0.0 on June 27, 2024 =
 
