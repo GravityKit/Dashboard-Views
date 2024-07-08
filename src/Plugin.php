@@ -13,7 +13,7 @@ use WP_Post;
 /**
  * The main Dashboard Views plugin class that initializes the required components, loads assets, etc.
  *
- * @since TBD
+ * @since 2.0.0
  */
 class Plugin {
 	const UI_ASSETS_PREFIX = 'dashboard-view';
@@ -21,7 +21,7 @@ class Plugin {
 	/**
 	 * Class constructor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_action( 'current_screen', [ $this, 'set_request' ], 1 );
@@ -61,7 +61,7 @@ class Plugin {
 	/**
 	 * Enqueues UI assets.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -112,7 +112,7 @@ class Plugin {
 	/**
 	 * Helper method that enqueues multiple scripts at once.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array[] $scripts The scripts to enqueue.
 	 *
@@ -137,7 +137,7 @@ class Plugin {
 	/**
 	 * Helper method that enqueues multiple styles at once.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array[] $styles The scripts to enqueue.
 	 *
@@ -161,7 +161,7 @@ class Plugin {
 	/**
 	 * Enqueues the View stylesheet that's configured in GravityView settings.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */

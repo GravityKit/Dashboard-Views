@@ -11,13 +11,13 @@ use GV_Extension_DataTables_Data;
 /**
  * Adds support for DataTables.
  *
- * @since TBD
+ * @since 2.0.0
  */
 class DataTables {
 	/**
 	 * Class constructor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_action( 'gravityview/template/after', [ $this, 'enqueue_ui_assets' ] );
@@ -27,7 +27,7 @@ class DataTables {
 	/**
 	 * Enqueues DataTables assets.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param Template_Context $gravityview_context The GravityView template context.
 	 *
@@ -49,7 +49,7 @@ class DataTables {
 	 * Decodes the DataTables Ajax data and optionally sets the request to the admin request.
 	 * This is needed because {@see Plugin::set_request()} hooks to 'current_screen' that's not triggered in Ajax requests.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */

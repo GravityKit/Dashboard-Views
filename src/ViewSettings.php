@@ -11,7 +11,7 @@ use GravityKitFoundation;
 /**
  * View-specific settings.
  *
- * @since TBD
+ * @since 2.0.0
  */
 class ViewSettings {
 	const SETTINGS_PREFIX = 'dashboard_views';
@@ -19,7 +19,7 @@ class ViewSettings {
 	/**
 	 * Class constructor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_filter( 'gravityview/metaboxes/default', [ $this, 'add_dashboard_views_settings_tab' ], 11 );
@@ -30,7 +30,7 @@ class ViewSettings {
 	/**
 	 * Adds the Dashboard Views settings tab to the View editor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array $tabs Existing View editor tabs.
 	 *
@@ -52,7 +52,7 @@ class ViewSettings {
 	/**
 	 * Adds settings to the Dashboard Views tab in the View editor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array $settings Existing View settings.
 	 *
@@ -124,7 +124,7 @@ class ViewSettings {
 	/**
 	 * Renders the Dashboard Views settings tab content.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param WP_Post $post The current post object.
 	 *
@@ -154,7 +154,7 @@ class ViewSettings {
 		 *
 		 * @filter 'gk/gravityview/dashboard-views/view-editor/settings'
 		 *
-		 * @since  TBD
+		 * @since  2.0.0
 		 *
 		 * @param array $settings_to_render Settings to render.
 		 */
@@ -180,7 +180,7 @@ class ViewSettings {
 	/**
 	 * Renders the "Limit Access to User Role(s)" setting.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $setting_key     The setting key.
 	 * @param array  $settings        The Dashboard Views settings object.
@@ -223,7 +223,7 @@ class ViewSettings {
 	/**
 	 * Adds View field option to exclude it from being displayed in the Dashboard.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param array $field_options The field options.
 	 *
@@ -231,8 +231,8 @@ class ViewSettings {
 	 */
 	public function modify_view_field_options( $field_options ) {
 		return array_merge(
-            $field_options,
-            [
+			$field_options,
+			[
 				self::SETTINGS_PREFIX . '_show_field' => [
 					'type'     => 'checkbox',
 					'label'    => esc_html__( 'Show in Dashboard', 'gk-gravityview-dashboard-views' ),
@@ -248,6 +248,6 @@ class ViewSettings {
 					'group'    => 'visibility',
 				],
 			]
-        );
+		);
 	}
 }

@@ -5,13 +5,13 @@ namespace GravityKit\GravityView\DashboardViews\Integrations;
 /**
  * Adds support for GravityFlow.
  *
- * @since TBD
+ * @since 2.0.0
  */
 class GravityFlow {
 	/**
 	 * Class constructor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		if ( ! function_exists( 'gravity_flow' ) ) {
@@ -24,7 +24,7 @@ class GravityFlow {
 	/**
 	 * Enqueues Gravity Flow assets.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */

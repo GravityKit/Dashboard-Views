@@ -14,7 +14,7 @@ use GV\Request as GravityViewRequest;
  *
  * {@see Plugin::set_request()}
  *
- * @since TBD
+ * @since 2.0.0
  */
 class Request extends GravityViewRequest {
 	/**
@@ -57,7 +57,7 @@ class Request extends GravityViewRequest {
 	 * Returns false to fake that we're not inside an admin screen unless it's an Ajax request.
 	 * This response is expected by various GravityKit plugins/extensions to determine whether to initialize, load their assets, etc.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -129,7 +129,7 @@ class Request extends GravityViewRequest {
 	/**
 	 * Returns the base URL for the Dashboard View.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @return string The base URL for the Dashboard View.
 	 */

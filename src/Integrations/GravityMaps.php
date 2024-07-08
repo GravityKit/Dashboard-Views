@@ -8,13 +8,13 @@ use GravityKit\GravityView\DashboardViews\View;
 /**
  * Adds support for GravityFlow.
  *
- * @since TBD
+ * @since 2.0.0
  */
 class GravityMaps {
 	/**
 	 * Class constructor.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_action( 'gravityview/maps/marker/url', [ $this, 'rewrite_single_entry_link' ], 10, 2 );
@@ -23,7 +23,7 @@ class GravityMaps {
 	/**
 	 * Rewrites the single entry link.
 	 *
-	 * @since TBD
+	 * @since 2.0.0
 	 *
 	 * @param string $link   The single entry link.
 	 * @param array  $entry  Gravity Forms entry object.
