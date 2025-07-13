@@ -21,6 +21,8 @@ add_action(
 	function () {
 		$required_gv_version = '2.23';
 
+		esc_html__( 'testing', 'gk-gravityview-dashboard-views' );
+
 		if ( ! defined( 'GV_PLUGIN_VERSION' ) || version_compare( GV_PLUGIN_VERSION, $required_gv_version, '<' ) ) {
 			add_action(
 				'admin_notices',
