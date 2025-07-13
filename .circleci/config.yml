@@ -52,12 +52,6 @@ jobs:
               git config user.name "GravityKit - CI"
               /home/circleci/tooling/build-tools/build_tools.sh create_release -o "gravityview-dashboard-views.php $(ls gravityview-dashboard-*.zip)"
             fi
-      - run:
-          name: Notifying GravityKit Release Manager
-          command: |
-            if ! [[ $(git log -n 1 | grep "\[skip notify\]") ]]; then
-              /home/circleci/tooling/build-tools/build_tools.sh announce_build -o "gravityview-dashboard-views.php $(ls gravityview-dashboard-*.zip) --with-circle"
-            fi
       - store_artifacts:
           path: .release
           destination: release

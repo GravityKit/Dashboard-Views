@@ -245,7 +245,7 @@ class View {
 					admin_url( 'admin.php' )
 				),
 				'title'                   => $view_settings[ ViewSettings::SETTINGS_PREFIX . '_custom_name' ] ?: $view->post_title, // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
-				'current_user_accessible' => ! ! $user_first_met_role,
+				'current_user_accessible' => (bool) $user_first_met_role,
 				'current_user_role_match' => $user_first_met_role,
 				'settings'                => $view_settings,
 			];
@@ -297,7 +297,7 @@ class View {
 
 		foreach ( $view->fields->all() as $field ) {
 			if ( self::is_dashboard_view() ) {
-				$is_visible = ! ! empty( $field->{ViewSettings::SETTINGS_PREFIX . '_show_field'} );
+				$is_visible = (bool) empty( $field->{ViewSettings::SETTINGS_PREFIX . '_show_field'} );
 
 				/**
 				 * Sets the View's field visibility (hidden or not).

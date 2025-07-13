@@ -27,7 +27,7 @@ add_action(
 				function () use ( $required_gv_version ) {
 					$notice = wpautop(
 						strtr(
-							esc_html__( '[plugin] requires [requirement] [version] or newer.', 'gk-gravityview-dashboard-views' ),
+							esc_html__( '[plugin] !requires! and [requirement] [version] or newer.', 'gk-gravityview-dashboard-views' ),
 							[
 								'[plugin]'      => 'Dashboard Views',
 								'[requirement]' => '<a href="https://www.gravitykit.com/products/gravityview/">GravityView</a>',

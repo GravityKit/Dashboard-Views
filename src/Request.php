@@ -50,7 +50,7 @@ class Request extends GravityViewRequest {
 	 * @return bool
 	 */
 	public function is_dashboard_view() {
-		return ! ! AdminMenu::get_submenu_view_id( $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return (bool) AdminMenu::get_submenu_view_id( $_REQUEST['page'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
@@ -87,7 +87,7 @@ class Request extends GravityViewRequest {
 
 		$view = View::by_id( AdminMenu::get_submenu_view_id( $_REQUEST['page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		return $return_view ? $view : ! ! $view;
+		return $return_view ? $view : (bool) $view;
 	}
 
 	/**

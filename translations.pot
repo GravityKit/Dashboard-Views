@@ -1,4 +1,4 @@
-# Copyright (C) 2024 GravityKit
+# Copyright (C) 2025 GravityKit
 # This file is distributed under the GPLv2 or later
 msgid ""
 msgstr ""
@@ -9,34 +9,29 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-08T22:31:50+00:00\n"
+"POT-Creation-Date: 2025-07-13T11:38:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: gk-gravityview-dashboard-views\n"
 
 #. Plugin Name of the plugin
-#: gravityview-dashboard-views.php
 msgid "GravityView - Dashboard Views"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: gravityview-dashboard-views.php
 msgid "https://www.gravitykit.com/products/dashboard-views/"
 msgstr ""
 
 #. Description of the plugin
-#: gravityview-dashboard-views.php
 msgid "Display Views in the WordPress Dashboard."
 msgstr ""
 
 #. Author of the plugin
-#: gravityview-dashboard-views.php
 msgid "GravityKit"
 msgstr ""
 
 #. Author URI of the plugin
-#: gravityview-dashboard-views.php
 msgid "https://www.gravitykit.com"
 msgstr ""
 
