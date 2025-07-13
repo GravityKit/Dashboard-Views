@@ -1,0 +1,76 @@
+:root {
+  --font-size: 1rem;
+}
+
+body {
+  background: white;
+}
+
+#wpfooter, .update-nag {
+  display: none
+}
+
+.wrap.dashboard-view {
+  & * {
+    font-size: initial;
+  }
+
+  .gv-grid-col-1-2 {
+    width: auto;
+  }
+
+  .gv-table-container {
+    overflow-x: auto;
+  }
+
+  form.gv-widget-search {
+    input {
+      width: auto;
+    }
+
+    &:not(.gv-is-search) .gv-search-clear {
+      display: none;
+    }
+
+    .gv-search-clear {
+      margin: 0 3%;
+    }
+
+    .gv-search-box-submit {
+      align-items: baseline;
+    }
+  }
+
+  .gv-edit-entry-wrapper #publishing-action {
+    display: flex;
+
+    > * {
+      margin-right: 3%;
+    }
+
+    > *:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .gk-maps-search-geolocation-address-autocomplete-container {
+    display: flex;
+
+    input.gk-maps-search-geolocation-address-autocomplete {
+      width: inherit;
+    }
+  }
+
+  .gk-maps-search-current-geolocation-radius {
+    width: auto;
+  }
+
+  // Prevent the DataTables length <select> from being displayed as a block, causing three lines of height.
+  .dataTables_length select {
+    display: inline-block;
+  }
+}
+
+.fancybox__container {
+  z-index: 100000 !important;
+}
