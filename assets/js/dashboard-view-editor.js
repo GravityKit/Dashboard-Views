@@ -14,6 +14,11 @@ document.addEventListener( 'DOMContentLoaded', function () {
 	const viewTitleEl = document.querySelector( '.wp-heading-inline' );
 	const disableFrontendDisplayEl = document.getElementById( 'gravityview_se_dashboard_views_show_in_frontend' );
 
+	// Exit early if required elements are missing
+	if ( !dashboardViewsEnableEl || !disableFrontendDisplayEl ) {
+		return;
+	}
+
 	function showFieldOptions() {
 		const settingEls = document.querySelectorAll( '.gv-setting-container-dashboard_views_show_field, .gv-setting-container-dashboard_views_exclude_from_frontend' );
 
