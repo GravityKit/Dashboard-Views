@@ -12,7 +12,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 	const userRolesSelectElementId = '#gravityview_se_dashboard_views_user_roles';
 	const dashboardViewsEnableEl = document.getElementById( 'gravityview_se_dashboard_views_enable' );
 	const viewTitleEl = document.querySelector( '.wp-heading-inline' );
-	const disableFrontendDisplayEl = document.getElementById( 'gravityview_se_dashboard_views_show_in_frontend' );
+	const disableFrontendDisplayEl = document.getElementById( 'gravityview_se_dashboard_views_internal_only' );
 
 	// Exit early if required elements are missing
 	if ( !dashboardViewsEnableEl || !disableFrontendDisplayEl ) {
