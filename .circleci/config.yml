@@ -30,9 +30,20 @@ jobs:
           paths:
             - node_modules
       - run:
-          name: Building and packaging
+          name: Building
           command: |
             /home/circleci/tooling/build-tools/build_tools.sh grunt
+      - run:
+          name: Trigger translation pipeline
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ] || [ "${CIRCLE_BRANCH}" == "main" ]; then
+              /home/circleci/tooling/build-tools/build_tools.sh trigger_translation -o "gk-gravityview-dashboard-views"
+            else
+              echo "Skipping translation pipeline (branch: ${CIRCLE_BRANCH})."
+            fi
+      - run:
+          name: Packaging
+          command: |
             if [ "${CIRCLE_BRANCH}" != "main" ]; then
               /home/circleci/tooling/build-tools/build_tools.sh package_build -o "gravityview-dashboard gravityview-dashboard-views.php --include-hash"
             else
