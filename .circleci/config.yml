@@ -104,6 +104,14 @@ jobs:
 
   build_package_release:
     <<: *default_job_config
+    environment:
+      # Disable husky pre-commit hooks during CI. `package_build` makes a
+      # git commit, which fires .husky/pre-commit → lint-staged →
+      # `vendor/bin/phpcs`. Since `composer install --no-dev` strips phpcs
+      # (it is a dev dependency), the hook fails with ENOENT and CI dies.
+      # This bug has existed on develop since CI was first configured —
+      # see GravityKit/Dashboard-Views#29 for the full root-cause analysis.
+      HUSKY: "0"
     steps:
       - attach_workspace:
           at: /home/circleci
