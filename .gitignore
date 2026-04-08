@@ -1,5 +1,14 @@
 .DS_Store
 node_modules
 vendor
+vendor_prefixed
 .sass-cache
 build
+.env
+
+# E2E Testing
+tests/E2E/setup/.wp-env.json
+tests/E2E/setup/.state.json
+tests/E2E/setup/.e2e-ports.json
+tests/E2E/results/
+tests/E2E/report/

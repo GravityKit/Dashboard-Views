@@ -2,7 +2,12 @@
   "name": "gravityview-dashboard-views",
   "version": "1.0.0",
   "license": "GPL-2.0",
+  "dependencies": {
+    "@gravitykit/e2e-bootstrap": "^1.0.0"
+  },
   "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@wordpress/env": "^10.34.0",
     "@babel/core": "^7.24.5",
     "@babel/plugin-transform-modules-commonjs": "^7.24.1",
     "@babel/preset-env": "^7.24.5",
@@ -52,6 +57,12 @@
     ]
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "wp-env:start": "cd tests/E2E/setup && wp-env start",
+    "wp-env:stop": "cd tests/E2E/setup && wp-env stop",
+    "wp-env:cli": "cd tests/E2E/setup && wp-env run cli",
+    "tests:e2e:setup": "node tests/E2E/setup/wp-env.config.js && cd tests/E2E/setup && wp-env start",
+    "tests:e2e:run": "playwright test --config=tests/E2E/setup/playwright.config.js",
+    "tests:e2e:debug": "USE_LOCAL_BROWSER=1 playwright test --config=tests/E2E/setup/playwright.config.js --debug"
   }
 }
