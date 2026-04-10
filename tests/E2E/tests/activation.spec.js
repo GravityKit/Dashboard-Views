@@ -51,4 +51,31 @@ test.describe('Dashboard Views — Activation Smoke Test', () => {
 		await expect(productCard.locator('button[role="switch"][aria-checked="true"]')).toBeVisible();
 	});
 
+	test('shows dependency dialog when attempting to deactivate GravityView', async ({ page }) => {
+		let dialogMessage = '';
+
+		page.on('dialog', async (dialog) => {
+			dialogMessage = dialog.message();
+			await dialog.accept();
+		});
+
+		await page.goto('/wp-admin/plugins.php');
+
+		const deactivateLink = page.locator('[data-plugin*="gravityview.php"] .deactivate a');
+		await expect(deactivateLink).toBeVisible();
+		await deactivateLink.click();
+		await page.waitForLoadState('networkidle');
+
+		expect(dialogMessage).toContain('GravityView is required by');
+
+		// Re-activate GravityView so subsequent tests are not affected.
+		await page.goto('/wp-admin/plugins.php');
+		const activateLink = page.locator('[data-plugin*="gravityview.php"] .activate a');
+
+		if (await activateLink.isVisible()) {
+			await activateLink.click();
+			await page.waitForLoadState('networkidle');
+		}
+	});
+
 });
