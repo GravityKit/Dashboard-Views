@@ -1,0 +1,10 @@
+{
+	"build": ["npm install", "grunt", "composer install --no-dev"],
+	"package": {
+		"prefix": "gravityview-dashboard"
+	},
+	"release": {
+		"branch": "main",
+		"mergeTo": "develop"
+	}
+}
