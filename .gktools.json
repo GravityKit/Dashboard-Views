@@ -1,7 +1,8 @@
 {
 	"build": ["npm install", "grunt", "composer install --no-dev"],
 	"package": {
-		"prefix": "gravityview-dashboard"
+		"prefix": "gravityview-dashboard",
+		"includeExtra": ["vendor", "build"]
 	},
 	"release": {
 		"branch": "main",
