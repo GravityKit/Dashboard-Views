@@ -16,6 +16,13 @@ Display Views in the WordPress Dashboard.
 
 == Changelog ==
 
+= 2.0.3 on June 18, 2026 =
+
+This release fixes the internal-only notice appearing under the wrong condition in the View editor.
+
+#### 🐛 Fixed
+* The "This View is configured for display in the Dashboard only" notice appeared when the *Restrict to Internal-Only View* setting was disabled, instead of when it was enabled.
+
 = 2.0.2 on June 18, 2026 =
 
 This release fixes a JavaScript error in the View editor and a potential error when the GravityView DataTables extension is not active.

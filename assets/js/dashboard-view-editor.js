@@ -37,18 +37,20 @@ document.addEventListener( 'DOMContentLoaded', function () {
 
 	function showFrontendDisplayDisabledNotice() {
 		const noticeElementId = 'frontend_display_disabled_notice';
+		const existingNotice = document.getElementById( noticeElementId );
 
-		if ( !disableFrontendDisplayEl.checked ) {
-			viewTitleEl.insertAdjacentHTML(
-				'afterend',
-				`<div class="notice notice-warning" id="${ noticeElementId }">
-					<p>${ window.gkDashboardViews?.frontend_display_disabled_notice }</p>
-				</div>` );
+		// The View is Dashboard-only (frontend display disabled) when the "Restrict to Internal-Only View" box is checked.
+		if ( disableFrontendDisplayEl.checked ) {
+			if ( !existingNotice ) {
+				viewTitleEl.insertAdjacentHTML(
+					'afterend',
+					`<div class="notice notice-warning" id="${ noticeElementId }">
+						<p>${ window.gkDashboardViews?.frontend_display_disabled_notice }</p>
+					</div>` );
+			}
 
 			return;
 		}
-
-		const existingNotice = document.getElementById( noticeElementId );
 
 		if ( existingNotice ) {
 			existingNotice.remove();
