@@ -38,6 +38,10 @@ class DataTables {
 			return;
 		}
 
+		if ( ! class_exists( 'GV_Extension_DataTables_Data' ) ) {
+			return;
+		}
+
 		( new GV_Extension_DataTables_Data() )->add_scripts_and_styles( $gravityview_context );
 
 		$datatables_css_url = apply_filters( 'gravityview_datatables_style_src', plugins_url( 'assets/css/datatables.css', GV_DT_FILE ) );

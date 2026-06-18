@@ -15,56 +15,63 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Getting GK test/build tools
-          command: |
-            git clone git@github.com:GravityKit/Tooling.git /home/circleci/tooling
-      - restore_cache:
-          key: node-dependencies-{{ checksum "package-lock.json" }}
+          name: Fetch tags
+          command: git fetch --tags
       - run:
-          name: Installing dependencies
+          name: Create .npmrc
           command: |
-            /home/circleci/tooling/build-tools/build_tools.sh npm -o install
-            /home/circleci/tooling/build-tools/build_tools.sh composer -o "install --no-dev"
-      - save_cache:
-          key: node-dependencies-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
+            echo "//npm.pkg.github.com/:_authToken=${GH_AUTH_TOKEN}" >> ~/.npmrc
+            echo "@gravitykit:registry=https://npm.pkg.github.com" >> ~/.npmrc
       - run:
-          name: Building and packaging
+          name: Install dependencies
           command: |
-            /home/circleci/tooling/build-tools/build_tools.sh grunt
-            if [ "${CIRCLE_BRANCH}" != "main" ]; then
-              /home/circleci/tooling/build-tools/build_tools.sh package_build -o "gravityview-dashboard gravityview-dashboard-views.php --include-hash"
-            else
-              /home/circleci/tooling/build-tools/build_tools.sh package_build -o "gravityview-dashboard gravityview-dashboard-views.php $([[ $(git log -n 1 | grep "\[skip release\]") ]] && echo --include-hash)"
-            fi
-            mkdir -p gravityview-dashboard
-            mv vendor gravityview-dashboard
-            mv build gravityview-dashboard
-            zip -gr $(ls gravityview-dashboard-*.zip) gravityview-dashboard build
-            mkdir .release
-            cp gravityview-dashboard-*.zip .release
+            npx @gravitykit/gktools composer install
+            npx @gravitykit/gktools npm install
       - run:
-          name: Creating a GitHub release
+          name: Configure git
+          command: |
+            git config user.email "support@gravitykit.com"
+            git config user.name "GravityKit - CI"
+      - run:
+          name: Replace @since tags
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
-              git config user.email "support@gravitykit.com"
-              git config user.name "GravityKit - CI"
-              /home/circleci/tooling/build-tools/build_tools.sh create_release -o "gravityview-dashboard-views.php $(ls gravityview-dashboard-*.zip)"
+              npx @gravitykit/gktools replace-since --commit
+            else
+              echo "Skipping @since tag replacement (only runs on main, before release build)."
             fi
       - run:
-          name: Notifying GravityKit Release Manager
+          name: Build and package
+          command: npx @gravitykit/gktools build
+      - run:
+          name: Trigger translation pipeline
           command: |
-            if ! [[ $(git log -n 1 | grep "\[skip notify\]") ]]; then
-              /home/circleci/tooling/build-tools/build_tools.sh announce_build -o "gravityview-dashboard-views.php $(ls gravityview-dashboard-*.zip) --with-circle"
+            if [ "${CIRCLE_BRANCH}" == "develop" ] || [ "${CIRCLE_BRANCH}" == "main" ]; then
+              npx @gravitykit/gktools translate gk-gravityview-dashboard-views --commit --push
+            else
+              echo "Skipping translation pipeline."
             fi
+      - run:
+          name: Create GitHub release
+          command: npx @gravitykit/gktools release
+      - run:
+          name: Announce build
+          command: |
+            if ! git log -1 --pretty=%B | grep -iq "\[skip notify\]"; then
+              npx @gravitykit/gktools announce
+            fi
+      - run:
+          name: Collect build artifacts
+          command: |
+            mkdir -p .release
+            cp gravityview-dashboard-*.zip .release/ 2>/dev/null || true
       - store_artifacts:
           path: .release
           destination: release
 
 workflows:
   version: 2
-  test_and_package:
+  build_and_release:
     jobs:
       - build_package_release:
           <<: *context
