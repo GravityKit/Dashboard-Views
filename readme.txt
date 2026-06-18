@@ -16,10 +16,13 @@ Display Views in the WordPress Dashboard.
 
 == Changelog ==
 
-= develop =
+= 2.0.2 on June 18, 2026 =
+
+This release fixes a JavaScript error in the View editor and a potential error when the GravityView DataTables extension is not active.
 
 #### 🐛 Fixed
-* JavaScript error when accessing View settings: `TypeError: null is not an object (evaluating 's.checked')`.
+* JavaScript error in the View editor: `TypeError: null is not an object (evaluating 's.checked')`.
+* PHP error when the GravityView DataTables extension is not active.
 
 = 2.0.1 on July 8, 2024 =
 
