@@ -2,12 +2,17 @@
   "name": "gravityview-dashboard-views",
   "version": "1.0.0",
   "license": "GPL-2.0",
+  "dependencies": {
+    "@gravitykit/e2e-bootstrap": "^1.2.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.24.5",
     "@babel/plugin-transform-modules-commonjs": "^7.24.1",
     "@babel/preset-env": "^7.24.5",
     "@lodder/grunt-postcss": "^3.1.1",
     "@picocss/pico": "^2.0.6",
+    "@playwright/test": "1.56.1",
+    "@wordpress/env": "^10.34.0",
     "autoprefixer": "^10.4.19",
     "babelify": "^10.0.0",
     "browserify": "^17.0.0",
@@ -19,11 +24,10 @@
     "grunt-contrib-clean": "^2.0.1",
     "grunt-contrib-concat": "^2.1.0",
     "grunt-contrib-cssmin": "^5.0.0",
-    "grunt-sass": "^3.1.0",
-    "sass": "^1.63.6",
     "grunt-contrib-uglify": "^5.2.2",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-exec": "^0.4",
+    "grunt-sass": "^3.1.0",
     "grunt-string-replace": "^1.3.3",
     "grunt-wp-i18n": "^1.0.3",
     "husky": "^8.0.3",
@@ -35,6 +39,7 @@
     "postcss-selector-namespace": "^3.0.1",
     "purecss": "^3.0.0",
     "sakura.css": "^1.5.0",
+    "sass": "^1.63.6",
     "simpledotcss": "^2.3.0",
     "tom-select": "^2.3.1"
   },
@@ -53,6 +58,12 @@
     ]
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "wp-env:start": "cd tests/E2E/setup && wp-env start",
+    "wp-env:stop": "cd tests/E2E/setup && wp-env stop",
+    "wp-env:cli": "cd tests/E2E/setup && wp-env run cli",
+    "tests:e2e:setup": "node tests/E2E/setup/wp-env.config.js && cd tests/E2E/setup && wp-env start",
+    "tests:e2e:run": "playwright test --config=tests/E2E/setup/playwright.config.js",
+    "tests:e2e:debug": "USE_LOCAL_BROWSER=1 playwright test --config=tests/E2E/setup/playwright.config.js --debug"
   }
 }
