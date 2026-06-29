@@ -12,3 +12,5 @@ readme.md export-ignore
 translations.pot export-ignore
 
 assets export-ignore
+.gktools.json export-ignore
+.gktools.env export-ignore

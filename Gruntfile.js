@@ -5,7 +5,7 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
-	grunt.loadNpmTasks( 'grunt-contrib-sass' );
+	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( '@lodder/grunt-postcss' );
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-clean' );
@@ -55,7 +55,8 @@ module.exports = function ( grunt ) {
 
 		sass: {
 			options: {
-				style: 'expanded',
+				implementation: require( 'sass' ),
+				outputStyle: 'expanded',
 				sourceMap: false
 			},
 			dist: {
